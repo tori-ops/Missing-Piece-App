@@ -4,6 +4,7 @@ import { writeFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { prisma } from '@/lib/prisma';
 
 const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads');
 const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || (session.user as any)?.role !== 'SUPERADMIN') {
+    if (!session) {
       return Response.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -23,12 +24,41 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const fileType = formData.get('fileType') as string; // 'logo' or 'favicon'
+    const tenantId = formData.get('tenantId') as string;
+
+    const userRole = (session.user as any)?.role;
+    const userTenantId = (session.user as any)?.tenantId;
+
+    // Allow SUPERADMIN for any tenant, TENANT only for their own
+    if (userRole === 'SUPERADMIN') {
+      // SUPERADMIN can upload - proceed
+    } else if (userRole === 'TENANT' && tenantId && userTenantId === tenantId) {
+      // TENANT can upload for their own tenant - proceed
+    } else {
+      return Response.json(
+        { error: 'Unauthorized: You can only upload for your own tenant' },
+        { status: 403 }
+      );
+    }
 
     if (!file) {
       return Response.json(
         { error: 'No file provided' },
         { status: 400 }
       );
+    }
+
+    // Verify tenant exists if tenantId provided
+    if (tenantId) {
+      const tenant = await prisma.tenant.findUnique({
+        where: { id: tenantId },
+      });
+      if (!tenant) {
+        return Response.json(
+          { error: 'Tenant not found' },
+          { status: 404 }
+        );
+      }
     }
 
     // Validate file type

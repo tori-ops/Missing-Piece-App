@@ -148,7 +148,27 @@ export async function POST(req: NextRequest) {
 
     // Atomic transaction: create client and user together
     const result = await prisma.$transaction(async (tx) => {
-      // Create client profile
+      // Get tenant branding to inherit
+      const tenantBranding = await tx.tenant.findUnique({
+        where: { id: user.tenantId! },
+        select: {
+          brandingPrimaryColor: true,
+          brandingSecondaryColor: true,
+          brandingSecondaryColorOpacity: true,
+          brandingFontColor: true,
+          brandingLogoUrl: true,
+          brandingLogoBackgroundRemoval: true,
+          brandingCompanyName: true,
+          brandingTagline: true,
+          brandingFaviconUrl: true,
+          brandingFooterText: true,
+          brandingFontFamily: true,
+          brandingHeaderFontFamily: true,
+          brandingBodyFontFamily: true,
+        }
+      });
+
+      // Create client profile with inherited branding
       const clientProfile = await tx.clientProfile.create({
         data: {
           tenantId: user.tenantId!,
@@ -168,7 +188,21 @@ export async function POST(req: NextRequest) {
           weddingLocation: weddingLocation || null,
           estimatedGuestCount: estimatedGuestCount || null,
           status: 'INVITED',
-          createdByUserId: user.id
+          createdByUserId: user.id,
+          // Inherit tenant branding
+          brandingPrimaryColor: tenantBranding?.brandingPrimaryColor || null,
+          brandingSecondaryColor: tenantBranding?.brandingSecondaryColor || null,
+          brandingSecondaryColorOpacity: tenantBranding?.brandingSecondaryColorOpacity || null,
+          brandingFontColor: tenantBranding?.brandingFontColor || null,
+          brandingLogoUrl: tenantBranding?.brandingLogoUrl || null,
+          brandingLogoBackgroundRemoval: tenantBranding?.brandingLogoBackgroundRemoval || null,
+          brandingCompanyName: tenantBranding?.brandingCompanyName || null,
+          brandingTagline: tenantBranding?.brandingTagline || null,
+          brandingFaviconUrl: tenantBranding?.brandingFaviconUrl || null,
+          brandingFooterText: tenantBranding?.brandingFooterText || null,
+          brandingFontFamily: tenantBranding?.brandingFontFamily || null,
+          brandingHeaderFontFamily: tenantBranding?.brandingHeaderFontFamily || null,
+          brandingBodyFontFamily: tenantBranding?.brandingBodyFontFamily || null,
         }
       });
 
