@@ -148,26 +148,6 @@ export async function POST(req: NextRequest) {
 
     // Atomic transaction: create client and user together
     const result = await prisma.$transaction(async (tx) => {
-      // Get tenant branding for welcome email (but don't store on client)
-      const tenantBranding = await tx.tenant.findUnique({
-        where: { id: user.tenantId! },
-        select: {
-          brandingPrimaryColor: true,
-          brandingSecondaryColor: true,
-          brandingSecondaryColorOpacity: true,
-          brandingFontColor: true,
-          brandingLogoUrl: true,
-          brandingLogoBackgroundRemoval: true,
-          brandingCompanyName: true,
-          brandingTagline: true,
-          brandingFaviconUrl: true,
-          brandingFooterText: true,
-          brandingFontFamily: true,
-          brandingHeaderFontFamily: true,
-          brandingBodyFontFamily: true,
-        }
-      });
-
       // Create client profile
       const clientProfile = await tx.clientProfile.create({
         data: {
