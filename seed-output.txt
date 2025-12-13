@@ -1,0 +1,17 @@
+≡ƒî▒ Seeding database...
+
+≡ƒæñ Creating SUPERADMIN user...
+Γ¥î Seeding failed: PrismaClientKnownRequestError: 
+Invalid `prisma.user.upsert()` invocation:
+
+
+The table `main.users` does not exist in the current database.
+    at ei.handleRequestError (C:\Users\koles\Desktop\The Missing Piece App\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (C:\Users\koles\Desktop\The Missing Piece App\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (C:\Users\koles\Desktop\The Missing Piece App\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (C:\Users\koles\Desktop\The Missing Piece App\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async main (file:///C:/Users/koles/Desktop/The%20Missing%20Piece%20App/prisma/seed.ts:26:22) {
+  code: 'P2021',
+  meta: { modelName: 'User', table: 'main.users' },
+  clientVersion: '6.19.1'
+}

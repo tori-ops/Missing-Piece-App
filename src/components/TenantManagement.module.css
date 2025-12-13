@@ -1,0 +1,213 @@
+.container {
+  background: white;
+  border: 2px solid #274E13;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 10px 40px rgba(39, 78, 19, 0.15);
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  color: #274E13;
+  font-size: 1.8rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: #F9F8F3;
+  border: 1px solid #E0DED0;
+  border-radius: 6px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.statLabel {
+  color: #666;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.statValue {
+  color: #274E13;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid #E0DED0;
+  border-radius: 6px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table thead {
+  background: #F9F8F3;
+  border-bottom: 2px solid #274E13;
+}
+
+.table th {
+  padding: 1rem;
+  text-align: left;
+  color: #274E13;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid #E0DED0;
+  color: #333;
+}
+
+.table tbody tr:hover {
+  background: #FAFAF8;
+}
+
+.businessName {
+  font-weight: 600;
+  color: #274E13;
+}
+
+.tier {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tier-free {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.tier-starter {
+  background: #E1F5FE;
+  color: #01579B;
+}
+
+.tier-professional {
+  background: #F3E5F5;
+  color: #6A1B9A;
+}
+
+.tier-enterprise {
+  background: #FFE0B2;
+  color: #E65100;
+}
+
+.tier-paid {
+  background: #FFF9C4;
+  color: #F57F17;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-active {
+  background: #C8E6C9;
+  color: #1B5E20;
+}
+
+.status-suspended {
+  background: #FFCDD2;
+  color: #B71C1C;
+}
+
+.status-inactive {
+  background: #ECEFF1;
+  color: #37474F;
+}
+
+.status-archived {
+  background: #F5F5F5;
+  color: #616161;
+}
+
+.center {
+  text-align: center;
+}
+
+.revenue {
+  color: #2E7D32;
+  font-weight: 600;
+}
+
+.outstanding {
+  color: #D97706;
+  font-weight: 600;
+}
+
+.date {
+  color: #999;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
+}
+
+.error {
+  background: #FFEBEE;
+  border: 1px solid #EF5350;
+  color: #C62828;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+.empty {
+  text-align: center;
+  color: #999;
+  padding: 2rem;
+  background: #F9F8F3;
+  border-radius: 6px;
+  border: 1px solid #E0DED0;
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}

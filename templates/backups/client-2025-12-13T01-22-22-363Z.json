@@ -1,0 +1,165 @@
+{
+  "id": "client-master",
+  "name": "Client Dashboard Template",
+  "type": "CLIENT",
+  "version": "1.1",
+  "lastUpdated": "2025-12-13T01:22:22.345Z",
+  "updatedBy": "System Admin",
+  "components": [
+    {
+      "id": "client-header",
+      "type": "header",
+      "title": "Wedding Planning Header",
+      "position": {
+        "section": "header",
+        "order": 1,
+        "width": "full"
+      },
+      "config": {
+        "showTenantLogo": true,
+        "showTenantCompanyName": true,
+        "showWeddingDate": true,
+        "includeLogout": true,
+        "personalizedGreeting": true
+      },
+      "isVisible": true,
+      "isRequired": true
+    },
+    {
+      "id": "wedding-overview",
+      "type": "stats",
+      "title": "Wedding Overview Cards",
+      "position": {
+        "section": "main",
+        "order": 1,
+        "width": "full"
+      },
+      "config": {
+        "metrics": [
+          "days-until-wedding",
+          "tasks-completed",
+          "budget-used",
+          "guests-confirmed",
+          "vendors-booked"
+        ],
+        "displayStyle": "cards",
+        "showProgressBars": true
+      },
+      "isVisible": true,
+      "isRequired": true
+    },
+    {
+      "id": "planning-checklist",
+      "type": "custom",
+      "title": "Wedding Planning Checklist",
+      "position": {
+        "section": "main",
+        "order": 2,
+        "width": "half"
+      },
+      "config": {
+        "categories": [
+          "venue-booking",
+          "vendor-selection",
+          "invitations",
+          "dress-attire",
+          "final-details"
+        ],
+        "allowEditing": true,
+        "showProgress": true,
+        "autoSave": true
+      },
+      "isVisible": true,
+      "isRequired": true
+    },
+    {
+      "id": "budget-tracker",
+      "type": "custom",
+      "title": "Wedding Budget Tracker",
+      "position": {
+        "section": "main",
+        "order": 3,
+        "width": "half"
+      },
+      "config": {
+        "categories": [
+          "venue",
+          "catering",
+          "photography",
+          "flowers",
+          "music",
+          "transportation",
+          "other"
+        ],
+        "showCharts": true,
+        "allowBudgetAdjustments": true
+      },
+      "isVisible": true,
+      "isRequired": true
+    },
+    {
+      "id": "vendor-contacts",
+      "type": "custom",
+      "title": "Vendor Contact Directory",
+      "position": {
+        "section": "sidebar",
+        "order": 1,
+        "width": "full"
+      },
+      "config": {
+        "showContactInfo": true,
+        "allowDirectMessaging": true,
+        "categorizeByService": true
+      },
+      "isVisible": true,
+      "isRequired": false
+    },
+    {
+      "id": "wedding-timeline",
+      "type": "timeline",
+      "title": "Wedding Timeline",
+      "position": {
+        "section": "main",
+        "order": 3,
+        "width": "full"
+      },
+      "isVisible": true,
+      "isRequired": false,
+      "config": {
+        "showMilestones": true,
+        "allowEditing": false
+      }
+    }
+  ],
+  "layout": {
+    "headerHeight": "120px",
+    "sidebarWidth": "320px",
+    "maxWidth": "1200px",
+    "spacing": "1.5rem",
+    "gridColumns": 12
+  },
+  "features": {
+    "allowClientCreation": false,
+    "showWeddingStats": true,
+    "showPlanningTools": true,
+    "enableNotifications": true,
+    "enableGuestCommunication": true,
+    "budgetTracking": true,
+    "vendorManagement": true,
+    "photoSharing": true,
+    "customSections": [
+      "inspiration-board",
+      "seating-chart",
+      "timeline-manager",
+      "gift-registry-links"
+    ],
+    "showTimeline": true
+  },
+  "styling": {
+    "componentSpacing": "1rem",
+    "borderRadius": "6px",
+    "shadowIntensity": "medium",
+    "animationStyle": "elegant",
+    "responsiveBreakpoints": true
+  }
+}

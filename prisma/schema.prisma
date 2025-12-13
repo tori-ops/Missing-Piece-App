@@ -1,0 +1,617 @@
+// The Missing Piece - Wedding Planning SaaS
+// Database Schema for Supabase PostgreSQL
+// Local Development + Production Ready
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum UserRole {
+  SUPERADMIN
+  TENANT
+  CLIENT
+}
+
+enum AccountStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  LOCKED
+  ARCHIVED
+}
+
+enum SessionType {
+  WEB
+  MOBILE
+  API
+  ADMIN
+}
+
+enum TwoFactorMethod {
+  EMAIL
+  SMS
+  TOTP
+  BACKUP_CODE
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+  ARCHIVED
+}
+
+enum SubscriptionTier {
+  FREE
+  TRIAL
+  PAID
+}
+
+enum ClientStatus {
+  ACTIVE
+  ONBOARDING
+  ARCHIVED
+  INACTIVE
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum AuditAction {
+  USER_CREATED
+  USER_UPDATED
+  USER_DELETED
+  PASSWORD_CHANGED
+  PASSWORD_RESET
+  EMAIL_VERIFIED
+  ACCOUNT_LOCKED
+  ACCOUNT_UNLOCKED
+  ACCOUNT_SUSPENDED
+  ACCOUNT_REACTIVATED
+  LOGIN_SUCCESSFUL
+  LOGIN_FAILED
+  LOGOUT
+  TENANT_CREATED
+  TENANT_UPDATED
+  TENANT_SUSPENDED
+  TENANT_REACTIVATED
+  CLIENT_CREATED
+  CLIENT_ARCHIVED
+  CLIENT_REACTIVATED
+  INVITE_CODE_GENERATED
+  INVITE_CODE_USED
+  INVITE_CODE_REVOKED
+  PAYMENT_RECORDED
+  SUBSCRIPTION_RENEWED
+  SUBSCRIPTION_EXPIRED
+  TWO_FACTOR_ENABLED
+  TWO_FACTOR_DISABLED
+  OAUTH_LINKED
+  OAUTH_UNLINKED
+}
+
+// ============================================================================
+// USERS & AUTHENTICATION
+// ============================================================================
+
+model User {
+  id                    String                @id @default(cuid())
+  
+  // Basic Info
+  email                 String?               @unique
+  firstName             String
+  lastName              String
+  phone                 String?
+  avatar                String?               // Supabase Storage path
+  
+  // Authentication
+  passwordHash          String?
+  role                  UserRole
+  accountStatus         AccountStatus         @default(PENDING)
+  isActive              Boolean               @default(true)
+  
+  // Password Management
+  mustChangePassword    Boolean               @default(false)
+  passwordChangedAt     DateTime?
+  passwordResetToken    String?               @unique
+  passwordResetExpires  DateTime?
+  
+  // Email Verification
+  emailVerified         DateTime?
+  emailVerificationToken String?              @unique
+  emailVerificationExpires DateTime?
+  
+  // Login Security
+  lastLoginAt           DateTime?
+  lastLoginIp           String?
+  failedLoginAttempts   Int                   @default(0)
+  lockedUntil           DateTime?
+  
+  // Multi-Tenant
+  tenantId              String?
+  clientId              String?               // For CLIENT role users, links to their client profile
+  
+  // 2FA
+  twoFactorEnabled      Boolean               @default(false)
+  twoFactorMethod       TwoFactorMethod?
+  twoFactorSecret       String?
+  twoFactorVerifiedAt   DateTime?
+  backupCodes           String?               // JSON array
+  
+  // Timestamps
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  
+  // Relations
+  tenant                Tenant?               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  clientProfile         ClientProfile?        @relation("ClientUser", fields: [clientId], references: [id], onDelete: Cascade)
+  sessions              Session[]
+  loginAttempts         LoginAttempt[]
+  passwordResets        PasswordReset[]
+  twoFactorChallenges   TwoFactorChallenge[]
+  auditLogs             AuditLog[]
+  devices               Device[]
+  oauthAccounts         OAuthAccount[]
+  createdClients        ClientProfile[]       @relation("CreatedByUser")
+  invitesCodes          InviteCode[]
+  payments              Payment[]
+  tenantAccessGranted   TenantAccess[]
+  
+  @@index([email])
+  @@index([tenantId])
+  @@index([clientId])
+  @@index([accountStatus])
+  @@index([role])
+  @@map("users")
+}
+
+// ============================================================================
+// SESSIONS & DEVICES
+// ============================================================================
+
+model Session {
+  id                    String                @id @default(cuid())
+  userId                String
+  
+  // Session Data
+  sessionType           SessionType           @default(WEB)
+  userAgent             String?
+  ipAddress             String?
+  deviceId              String?
+  
+  // Lifecycle
+  isActive              Boolean               @default(true)
+  expiresAt             DateTime
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  lastActivityAt        DateTime              @default(now())
+  
+  // Security
+  refreshToken          String?               @unique
+  refreshTokenExpires   DateTime?
+  
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([isActive])
+  @@map("sessions")
+}
+
+model Device {
+  id                    String                @id @default(cuid())
+  userId                String
+  
+  // Device Identification
+  deviceId              String
+  deviceName            String?
+  deviceType            String?               // mobile | tablet | desktop | web
+  
+  // Browser/OS Info
+  userAgent             String?
+  browser               String?
+  osName                String?
+  osVersion             String?
+  
+  // Trust
+  isTrusted             Boolean               @default(false)
+  trustedAt             DateTime?
+  trustToken            String?               @unique
+  
+  // Activity
+  lastUsedAt            DateTime?
+  lastIpAddress         String?
+  
+  // Lifecycle
+  isActive              Boolean               @default(true)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, deviceId])
+  @@index([userId])
+  @@index([isTrusted])
+  @@map("devices")
+}
+
+// ============================================================================
+// PASSWORD & 2FA
+// ============================================================================
+
+model PasswordReset {
+  id                    String                @id @default(cuid())
+  userId                String
+  
+  token                 String                @unique
+  tokenExpiresAt        DateTime
+  isUsed                Boolean               @default(false)
+  usedAt                DateTime?
+  
+  ipAddress             String?
+  userAgent             String?
+  
+  createdAt             DateTime              @default(now())
+  
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([token])
+  @@map("password_resets")
+}
+
+model TwoFactorChallenge {
+  id                    String                @id @default(cuid())
+  userId                String
+  
+  code                  String
+  codeExpiresAt         DateTime
+  method                TwoFactorMethod
+  
+  attempts              Int                   @default(0)
+  maxAttempts           Int                   @default(5)
+  isVerified            Boolean               @default(false)
+  verifiedAt            DateTime?
+  
+  sessionId             String?
+  ipAddress             String?
+  userAgent             String?
+  
+  createdAt             DateTime              @default(now())
+  
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([code])
+  @@map("two_factor_challenges")
+}
+
+// ============================================================================
+// OAUTH & THIRD-PARTY
+// ============================================================================
+
+model OAuthAccount {
+  id                    String                @id @default(cuid())
+  userId                String
+  
+  provider              String                // google | apple | facebook
+  providerAccountId     String
+  
+  accessToken           String?
+  refreshToken          String?
+  tokenExpires          DateTime?
+  
+  email                 String?
+  name                  String?
+  image                 String?
+  
+  connectedAt           DateTime              @default(now())
+  lastUsedAt            DateTime?
+  
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("oauth_accounts")
+}
+
+// ============================================================================
+// TENANTS
+// ============================================================================
+
+model Tenant {
+  id                    String                @id @default(cuid())
+  
+  // Business Profile (populated at creation by SuperAdmin)
+  firstName             String
+  lastName              String
+  businessName          String
+  phone                 String
+  email                 String                @unique
+  primary_email         String                @unique                  // Immutable login identifier
+  webAddress            String
+  
+  // Wedding Details
+  weddingDate           DateTime?
+  budget                Float?
+  
+  // Subscription
+  status                TenantStatus          @default(ACTIVE)
+  subscriptionTier      SubscriptionTier      @default(FREE)
+  subscriptionStartDate DateTime?
+  subscriptionEndDate   DateTime?
+  
+  // Notifications
+  notificationSentAt30Days DateTime?
+  notificationSentAt2Weeks DateTime?
+  
+  // Admin Notes
+  adminNotes            String?
+  
+  // ========================================================================
+  // BRANDING (White-label customization for client experience)
+  // ========================================================================
+  brandingPrimaryColor      String?           @default("#274E13")      // Primary color - accent/text color (dark)
+  brandingSecondaryColor    String?           @default("#D0CEB5")      // Secondary color - background color
+  brandingSecondaryColorOpacity Int?          @default(55)             // Secondary color opacity 0-100 (%)
+  brandingFontColor         String?           @default("#000000")      // Font color - universal text color (must be dark)
+  brandingLogoUrl           String?                                     // Logo image URL
+  brandingLogoBackgroundRemoval Boolean?      @default(false)          // Remove white background from logos
+  brandingCompanyName       String?                                     // Override for company display name
+  brandingTagline           String?                                     // Company tagline
+  brandingFaviconUrl        String?                                     // Favicon URL
+  brandingFooterText        String?                                     // Footer text/contact info
+  brandingFontFamily        String?           @default("'Poppins', sans-serif")  // Selected font family
+  brandingHeaderFontFamily  String?           @default("'Playfair Display', serif")  // Header font (h1, h2, h3)
+  brandingBodyFontFamily    String?           @default("'Poppins', sans-serif")  // Body text font
+  
+  // Lifecycle
+  isActive              Boolean               @default(true)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  
+  // Relations
+  users                 User[]
+  clientProfiles        ClientProfile[]
+  inviteCodes           InviteCode[]
+  payments              Payment[]
+  auditLogs             AuditLog[]
+  
+  @@index([status])
+  @@index([subscriptionTier])
+  @@index([email])
+  @@map("tenants")
+}
+
+// ============================================================================
+// CLIENT PROFILES & INVITES
+// ============================================================================
+
+enum ClientInviteStatus {
+  INVITED
+  ACTIVE
+  GRADUATED
+}
+
+model ClientProfile {
+  id                    String                @id @default(cuid())
+  tenantId              String
+  
+  // Couple 1 (Primary)
+  couple1FirstName      String
+  couple1LastName       String
+  
+  // Couple 2 (Optional)
+  couple2FirstName      String?
+  couple2LastName       String?
+  
+  // Contact Information (email is login identifier)
+  contactEmail          String                @unique
+  contactPhone          String?               // Main contact phone number (visible to tenant)
+  
+  // Address
+  addressLine1          String?
+  addressLine2          String?
+  addressCity           String?
+  addressState          String?
+  addressZip            String?
+  
+  // Wedding Details
+  weddingDate           DateTime?
+  weddingLocation       String?               // Venue name/location (e.g., "The Grand Ballroom")
+  budgetCents           Int?                  // in cents for precision
+  estimatedGuestCount   Int?                  // Estimated number of guests
+  
+  // Status (INVITED = temp password sent, hasn't logged in; ACTIVE = logged in; GRADUATED = wedding happened)
+  status                ClientInviteStatus    @default(INVITED)
+  
+  // Audit
+  createdByUserId       String?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  
+  // Relations
+  tenant                Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  users                 User[]                @relation("ClientUser")
+  inviteCodes           InviteCode[]
+  createdBy             User?                 @relation("CreatedByUser", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  tenantAccessList      TenantAccess[]
+  
+  @@index([tenantId])
+  @@index([contactEmail])
+  @@index([status])
+  @@map("client_profiles")
+}
+
+// ============================================================================
+// TENANT ACCESS TO CLIENT PROFILES
+// ============================================================================
+
+model TenantAccess {
+  id                    String                @id @default(cuid())
+  clientProfileId       String
+  tenantId              String
+  
+  // Access metadata
+  grantedAt             DateTime              @default(now())
+  grantedByClientUserId String?               // User ID of client who shared access
+  
+  // Relations
+  clientProfile         ClientProfile         @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  grantedByClient       User?                 @relation(fields: [grantedByClientUserId], references: [id], onDelete: SetNull)
+  
+  @@unique([clientProfileId, tenantId])
+  @@index([clientProfileId])
+  @@index([tenantId])
+  @@map("tenant_access")
+}
+
+model InviteCode {
+  id                    String                @id @default(cuid())
+  
+  // Relationship
+  tenantId              String
+  clientProfileId       String
+  createdByUserId       String
+  
+  // Code
+  code                  String
+  
+  // Email for second login
+  inviteEmail           String
+  
+  // Lifecycle
+  expiresAt             DateTime
+  isUsed                Boolean               @default(false)
+  usedAt                DateTime?
+  usedByUserId          String?
+  isRevoked             Boolean               @default(false)
+  revokedAt             DateTime?
+  
+  createdAt             DateTime              @default(now())
+  
+  // Relations
+  tenant                Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  clientProfile         ClientProfile         @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  createdBy             User                  @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  @@index([tenantId])
+  @@index([clientProfileId])
+  @@index([expiresAt])
+  @@map("invite_codes")
+}
+
+// ============================================================================
+// LOGIN TRACKING
+// ============================================================================
+
+model LoginAttempt {
+  id                    String                @id @default(cuid())
+  userId                String?
+  email                 String?
+  
+  success               Boolean
+  reason                String?               // invalid_password | user_not_found | account_locked | account_inactive | email_unverified | 2fa_required | 2fa_failed
+  
+  ipAddress             String
+  userAgent             String?
+  deviceId              String?
+  
+  country               String?
+  city                  String?
+  
+  createdAt             DateTime              @default(now())
+  
+  user                  User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([email])
+  @@index([success])
+  @@index([createdAt])
+  @@map("login_attempts")
+}
+
+// ============================================================================
+// PAYMENTS & BILLING
+// ============================================================================
+
+model Payment {
+  id                    String                @id @default(cuid())
+  tenantId              String
+  
+  // Payment Details
+  amountCents           Int                   // in cents
+  currency              String                @default("USD")
+  paymentDate           DateTime
+  status                PaymentStatus         @default(PENDING)
+  
+  // Description
+  description           String?
+  
+  // External Reference
+  transactionId         String?               @unique
+  invoiceNumber         String?               @unique
+  
+  // Recording
+  recordedByUserId      String
+  recordedAt            DateTime              @default(now())
+  
+  // Lifecycle
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  
+  // Relations
+  tenant                Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  recordedBy            User                  @relation(fields: [recordedByUserId], references: [id], onDelete: Restrict)
+  
+  @@index([tenantId])
+  @@index([paymentDate])
+  @@index([status])
+  @@map("payments")
+}
+
+// ============================================================================
+// AUDIT LOGGING
+// ============================================================================
+
+model AuditLog {
+  id                    String                @id @default(cuid())
+  
+  action                AuditAction
+  entity                String                // user | tenant | clientprofile | invitecode | payment
+  entityId              String?
+  
+  userId                String?
+  tenantId              String?
+  
+  changes               String?               // JSON
+  metadata              String?               // JSON
+  
+  ipAddress             String?
+  userAgent             String?
+  
+  createdAt             DateTime              @default(now())
+  
+  // Relations
+  user                  User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
+  tenant                Tenant?               @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([tenantId])
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

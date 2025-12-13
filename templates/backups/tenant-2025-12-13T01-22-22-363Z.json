@@ -1,0 +1,138 @@
+{
+  "id": "tenant-master",
+  "name": "Tenant Dashboard Template",
+  "type": "TENANT",
+  "version": "1.1",
+  "lastUpdated": "2025-12-13T01:22:22.343Z",
+  "updatedBy": "System Admin",
+  "components": [
+    {
+      "id": "tenant-header",
+      "type": "header",
+      "title": "Business Header with Branding",
+      "position": {
+        "section": "header",
+        "order": 1,
+        "width": "full"
+      },
+      "config": {
+        "showLogo": true,
+        "showCompanyName": true,
+        "showTagline": true,
+        "includeLogout": true
+      },
+      "isVisible": true,
+      "isRequired": true
+    },
+    {
+      "id": "business-stats",
+      "type": "stats",
+      "title": "Business Statistics Dashboard",
+      "position": {
+        "section": "main",
+        "order": 1,
+        "width": "full"
+      },
+      "config": {
+        "metrics": [
+          "total-clients",
+          "active-weddings",
+          "upcoming-weddings",
+          "monthly-revenue",
+          "client-satisfaction"
+        ],
+        "displayStyle": "cards",
+        "showTrends": true
+      },
+      "isVisible": true,
+      "isRequired": false
+    },
+    {
+      "id": "client-management",
+      "type": "client-list",
+      "title": "Client Management Interface",
+      "position": {
+        "section": "main",
+        "order": 2,
+        "width": "full"
+      },
+      "config": {
+        "showSearch": true,
+        "showFilters": true,
+        "sortOptions": [
+          "recent",
+          "wedding-date",
+          "alphabetical"
+        ],
+        "actions": [
+          "view",
+          "edit",
+          "email",
+          "archive"
+        ],
+        "pagination": true,
+        "itemsPerPage": 10
+      },
+      "isVisible": true,
+      "isRequired": true
+    },
+    {
+      "id": "add-client-form",
+      "type": "create-form",
+      "title": "New Client Creation Modal",
+      "position": {
+        "section": "main",
+        "order": 3,
+        "width": "full"
+      },
+      "config": {
+        "triggerType": "modal",
+        "triggerText": "Add New Client",
+        "requiredFields": [
+          "couple1FirstName",
+          "contactEmail",
+          "weddingDate",
+          "estimatedGuestCount"
+        ],
+        "autoSendWelcomeEmail": true
+      },
+      "isVisible": true,
+      "isRequired": true
+    }
+  ],
+  "layout": {
+    "headerHeight": "140px",
+    "maxWidth": "1400px",
+    "spacing": "2rem",
+    "gridColumns": 12,
+    "breakpoints": {
+      "mobile": "768px",
+      "tablet": "1024px",
+      "desktop": "1200px"
+    }
+  },
+  "features": {
+    "allowClientCreation": true,
+    "showBusinessStats": true,
+    "showUpcomingWeddings": true,
+    "enableNotifications": true,
+    "enableBrandingCustomization": true,
+    "allowLogoUpload": true,
+    "emailIntegration": true,
+    "customSections": [
+      "recent-activity",
+      "wedding-calendar",
+      "revenue-tracking",
+      "client-communications"
+    ],
+    "enableAnalytics": true,
+    "showRecentActivity": true
+  },
+  "styling": {
+    "componentSpacing": "1.5rem",
+    "borderRadius": "8px",
+    "shadowIntensity": "light",
+    "animationStyle": "smooth",
+    "responsiveBreakpoints": true
+  }
+}
