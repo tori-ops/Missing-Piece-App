@@ -217,26 +217,19 @@ export class DashboardTemplateManager {
 
 // Template Component Renderer
 export function renderTemplateComponent(
-  component: DashboardComponent, 
-  branding: any, 
-  userData: any
+  _component: DashboardComponent,
+  _branding: any,
+  _userData: any
 ): React.ComponentType {
   // This function would return the appropriate React component
   // based on the template configuration and user's branding
-  
-  const style = {
-    order: component.position.order,
-    width: component.position.width === 'full' ? '100%' : 
-           component.position.width === 'half' ? '50%' :
-           component.position.width === 'third' ? '33.33%' : '25%'
-  };
   
   // Component would be rendered with:
   // - Template-defined structure and functionality
   // - User-specific branding (colors, fonts, logos)
   // - User-specific data (clients, stats, etc.)
   
-  return null; // Placeholder - would return actual component
+  return (() => null) as React.ComponentType; // Placeholder - would return actual component
 }
 
 // Template Hook for React Components

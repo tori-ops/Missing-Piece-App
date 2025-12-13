@@ -136,19 +136,19 @@ export default async function ClientDashboard() {
                       💰 Budget: <strong>${(clientProfile.budgetCents / 100).toLocaleString()}</strong>
                     </p>
                   )}
-                  {clientProfile?.guestCount && (
+                  {clientProfile?.estimatedGuestCount && (
                     <p style={{ color: fontColor }}>
-                      👥 Guest Count: <strong>{clientProfile.guestCount}</strong>
+                      👥 Guest Count: <strong>{clientProfile.estimatedGuestCount}</strong>
                     </p>
                   )}
-                  {clientProfile?.venueName && (
+                  {clientProfile?.weddingLocation && (
                     <p style={{ color: fontColor }}>
-                      🏛️ Venue: <strong>{clientProfile.venueName}</strong>
+                      🏛️ Venue: <strong>{clientProfile.weddingLocation}</strong>
                     </p>
                   )}
-                  {clientProfile?.venueAddress && (
+                  {clientProfile?.addressLine1 && (
                     <p style={{ color: fontColor, fontSize: '0.9rem' }}>
-                      📍 {clientProfile.venueAddress}
+                      📍 {clientProfile.addressLine1}
                     </p>
                   )}
                 </>
