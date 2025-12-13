@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
 
     // Atomic transaction: create client and user together
     const result = await prisma.$transaction(async (tx) => {
-      // Get tenant branding to inherit
+      // Get tenant branding for welcome email (but don't store on client)
       const tenantBranding = await tx.tenant.findUnique({
         where: { id: user.tenantId! },
         select: {
@@ -168,7 +168,7 @@ export async function POST(req: NextRequest) {
         }
       });
 
-      // Create client profile with inherited branding
+      // Create client profile
       const clientProfile = await tx.clientProfile.create({
         data: {
           tenantId: user.tenantId!,
@@ -188,21 +188,7 @@ export async function POST(req: NextRequest) {
           weddingLocation: weddingLocation || null,
           estimatedGuestCount: estimatedGuestCount || null,
           status: 'INVITED',
-          createdByUserId: user.id,
-          // Inherit tenant branding
-          brandingPrimaryColor: tenantBranding?.brandingPrimaryColor || null,
-          brandingSecondaryColor: tenantBranding?.brandingSecondaryColor || null,
-          brandingSecondaryColorOpacity: tenantBranding?.brandingSecondaryColorOpacity || null,
-          brandingFontColor: tenantBranding?.brandingFontColor || null,
-          brandingLogoUrl: tenantBranding?.brandingLogoUrl || null,
-          brandingLogoBackgroundRemoval: tenantBranding?.brandingLogoBackgroundRemoval || null,
-          brandingCompanyName: tenantBranding?.brandingCompanyName || null,
-          brandingTagline: tenantBranding?.brandingTagline || null,
-          brandingFaviconUrl: tenantBranding?.brandingFaviconUrl || null,
-          brandingFooterText: tenantBranding?.brandingFooterText || null,
-          brandingFontFamily: tenantBranding?.brandingFontFamily || null,
-          brandingHeaderFontFamily: tenantBranding?.brandingHeaderFontFamily || null,
-          brandingBodyFontFamily: tenantBranding?.brandingBodyFontFamily || null,
+          createdByUserId: user.id
         }
       });
 
