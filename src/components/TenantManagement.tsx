@@ -67,28 +67,23 @@ export default function TenantManagement() {
     );
   }
 
-  const totalRevenue = tenants.reduce((sum, t) => sum + t.totalRevenue, 0);
-  const totalOutstanding = tenants.reduce((sum, t) => sum + t.outstandingPayments, 0);
+  const totalClients = tenants.reduce((sum, t) => sum + t.clientCount, 0);
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2 className={styles.title}>🏢 Tenant Management</h2>
-        <p className={styles.subtitle}>Manage all tenants and monitor revenue</p>
+        <h2 className={styles.title}>🏢 Planner Management</h2>
+        <p className={styles.subtitle}>Manage all planners and their clients</p>
       </div>
 
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Total Tenants</div>
+          <div className={styles.statLabel}>Total Planners</div>
           <div className={styles.statValue}>{tenants.length}</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Total Revenue</div>
-          <div className={styles.statValue}>${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Outstanding Payments</div>
-          <div className={styles.statValue} style={{ color: '#d97706' }}>${totalOutstanding.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+          <div className={styles.statLabel}>Total Clients</div>
+          <div className={styles.statValue}>{totalClients}</div>
         </div>
       </div>
 
