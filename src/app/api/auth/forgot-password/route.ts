@@ -102,7 +102,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const resetUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
+    // Build correct reset URL (handles VERCEL_URL, NEXTAUTH_URL, localhost)
+    const baseUrl = process.env.NEXTAUTH_URL || 
+                    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+    const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
     console.log('🔑 Password Reset URL:', resetUrl);
 
     return NextResponse.json({
