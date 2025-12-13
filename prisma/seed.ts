@@ -42,6 +42,68 @@ async function main() {
   console.log(`✓ SUPERADMIN created: ${superadmin.email}\n`);
 
   // ========================================================================
+  // CREATE TORI'S TENANT
+  // ========================================================================
+  console.log('🏢 Creating Tori tenant...');
+
+  const toriTenant = await prisma.tenant.upsert({
+    where: { primary_email: 'tori@missingpieceplanning.com' },
+    update: {},
+    create: {
+      primary_email: 'tori@missingpieceplanning.com',
+      firstName: 'Tori',
+      lastName: 'Admin',
+      businessName: 'The Missing Piece Planning',
+      phone: '555-0000',
+      email: 'tori@missingpieceplanning.com',
+      webAddress: 'www.missingpieceplanning.com',
+      status: 'ACTIVE',
+      subscriptionTier: 'PAID',
+      subscriptionStartDate: new Date(),
+      subscriptionEndDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+      isActive: true,
+      // Branding
+      brandingPrimaryColor: '#D0CEB5',
+      brandingSecondaryColor: '#F5F3EB',
+      brandingSecondaryColorOpacity: 70,
+      brandingFontColor: '#274E13',
+      brandingCompanyName: 'The Missing Piece Planning',
+      brandingTagline: 'Planning Made Perfect',
+      brandingHeaderFontFamily: "'Playfair Display', serif",
+      brandingBodyFontFamily: "'Poppins', sans-serif"
+    }
+  });
+
+  console.log(`✓ Tori tenant created: ${toriTenant.businessName}\n`);
+
+  // ========================================================================
+  // CREATE TORI TENANT USER
+  // ========================================================================
+  console.log('👤 Creating TORI tenant user...');
+
+  const toriPassword = await bcrypt.hash('Tori2025!', 12);
+  const toriUser = await prisma.user.upsert({
+    where: { email: 'tori@missingpieceplanning.com' },
+    update: {},
+    create: {
+      email: 'tori@missingpieceplanning.com',
+      firstName: 'Tori',
+      lastName: 'Admin',
+      phone: '555-0000',
+      role: 'TENANT',
+      tenantId: toriTenant.id,
+      accountStatus: 'ACTIVE',
+      emailVerified: new Date(),
+      passwordHash: toriPassword,
+      isActive: true,
+      mustChangePassword: false,
+      twoFactorEnabled: false
+    }
+  });
+
+  console.log(`✓ TORI tenant user created: ${toriUser.email}\n`);
+
+  // ========================================================================
   // CREATE TEST TENANT
   // ========================================================================
   console.log('🏢 Creating test tenant...');
@@ -213,6 +275,10 @@ async function main() {
   console.log('SUPERADMIN:');
   console.log('  Email: dean@missingpieceplanning.com');
   console.log('  Password: SuperAdmin123!\n');
+
+  console.log('TENANT 0 - The Missing Piece Planning (TORI):');
+  console.log('  Email: tori@missingpieceplanning.com');
+  console.log('  Password: Tori2025!\n');
 
   console.log('TENANT 1 - Elite Weddings Co:');
   console.log('  Email: sarah@eliteweddings.local');
