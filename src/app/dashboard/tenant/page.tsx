@@ -26,25 +26,24 @@ export default async function TenantDashboard() {
     redirect('/');
   }
 
-  // Get tenant info with clients in single query to avoid pooler issues
+  // Get tenant info
   const user = await prisma.user.findUnique({
     where: { email: session.user?.email || '' },
     include: { 
-      tenant: {
-        include: {
-          clientProfiles: {
-            include: { users: true },
-            orderBy: { createdAt: 'desc' }
-          }
-        }
-      },
+      tenant: true,
       clientProfile: true
     }
   });
 
   const tenantId = user?.tenantId || '';
   const tenant = user?.tenant;
-  const clients = tenant?.clientProfiles || [];
+
+  // Get clients
+  const clients = await prisma.clientProfile.findMany({
+    where: { tenantId },
+    include: { users: true },
+    orderBy: { createdAt: 'desc' }
+  });
 
   // Render dashboard using master template
   const dashboardConfig = await renderTemplateDashboard('TENANT', user, tenant, { clients });
