@@ -19,10 +19,44 @@ export default function ClientList({
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif"
 }: ClientListProps) {
-  const [clients] = useState(initialClients);
+  const [clients, setClients] = useState(initialClients);
   const [selectedClient, setSelectedClient] = useState<any>(null);
+  const [deletingClientId, setDeletingClientId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<'ALL' | 'OK' | 'BEHIND' | 'OVER'>('ALL');
   const [sortBy, setSortBy] = useState<'date' | 'name'>('date');
+
+  const handleDeleteClient = async (clientId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!confirm('Are you sure you want to delete this client? This action cannot be undone.')) {
+      return;
+    }
+
+    setDeletingClientId(clientId);
+    setDeleteError(null);
+
+    try {
+      const response = await fetch(`/api/tenant/clients/${clientId}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete client');
+      }
+
+      // Remove client from local state
+      setClients(clients.filter(c => c.id !== clientId));
+      setSelectedClient(null);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete client';
+      setDeleteError(message);
+      console.error('Error deleting client:', error);
+    } finally {
+      setDeletingClientId(null);
+    }
+  };
 
   // Placeholder status assignment (will be replaced with real logic later)
   const getClientStatus = (client: any) => {
@@ -86,6 +120,20 @@ export default function ClientList({
 
   return (
     <div style={{ fontFamily: bodyFontFamily }}>
+      {/* Error Message */}
+      {deleteError && (
+        <div style={{
+          background: '#FEE2E2',
+          border: '1px solid #FCA5A5',
+          color: '#991B1B',
+          padding: '1rem',
+          borderRadius: '8px',
+          marginBottom: '1rem',
+          fontSize: '0.95rem'
+        }}>
+          ❌ {deleteError}
+        </div>
+      )}
       {/* Filters & Sorting */}
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap', alignItems: 'center' }}>
         <div>
@@ -213,6 +261,24 @@ export default function ClientList({
                   }}>
                     {client.users?.length > 0 ? '✓ Active' : 'Pending'}
                   </span>
+                  <button
+                    onClick={(e) => handleDeleteClient(client.id, e)}
+                    disabled={deletingClientId === client.id}
+                    style={{
+                      background: '#DC2626',
+                      color: 'white',
+                      border: 'none',
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: '6px',
+                      fontSize: '0.85rem',
+                      fontWeight: '600',
+                      cursor: deletingClientId === client.id ? 'not-allowed' : 'pointer',
+                      opacity: deletingClientId === client.id ? 0.6 : 1,
+                      transition: 'opacity 0.2s'
+                    }}
+                  >
+                    {deletingClientId === client.id ? '⏳ Deleting...' : '🗑️ Delete'}
+                  </button>
                 </div>
               </div>
             </div>
