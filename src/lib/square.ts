@@ -1,6 +1,5 @@
 
-import square from 'square';
-const { Client, Environment } = square;
+import { Client, Environment } from 'square';
 
 const squareClient = new Client({
   environment: Environment.Sandbox,
