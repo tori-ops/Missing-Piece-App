@@ -593,7 +593,7 @@ export const TASK_TEMPLATES: TaskTemplate[] = [
     importance: 2,
   },
   {
-    key: k("8-9 months out", "Discuss any "no" flowers due to allergies or personal dislike"),
+    key: k("8-9 months out", "Discuss any \"no\" flowers due to allergies or personal dislike"),
     title: 'Discuss any "no" flowers due to allergies or personal dislike',
     section: "8-9 months out",
     owner: "client",
