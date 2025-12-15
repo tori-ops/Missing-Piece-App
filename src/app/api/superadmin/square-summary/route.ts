@@ -15,7 +15,9 @@ export async function GET() {
     let nextPaymentDue: string | null = null;
 
     for (const payment of payments) {
-      const amount = payment.amountMoney?.amount ? payment.amountMoney.amount / 100 : 0;
+      // Square API returns amount as BigInt, convert to Number for math
+      const rawAmount = payment.amountMoney?.amount;
+      const amount = rawAmount ? Number(rawAmount) / 100 : 0;
       totalRevenue += amount;
       if (payment.createdAt && new Date(payment.createdAt) >= yearStart) {
         ytdRevenue += amount;
