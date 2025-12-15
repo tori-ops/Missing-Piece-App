@@ -34,9 +34,9 @@ export async function GET() {
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
-  } catch (error) {
+  } catch (error: any) {
     return new Response(
-      JSON.stringify({ error: error.message || 'Failed to fetch Square summary.' }),
+      JSON.stringify({ error: error?.message || 'Failed to fetch Square summary.' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
