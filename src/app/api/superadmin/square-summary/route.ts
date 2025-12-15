@@ -1,7 +1,6 @@
-import { NextRequest } from 'next/server';
 import squareClient from '@/lib/square';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // Fetch all payments
     const paymentsApi = squareClient.paymentsApi;
