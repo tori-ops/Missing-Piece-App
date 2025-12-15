@@ -20,36 +20,6 @@ transporter.verify((error) => {
   }
 });
 
-// Helper function to build correct URLs for email links
-function getBaseUrl(): string {
-  // Production: always use Vercel URL
-  if (process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production') {
-    return 'https://missing-piece-app.vercel.app';
-  }
-  
-  // Priority order: NEXTAUTH_URL > VERCEL_URL > localhost
-  if (process.env.NEXTAUTH_URL && process.env.NEXTAUTH_URL.startsWith('http')) {
-    return process.env.NEXTAUTH_URL;
-  }
-  
-  if (process.env.VERCEL_URL) {
-    // Vercel automatically sets VERCEL_URL but needs https prefix
-    return `https://${process.env.VERCEL_URL}`;
-  }
-  
-  // Development fallback
-  return 'http://localhost:3000';
-}
-
-function buildResetLink(token: string): string {
-  const baseUrl = getBaseUrl();
-  return `${baseUrl}/reset-password?token=${token}`;
-}
-
-function buildPortalLink(): string {
-  return getBaseUrl();
-}
-
 interface WelcomeEmailData {
   recipientEmail: string;
   recipientName: string;
@@ -88,18 +58,17 @@ function extractFirstName(fullName: string): string {
 
 export async function sendWelcomeEmail(data: WelcomeEmailData) {
   try {
-    const resetLink = buildResetLink(data.resetToken);
-    const portalLink = buildPortalLink();
+    const resetLink = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${data.resetToken}`;
     
     let subject: string;
     let htmlContent: string;
     
     if (data.role === 'TENANT') {
       subject = `Welcome to The Missing Piece - Your Business Account is Ready!`;
-      htmlContent = generateTenantWelcomeEmail(data, resetLink, portalLink);
+      htmlContent = generateTenantWelcomeEmail(data, resetLink);
     } else {
       subject = `Welcome to ${data.tenantBusinessName} - Your Wedding Planning Portal is Ready!`;
-      htmlContent = generateClientWelcomeEmail(data, resetLink, portalLink);
+      htmlContent = generateClientWelcomeEmail(data, resetLink);
     }
 
     const mailOptions = {
@@ -111,7 +80,6 @@ export async function sendWelcomeEmail(data: WelcomeEmailData) {
 
     const info = await transporter.sendMail(mailOptions);
     console.log('✅ Email sent successfully:', info.messageId);
-    console.log('   Reset Link:', resetLink);
     
     return {
       success: true,
@@ -126,7 +94,7 @@ export async function sendWelcomeEmail(data: WelcomeEmailData) {
   }
 }
 
-function generateTenantWelcomeEmail(data: WelcomeEmailData, resetLink: string, portalLink: string): string {
+function generateTenantWelcomeEmail(data: WelcomeEmailData, resetLink: string): string {
   const firstName = extractFirstName(data.recipientName);
   
   return `
@@ -225,7 +193,7 @@ function generateTenantWelcomeEmail(data: WelcomeEmailData, resetLink: string, p
       
       <h3>📧 Your Login Details:</h3>
       <p><strong>Email:</strong> ${data.recipientEmail}<br>
-      <strong>Portal:</strong> <a href="${portalLink}">${portalLink}</a></p>
+      <strong>Portal:</strong> <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}">${process.env.NEXTAUTH_URL || 'http://localhost:3000'}</a></p>
       
       <p>If you have any questions or need assistance, don't hesitate to reach out to our support team.</p>
       
@@ -249,7 +217,7 @@ function generateTenantWelcomeEmail(data: WelcomeEmailData, resetLink: string, p
 </html>`;
 }
 
-function generateClientWelcomeEmail(data: WelcomeEmailData, resetLink: string, portalLink: string): string {
+function generateClientWelcomeEmail(data: WelcomeEmailData, resetLink: string): string {
   const firstName = extractFirstName(data.recipientName);
   const branding = data.tenantBranding;
   
@@ -373,7 +341,7 @@ function generateClientWelcomeEmail(data: WelcomeEmailData, resetLink: string, p
       
       <h3>📧 Your Login Details:</h3>
       <p><strong>Email:</strong> ${data.recipientEmail}<br>
-      <strong>Portal:</strong> <a href="${portalLink}">${portalLink}</a></p>
+      <strong>Portal:</strong> <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}">${process.env.NEXTAUTH_URL || 'http://localhost:3000'}</a></p>
       
       <p>We're excited to be part of your wedding journey!</p>
       
@@ -397,7 +365,7 @@ function generateClientWelcomeEmail(data: WelcomeEmailData, resetLink: string, p
 
 export async function sendPasswordResetEmail(recipientEmail: string, resetToken: string, recipientName: string) {
   try {
-    const resetLink = buildResetLink(resetToken);
+    const resetLink = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
     
     const mailOptions = {
       from: process.env.EMAIL_FROM || 'The Missing Piece <noreply@missingpiece.com>',

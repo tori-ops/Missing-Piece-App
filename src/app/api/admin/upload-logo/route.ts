@@ -1,11 +1,13 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-import { put } from '@vercel/blob';
+import { writeFile, mkdir } from 'fs/promises';
+import { existsSync } from 'fs';
+import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
+const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads');
 const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
 const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'svg'];
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(request: Request) {
   try {
@@ -29,14 +31,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
-      return Response.json(
-        { error: 'File size exceeds 5MB limit' },
-        { status: 400 }
-      );
-    }
-
     // Validate file type
     if (!ALLOWED_TYPES.includes(file.type)) {
       return Response.json(
@@ -55,21 +49,25 @@ export async function POST(request: Request) {
       );
     }
 
-    // Convert file to buffer
-    const buffer = await file.arrayBuffer();
+    // Ensure uploads directory exists
+    if (!existsSync(UPLOAD_DIR)) {
+      await mkdir(UPLOAD_DIR, { recursive: true });
+    }
 
     // Generate unique filename
     const ext = fileName.split('.').pop();
     const uniqueFileName = `${fileType}-${uuidv4()}.${ext}`;
+    const filePath = join(UPLOAD_DIR, uniqueFileName);
 
-    // Upload to Vercel Blob
-    const blob = await put(uniqueFileName, buffer, {
-      access: 'public',
-      contentType: file.type,
-    });
+    // Convert file to buffer and write
+    const buffer = await file.arrayBuffer();
+    await writeFile(filePath, Buffer.from(buffer));
+
+    // Return relative path for database storage
+    const relativePath = `/uploads/${uniqueFileName}`;
 
     return Response.json(
-      { filePath: blob.url },
+      { filePath: relativePath },
       { status: 200 }
     );
   } catch (error) {

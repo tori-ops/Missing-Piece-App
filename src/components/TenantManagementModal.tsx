@@ -28,8 +28,8 @@ export default function TenantManagementModal() {
           e.currentTarget.style.boxShadow = 'none';
         }}
       >
-        <h3 style={{ color: '#274E13', margin: '0 0 0.5rem 0' }}>📊 Planner Management</h3>
-        <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>Create, manage, and monitor all planners</p>
+        <h3 style={{ color: '#274E13', margin: '0 0 0.5rem 0' }}>📊 Tenant Management</h3>
+        <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>Create, manage, and monitor all tenants</p>
       </button>
 
       {showModal && (
