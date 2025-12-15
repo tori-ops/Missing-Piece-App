@@ -389,6 +389,8 @@ model Tenant {
   inviteCodes           InviteCode[]
   payments              Payment[]
   auditLogs             AuditLog[]
+  taskTemplates         TaskTemplate[] @relation("TenantTaskTemplates")
+  pushNotifications     PushNotification[] @relation("TenantPushNotifications")
   
   @@index([status])
   @@index([subscriptionTier])
@@ -449,6 +451,8 @@ model ClientProfile {
   inviteCodes           InviteCode[]
   createdBy             User?                 @relation("CreatedByUser", fields: [createdByUserId], references: [id], onDelete: SetNull)
   tenantAccessList      TenantAccess[]
+  tasks                 Task[]
+  pushNotifications     PushNotification[]
   
   @@index([tenantId])
   @@index([contactEmail])
@@ -580,6 +584,94 @@ model Payment {
   @@index([paymentDate])
   @@index([status])
   @@map("payments")
+}
+
+// ============================================================================
+// WEDDING PLANNING TASKS & TIMELINE
+// ============================================================================
+
+model TaskTemplate {
+  id                 String   @id @default(cuid())
+  key                String   @unique // e.g., "11_months_out_review_service_agreement"
+  title              String
+  section            String   // "11 months out", "10 months out", etc.
+  category           String   // "Vendors & Bookings", "Timeline & Decisions", etc.
+  owner              String   // "client" or "planner"
+  importance         Int      // 1-5
+  milestone          Boolean  @default(false)
+  confetti           Boolean  @default(false)
+  pushOnActivate     Boolean  @default(false)
+  
+  tenantId           String?  // null = default template, or tenant-specific
+  tenant             Tenant?  @relation("TenantTaskTemplates", fields: [tenantId], references: [id], onDelete: SetNull)
+  
+  tasks              Task[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([section])
+  @@index([category])
+  @@index([importance])
+  @@map("task_templates")
+}
+
+model Task {
+  id                 String   @id @default(cuid())
+  clientProfileId    String
+  clientProfile      ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  
+  taskTemplateId     String
+  taskTemplate       TaskTemplate @relation(fields: [taskTemplateId], references: [id], onDelete: Restrict)
+  
+  status             String   @default("NOT_STARTED")
+  // NOT_STARTED | ACTIVE | OVERDUE | COMPLETED | SKIPPED | ASK_PLANNER | OPTIONAL
+  
+  dueDate            DateTime // Calculated: weddingDate - (monthsOut * 30)
+  activationDate     DateTime // When task enters 30-day window
+  completedAt        DateTime?
+  isOverdue          Boolean  @default(false)
+  
+  notes              String?
+  requestHelp        Boolean  @default(false)
+  
+  notifications      PushNotification[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([clientProfileId])
+  @@index([taskTemplateId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([isOverdue])
+  @@map("tasks")
+}
+
+model PushNotification {
+  id                 String   @id @default(cuid())
+  tenantId           String   // The planner receiving the notification
+  tenant             Tenant   @relation("TenantPushNotifications", fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  clientProfileId    String
+  clientProfile      ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  
+  taskId             String?
+  task               Task?    @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  
+  type               String   // "TASK_OVERDUE", "TASK_COMPLETED", "TASK_SKIPPED_HIGH", "TASK_HELP_REQUESTED"
+  title              String
+  message            String
+  
+  sentAt             DateTime @default(now())
+  readAt             DateTime?
+  createdAt          DateTime @default(now())
+
+  @@index([tenantId])
+  @@index([clientProfileId])
+  @@index([taskId])
+  @@index([type])
+  @@index([sentAt])
+  @@map("push_notifications")
 }
 
 // ============================================================================
