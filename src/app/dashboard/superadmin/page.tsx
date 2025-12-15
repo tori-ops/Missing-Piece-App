@@ -14,11 +14,17 @@ export default async function SuperAdminDashboard() {
   }
 
   return (
-    <div style={{ padding: '2rem', minHeight: '100vh', background: '#D0CEB5' }}>
+    <div
+      style={{
+        padding: '2rem',
+        minHeight: '100vh',
+        background: "url('/background.png') center center / cover no-repeat fixed",
+      }}
+    >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <img 
-            src="/mp-logo.png" 
+          <img
+            src="/mp-logo.png"
             alt="The Missing Piece Logo"
             style={{ height: '60px', width: 'auto' }}
           />
@@ -26,15 +32,17 @@ export default async function SuperAdminDashboard() {
         </div>
         <LogoutButton />
       </div>
-      
-      <div style={{ 
-        background: 'white', 
-        border: '2px solid #274E13', 
-        borderRadius: '8px', 
-        padding: '2rem',
-        marginTop: '2rem',
-        boxShadow: '0 10px 40px rgba(39, 78, 19, 0.15)'
-      }}>
+
+      <div
+        style={{
+          background: 'rgba(255,255,255,0.85)',
+          border: '2px solid #274E13',
+          borderRadius: '8px',
+          padding: '2rem',
+          marginTop: '2rem',
+          boxShadow: '0 10px 40px rgba(39, 78, 19, 0.15)',
+        }}
+      >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
           <h2 style={{ color: '#274E13', margin: 0 }}>Welcome, {session.user?.name || 'SuperAdmin'}</h2>
           <CreateTenantFormModal />
@@ -42,9 +50,8 @@ export default async function SuperAdminDashboard() {
         <p style={{ color: '#666', marginTop: '1rem', lineHeight: '1.6' }}>
           You have access to all system management features:
         </p>
-        
+
         <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-          
           <TenantManagementModal />
 
           <div style={{
