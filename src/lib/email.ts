@@ -22,8 +22,13 @@ transporter.verify((error) => {
 
 // Helper function to build correct URLs for email links
 function getBaseUrl(): string {
+  // Production: always use Vercel URL
+  if (process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production') {
+    return 'https://missing-piece-app.vercel.app';
+  }
+  
   // Priority order: NEXTAUTH_URL > VERCEL_URL > localhost
-  if (process.env.NEXTAUTH_URL) {
+  if (process.env.NEXTAUTH_URL && process.env.NEXTAUTH_URL.startsWith('http')) {
     return process.env.NEXTAUTH_URL;
   }
   
