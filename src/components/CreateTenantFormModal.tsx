@@ -33,7 +33,9 @@ export default function CreateTenantFormModal() {
           e.currentTarget.style.background = '#274E13';
         }}
       >
-        ➕
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 7v18M7 16h18" stroke="white" strokeWidth="3" strokeLinecap="round"/>
+        </svg>
       </button>
 
       {showModal && (
