@@ -19,10 +19,7 @@ const SuperAdminDashboard: React.FC = () => {
 
   useEffect(() => {
     async function fetchData() {
-      // Fetch tenants summary (replace with real API route)
-      const tenantsRes = await fetch('/api/superadmin/tenants-summary');
-      const tenantsData = await tenantsRes.json();
-      // setTenants(tenantsData); // removed: tenants state is unused
+      // Fetch tenants summary removed (no longer used)
       // Fetch Square summary
       const squareRes = await fetch('/api/superadmin/square-summary');
       const squareData = await squareRes.json();
