@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import CreateTenantForm from './CreateTenantForm';
 import styles from './SuperAdminDashboard.module.css';
 
 
@@ -208,7 +209,6 @@ const SuperAdminDashboard: React.FC = () => {
             <div className={styles.modalBox} onClick={e => e.stopPropagation()}>
               <h2 className={styles.modalTitle}>Add New Tenant</h2>
               <div className={styles.modalDesc}>
-                <import CreateTenantForm from './CreateTenantForm' />
                 <CreateTenantForm onSuccess={() => setModal(null)} />
               </div>
               <button className={styles.modalCloseBtn} onClick={() => setModal(null)}>
