@@ -7,6 +7,43 @@ interface TenantSummary {
   businessName: string;
   clientCount: number;
   subscriptionTier: string;
+  status: string;
+  nextPaymentDue: string | null;
+  revenueYTD: number;
+  revenueTotal: number;
+}
+
+interface SquareSummary {
+  totalRevenue: number;
+  ytdRevenue: number;
+  nextPaymentDue: string | null;
+  paymentCount: number;
+}
+
+const SuperAdminDashboard: React.FC = () => {
+  const [tenants, setTenants] = useState<TenantSummary[]>([]);
+  const [square, setSquare] = useState<SquareSummary | null>(null);
+  const [search, setSearch] = useState('');
+  const [modal, setModal] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      // Fetch tenants summary (replace with real API route)
+      const tenantsRes = await fetch('/api/superadmin/tenants-summary');
+      const tenantsData = await tenantsRes.json();
+      setTenants(tenantsData);
+      // Fetch Square summary
+      const squareRes = await fetch('/api/superadmin/square-summary');
+      const squareData = await squareRes.json();
+      setSquare(squareData);
+    }
+    fetchData();
+  }, []);
+
+  const handleCardClick = (feature: string) => {
+    setModal(feature);
+  };
+
   return (
     <div className={styles.root}>
       <h1 className={styles.header}>SuperAdmin Dashboard</h1>
@@ -23,11 +60,11 @@ interface TenantSummary {
         <div className={styles.revenueCard}>
           <h3 className={styles.revenueTitle}>Total Revenue (YTD)</h3>
           <div className={styles.revenueAmount}>
-            ${square?.ytdRevenue.toLocaleString()}
+            ${square?.ytdRevenue?.toLocaleString()}
           </div>
           <h4 className={styles.revenueSubtitle}>All-Time Revenue</h4>
           <div className={styles.revenueTotal}>
-            ${square?.totalRevenue.toLocaleString()}
+            ${square?.totalRevenue?.toLocaleString()}
           </div>
           <div className={styles.revenueMeta}>
             Payments: {square?.paymentCount}
