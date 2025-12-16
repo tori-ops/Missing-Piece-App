@@ -2,16 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './SuperAdminDashboard.module.css';
 
-interface TenantSummary {
-  id: string;
-  businessName: string;
-  clientCount: number;
-  subscriptionTier: string;
-  status: string;
-  nextPaymentDue: string | null;
-  revenueYTD: number;
-  revenueTotal: number;
-}
+
 
 interface SquareSummary {
   totalRevenue: number;
@@ -31,7 +22,7 @@ const SuperAdminDashboard: React.FC = () => {
       // Fetch tenants summary (replace with real API route)
       const tenantsRes = await fetch('/api/superadmin/tenants-summary');
       const tenantsData = await tenantsRes.json();
-      setTenants(tenantsData);
+      // setTenants(tenantsData); // removed: tenants state is unused
       // Fetch Square summary
       const squareRes = await fetch('/api/superadmin/square-summary');
       const squareData = await squareRes.json();
