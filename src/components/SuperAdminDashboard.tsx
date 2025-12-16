@@ -12,14 +12,18 @@ interface SquareSummary {
 }
 
 const SuperAdminDashboard: React.FC = () => {
-  // const [tenants, setTenants] = useState<TenantSummary[]>([]);
+  const [tenants, setTenants] = useState<any[]>([]);
+  const [showTenants, setShowTenants] = useState(false);
   const [square, setSquare] = useState<SquareSummary | null>(null);
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
-      // Fetch tenants summary removed (no longer used)
+      // Fetch tenants summary (restored)
+      const tenantsRes = await fetch('/api/superadmin/tenants-summary');
+      const tenantsData = await tenantsRes.json();
+      setTenants(tenantsData);
       // Fetch Square summary
       const squareRes = await fetch('/api/superadmin/square-summary');
       const squareData = await squareRes.json();
@@ -79,11 +83,50 @@ const SuperAdminDashboard: React.FC = () => {
           You have access to all system management features:
         </p>
         <div className={styles.featureGrid}>
-          <div className={styles.featureCard}>
-            Tenant Management
+          <div
+            className={`${styles.featureCard} ${styles.featureCardClickable}`}
+            onClick={() => setShowTenants(!showTenants)}
+            tabIndex={0}
+            role="button"
+            aria-label="Tenant Management"
+          >
+            <span className={styles.featureCardTitle}>🏢 Tenant Management</span>
             <div className={styles.featureCardSub}>
               Create, manage, and monitor all tenants
             </div>
+            {showTenants && (
+              <div style={{ marginTop: '1rem' }}>
+                <table style={{ width: '100%', background: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 8px #0001', fontSize: '0.95rem' }}>
+                  <thead style={{ background: '#D0CEB5' }}>
+                    <tr>
+                      <th style={{ padding: '0.5rem' }}>Business Name</th>
+                      <th>Status</th>
+                      <th>Subscription</th>
+                      <th>Clients</th>
+                      <th>Revenue (YTD)</th>
+                      <th>Revenue (Total)</th>
+                      <th>Next Payment Due</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tenants.map(tenant => (
+                      <tr key={tenant.id}>
+                        <td style={{ padding: '0.5rem' }}>{tenant.businessName}</td>
+                        <td>{tenant.status}</td>
+                        <td>{tenant.subscriptionTier}</td>
+                        <td>{tenant.clientCount}</td>
+                        <td>${tenant.revenueYTD?.toLocaleString()}</td>
+                        <td>${tenant.revenueTotal?.toLocaleString()}</td>
+                        <td>{tenant.nextPaymentDue || 'N/A'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div style={{ marginTop: '0.5rem', color: '#274E13', fontWeight: 500 }}>
+                  Tracking {tenants.length} tenants
+                </div>
+              </div>
+            )}
           </div>
           <div
             className={`${styles.featureCard} ${styles.featureCardClickable}`}
