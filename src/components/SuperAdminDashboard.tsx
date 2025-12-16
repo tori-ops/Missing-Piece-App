@@ -207,10 +207,10 @@ const SuperAdminDashboard: React.FC = () => {
           <div className={styles.modalOverlay} onClick={() => setModal(null)}>
             <div className={styles.modalBox} onClick={e => e.stopPropagation()}>
               <h2 className={styles.modalTitle}>Add New Tenant</h2>
-              {/* You can render your CreateTenantForm here */}
-              <p className={styles.modalDesc}>
-                Tenant creation form goes here.
-              </p>
+              <div className={styles.modalDesc}>
+                <import CreateTenantForm from './CreateTenantForm' />
+                <CreateTenantForm onSuccess={() => setModal(null)} />
+              </div>
               <button className={styles.modalCloseBtn} onClick={() => setModal(null)}>
                 Close
               </button>
