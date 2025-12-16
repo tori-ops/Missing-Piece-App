@@ -187,52 +187,7 @@ const SuperAdminDashboard: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
-  );
-              width: '100vw',
-              height: '100vh',
-              background: 'rgba(0,0,0,0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000,
-            }}
-            onClick={() => setModal(null)}
-          >
-            <div
-              style={{
-                background: 'white',
-                borderRadius: '10px',
-                padding: '2rem 3rem',
-                minWidth: '320px',
-                boxShadow: '0 4px 32px rgba(0,0,0,0.15)',
-                textAlign: 'center',
-              }}
-              onClick={e => e.stopPropagation()}
-            >
-              <h2 style={{ color: '#274E13' }}>Add New Tenant</h2>
-              {/* You can render your CreateTenantForm here */}
-              <p style={{ color: '#666', margin: '1rem 0 2rem' }}>
-                Tenant creation form goes here.
-              </p>
-              <button
-                style={{
-                  background: '#274E13',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '0.5rem 1.5rem',
-                  fontSize: '1rem',
-                  cursor: 'pointer',
-                }}
-                onClick={() => setModal(null)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+
     </div>
   );
 };
