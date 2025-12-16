@@ -21,7 +21,7 @@ interface SquareSummary {
 }
 
 const SuperAdminDashboard: React.FC = () => {
-  const [tenants, setTenants] = useState<TenantSummary[]>([]);
+  // const [tenants, setTenants] = useState<TenantSummary[]>([]);
   const [square, setSquare] = useState<SquareSummary | null>(null);
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState<string | null>(null);
