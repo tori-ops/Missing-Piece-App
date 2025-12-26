@@ -3,6 +3,19 @@ import squareClient from '@/lib/square';
 export async function GET() {
   try {
     // Fetch all payments
+    if (!squareClient || !squareClient.paymentsApi) {
+      return new Response(
+        JSON.stringify({
+          totalRevenue: 0,
+          ytdRevenue: 0,
+          nextPaymentDue: null,
+          paymentCount: 0,
+          message: 'Square client not configured'
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const paymentsApi = squareClient.paymentsApi;
     const { result } = await paymentsApi.listPayments();
     const payments = result.payments || [];
@@ -37,9 +50,17 @@ export async function GET() {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error: any) {
+    // Return zero values instead of error to allow dashboard to load
+    console.error('Square summary error:', error?.message);
     return new Response(
-      JSON.stringify({ error: error?.message || 'Failed to fetch Square summary.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({
+        totalRevenue: 0,
+        ytdRevenue: 0,
+        nextPaymentDue: null,
+        paymentCount: 0,
+        error: 'Square not available'
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }

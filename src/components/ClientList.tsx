@@ -13,6 +13,7 @@ interface ClientListProps {
 }
 
 export default function ClientList({ 
+  tenantId,
   clients: initialClients, 
   primaryColor = '#274E13', 
   fontColor = '#000000', 
@@ -74,7 +75,7 @@ export default function ClientList({
     return (
       <div style={{
         background: `${primaryColor}15`,
-        border: `2px dashed ${primaryColor}40`,
+        border: `1px dashed ${primaryColor}40`,
         borderRadius: '12px',
         padding: '3rem 2rem',
         textAlign: 'center'
@@ -172,7 +173,7 @@ export default function ClientList({
                     fontSize: '1.3rem',
                     fontWeight: '600'
                   }}>
-                    {client.couple1FirstName} & {client.couple2FirstName || ''} {client.couple1LastName}
+                    {client.couple1FirstName} & {client.couple2FirstName || ''}
                   </h3>
                   <p style={{ margin: '0.25rem 0', color: fontColor, opacity: 0.8, fontSize: '0.95rem' }}>
                     💍 Wedding: <strong>{weddingDate}</strong>
@@ -224,6 +225,7 @@ export default function ClientList({
       {selectedClient && (
         <ClientDetailModal
           client={selectedClient}
+          tenantId={tenantId}
           primaryColor={primaryColor}
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}

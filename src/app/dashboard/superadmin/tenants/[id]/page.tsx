@@ -41,7 +41,7 @@ export default async function TenantEditPage({ params }: { params: Promise<{ id:
 
   return (
     <div style={{ padding: '2rem', minHeight: '100vh', background: '#D0CEB5' }}>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         {/* Welcome Message */}
         <p style={{ color: '#274E13', margin: '0 0 1.5rem 0', fontSize: '1rem', fontWeight: '500' }}>
           Welcome back, {tenant.firstName || 'Admin'}
@@ -110,8 +110,9 @@ export default async function TenantEditPage({ params }: { params: Promise<{ id:
               webAddress: tenant.webAddress || undefined,
               status: tenant.status,
               subscriptionTier: tenant.subscriptionTier,
-              weddingDate: undefined,
-              budget: undefined
+              streetAddress: tenant.streetAddress || undefined,
+              city: tenant.city || undefined,
+              state: tenant.state || undefined
             }} 
           />
         </div>

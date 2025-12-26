@@ -344,9 +344,10 @@ model Tenant {
   primary_email         String                @unique                  // Immutable login identifier
   webAddress            String
   
-  // Wedding Details
-  weddingDate           DateTime?
-  budget                Float?
+  // Address Details
+  streetAddress         String?
+  city                  String?
+  state                 String?
   
   // Subscription
   status                TenantStatus          @default(ACTIVE)

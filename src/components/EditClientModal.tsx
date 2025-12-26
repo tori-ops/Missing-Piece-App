@@ -19,7 +19,7 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
     couple2FirstName: client.couple2FirstName || '',
     couple2LastName: client.couple2LastName || '',
     weddingDate: client.weddingDate ? new Date(client.weddingDate).toISOString().split('T')[0] : '',
-    budget: client.overallBudgetCents ? (client.overallBudgetCents / 100).toString() : '',
+    budget: client.budgetCents ? (client.budgetCents / 100).toString() : '',
     status: client.status || 'ACTIVE'
   });
 
@@ -50,7 +50,7 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
           couple2FirstName: formData.couple2FirstName,
           couple2LastName: formData.couple2LastName,
           weddingDate: formData.weddingDate,
-          budget: formData.budget ? parseInt(formData.budget) * 100 : null,
+          budget: formData.budget ? parseFloat(formData.budget) : null,
           status: formData.status
         })
       });

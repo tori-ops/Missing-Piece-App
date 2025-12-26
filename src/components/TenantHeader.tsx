@@ -21,8 +21,9 @@ interface TenantHeaderProps {
     webAddress?: string;
     status: string;
     subscriptionTier: string;
-    weddingDate?: string;
-    budget?: number;
+    streetAddress?: string;
+    city?: string;
+    state?: string;
   };
   logoutButton: React.ReactNode;
 }

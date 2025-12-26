@@ -1,13 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
+import { revalidatePath } from 'next/cache';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
+    
+    console.log('Update tenant session:', { 
+      sessionExists: !!session, 
+      role: (session?.user as any)?.role,
+      email: (session?.user as any)?.email 
+    });
 
     if (!session || (session.user as any)?.role !== 'SUPERADMIN') {
+      console.error('Unauthorized attempt:', { session, role: (session?.user as any)?.role });
       return NextResponse.json(
         { error: 'Unauthorized: Only superadmins can update tenants' },
         { status: 403 }
@@ -35,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     // Update basic info if provided
     if (basicInfo) {
-      const { firstName, lastName, businessName, phone, email, webAddress, status, subscriptionTier, weddingDate, budget } = basicInfo;
+      const { firstName, lastName, businessName, phone, email, webAddress, status, subscriptionTier, streetAddress, city, state } = basicInfo;
 
       // Validate required fields
       if (!businessName?.trim() || !email?.trim()) {
@@ -62,16 +70,28 @@ export async function POST(request: NextRequest) {
       await prisma.tenant.update({
         where: { id: tenantId },
         data: {
-          firstName: firstName || null,
-          lastName: lastName || null,
+          firstName: firstName || '',
+          lastName: lastName || '',
           businessName,
-          phone: phone || null,
+          brandingCompanyName: businessName, // Keep branding in sync with business name
+          phone: phone || '',
           email,
-          webAddress: webAddress || null,
+          webAddress: webAddress || '',
           status: status || 'ACTIVE',
           subscriptionTier: subscriptionTier || 'FREE',
-          weddingDate: weddingDate ? new Date(weddingDate) : null,
-          budget: budget ? parseFloat(budget.toString()) : null,
+          streetAddress: streetAddress || null,
+          city: city || null,
+          state: state || null,
+        },
+      });
+
+      // Also update the User records associated with this tenant to sync firstName/lastName
+      // This ensures the welcome message and profile display are consistent
+      await prisma.user.updateMany({
+        where: { tenantId },
+        data: {
+          firstName: firstName || '',
+          lastName: lastName || '',
         },
       });
 
@@ -91,6 +111,9 @@ export async function POST(request: NextRequest) {
               webAddress,
               status,
               subscriptionTier,
+              streetAddress,
+              city,
+              state,
             }),
             userId: (session.user as any)?.id || 'unknown',
           },
@@ -101,17 +124,28 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Fetch updated tenant
+    // Fetch updated tenant with all fields
     const updatedTenant = await prisma.tenant.findUnique({
       where: { id: tenantId },
       select: {
         id: true,
+        firstName: true,
+        lastName: true,
         businessName: true,
+        phone: true,
         email: true,
+        webAddress: true,
+        streetAddress: true,
+        city: true,
+        state: true,
         status: true,
         subscriptionTier: true,
       },
     });
+
+    // Invalidate tenant's cached profile pages
+    revalidatePath('/dashboard/tenant');
+    revalidatePath(`/dashboard/superadmin/tenants/${tenantId}`);
 
     return NextResponse.json({
       message: 'Tenant updated successfully',
@@ -119,8 +153,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error updating tenant:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: 'Failed to update tenant' },
+      { error: `Failed to update tenant: ${errorMessage}` },
       { status: 500 }
     );
   }

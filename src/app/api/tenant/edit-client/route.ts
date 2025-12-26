@@ -61,7 +61,7 @@ export async function PUT(request: NextRequest) {
         couple2FirstName: couple2FirstName || null,
         couple2LastName: couple2LastName || null,
         weddingDate: weddingDate ? new Date(weddingDate) : null,
-        budgetCents: budget || null,
+        budgetCents: budget ? Math.round(budget * 100) : null,
         status
       },
       include: { users: true }

@@ -19,6 +19,9 @@ const componentLibrary = {
   LogoutButton
 };
 
+// Don't cache this page - always fetch fresh data
+export const revalidate = 0;
+
 export default async function TenantDashboard() {
   const session = await getServerSession(authOptions);
 
@@ -49,7 +52,7 @@ export default async function TenantDashboard() {
   const dashboardConfig = await renderTemplateDashboard('TENANT', user, tenant, { clients });
   
   // Extract branding and layout
-  const { branding, layout, componentsBySection, features } = dashboardConfig;
+  const { branding, componentsBySection, features } = dashboardConfig;
   
   // Fallback branding if template doesn't provide it
   const accentColor = branding?.primaryColor || '#274E13';
@@ -60,13 +63,15 @@ export default async function TenantDashboard() {
 
   return (
     <div style={{ 
-      padding: layout.spacing || '2rem', 
+      padding: 'max(1rem, min(2rem, 5vw))', 
       minHeight: '100vh', 
       background: backgroundColorWithOpacity, 
       fontFamily, 
       color: fontColor,
-      maxWidth: layout.maxWidth,
-      margin: '0 auto'
+      maxWidth: '800px',
+      margin: '0 auto',
+      boxSizing: 'border-box',
+      width: '100%'
     }}>
       
       {/* Header Section */}
@@ -91,8 +96,9 @@ export default async function TenantDashboard() {
                 webAddress: tenant?.webAddress || undefined,
                 status: tenant?.status || 'ACTIVE',
                 subscriptionTier: tenant?.subscriptionTier || 'FREE',
-                weddingDate: tenant?.weddingDate ? new Date(tenant.weddingDate).toISOString().split('T')[0] : undefined,
-                budget: tenant?.budget || undefined,
+                streetAddress: tenant?.streetAddress || undefined,
+                city: tenant?.city || undefined,
+                state: tenant?.state || undefined,
               }}
               logoutButton={<LogoutButton primaryColor={accentColor} />}
             />
@@ -110,7 +116,9 @@ export default async function TenantDashboard() {
             <div key={component.id} style={{ marginBottom: '2rem' }}>
               <TenantStats 
                 tenantId={tenantId} 
-                primaryColor={accentColor} 
+                primaryColor={accentColor}
+                secondaryColor="#E1E0D0"
+                secondaryColorOpacity={80}
                 fontColor={fontColor} 
                 headerFontFamily={branding?.headerFontFamily || "'Playfair Display', serif"}
                 bodyFontFamily={branding?.bodyFontFamily || "'Poppins', sans-serif"} 

@@ -13,14 +13,17 @@ interface TenantBasicInfoFormProps {
     webAddress?: string;
     status: string;
     subscriptionTier: string;
-    weddingDate?: string;
-    budget?: number;
+    streetAddress?: string;
+    city?: string;
+    state?: string;
   };
+  onSuccess?: () => void;
 }
 
 export default function TenantBasicInfoForm({
   tenantId,
   initialData,
+  onSuccess,
 }: TenantBasicInfoFormProps) {
   const [formData, setFormData] = useState({
     firstName: initialData.firstName || '',
@@ -31,8 +34,9 @@ export default function TenantBasicInfoForm({
     webAddress: initialData.webAddress || '',
     status: initialData.status,
     subscriptionTier: initialData.subscriptionTier,
-    weddingDate: initialData.weddingDate || '',
-    budget: initialData.budget || '',
+    streetAddress: initialData.streetAddress || '',
+    city: initialData.city || '',
+    state: initialData.state || '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -87,8 +91,9 @@ export default function TenantBasicInfoForm({
             webAddress: formData.webAddress,
             status: formData.status,
             subscriptionTier: formData.subscriptionTier,
-            weddingDate: formData.weddingDate ? new Date(formData.weddingDate).toISOString() : null,
-            budget: formData.budget ? parseFloat(formData.budget.toString()) : null,
+            streetAddress: formData.streetAddress || null,
+            city: formData.city || null,
+            state: formData.state || null,
           },
         }),
       });
@@ -100,7 +105,25 @@ export default function TenantBasicInfoForm({
         return;
       }
 
+      // Update form with response data so it shows what was saved
+      if (data.tenant) {
+        setFormData({
+          firstName: data.tenant.firstName || '',
+          lastName: data.tenant.lastName || '',
+          businessName: data.tenant.businessName || '',
+          phone: data.tenant.phone || '',
+          email: data.tenant.email || '',
+          webAddress: data.tenant.webAddress || '',
+          status: data.tenant.status || 'ACTIVE',
+          subscriptionTier: data.tenant.subscriptionTier || 'FREE',
+          streetAddress: data.tenant.streetAddress || '',
+          city: data.tenant.city || '',
+          state: data.tenant.state || '',
+        });
+      }
+
       setSuccess(true);
+      onSuccess?.();
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -246,13 +269,14 @@ export default function TenantBasicInfoForm({
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#274E13' }}>
-            Wedding Date
+            Street Address
           </label>
           <input
-            type="date"
-            name="weddingDate"
-            value={formData.weddingDate}
+            type="text"
+            name="streetAddress"
+            value={formData.streetAddress}
             onChange={handleChange}
+            placeholder="e.g., 123 Main St"
             style={{
               width: '100%',
               padding: '0.75rem',
@@ -266,16 +290,37 @@ export default function TenantBasicInfoForm({
 
         <div>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#274E13' }}>
-            Budget ($)
+            City
           </label>
           <input
-            type="number"
-            name="budget"
-            value={formData.budget}
+            type="text"
+            name="city"
+            value={formData.city}
             onChange={handleChange}
-            placeholder="e.g., 50000"
-            step="0.01"
-            min="0"
+            placeholder="e.g., Denver"
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              fontSize: '1rem',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        <div>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#274E13' }}>
+            State
+          </label>
+          <input
+            type="text"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            placeholder="e.g., CO"
             style={{
               width: '100%',
               padding: '0.75rem',
@@ -330,9 +375,8 @@ export default function TenantBasicInfoForm({
             }}
           >
             <option value="FREE">Free</option>
-            <option value="STARTER">Starter</option>
-            <option value="PROFESSIONAL">Professional</option>
-            <option value="ENTERPRISE">Enterprise</option>
+            <option value="TRIAL">Trial</option>
+            <option value="PAID">Paid</option>
           </select>
         </div>
       </div>

@@ -1,5 +1,8 @@
 'use client';
 
+import { useState } from 'react';
+import EditClientModal from './EditClientModal';
+
 interface ClientDetailModalProps {
   client: any;
   primaryColor?: string;
@@ -7,6 +10,7 @@ interface ClientDetailModalProps {
   bodyFontFamily?: string;
   headerFontFamily?: string;
   onClose: () => void;
+  tenantId?: string;
 }
 
 export default function ClientDetailModal({
@@ -15,11 +19,20 @@ export default function ClientDetailModal({
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
-  onClose
+  onClose,
+  tenantId
 }: ClientDetailModalProps) {
-  const weddingDate = client.weddingDate ? new Date(client.weddingDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Not set';
-  const budget = client.budgetCents ? `$${(client.budgetCents / 100).toLocaleString()}` : 'Not set';
-  const guestCount = client.estimatedGuestCount || 'Not provided';
+  const [editMode, setEditMode] = useState(false);
+  const [updatedClient, setUpdatedClient] = useState(client);
+
+  const weddingDate = updatedClient.weddingDate ? new Date(updatedClient.weddingDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Not set';
+  const budget = updatedClient.budgetCents ? `$${(updatedClient.budgetCents / 100).toLocaleString()}` : 'Not set';
+  const guestCount = updatedClient.estimatedGuestCount || 'Not provided';
+
+  const handleSaveClient = (newClientData: any) => {
+    setUpdatedClient(newClientData);
+    setEditMode(false);
+  };
 
   const InfoSection = ({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) => (
     <section style={{ marginBottom: '2rem' }}>
@@ -248,6 +261,7 @@ export default function ClientDetailModal({
             Close
           </button>
           <button
+            onClick={() => setEditMode(true)}
             style={{
               background: primaryColor,
               color: 'white',
@@ -274,6 +288,15 @@ export default function ClientDetailModal({
           </button>
         </div>
       </div>
+
+      {editMode && tenantId && (
+        <EditClientModal
+          client={updatedClient}
+          tenantId={tenantId}
+          onClose={() => setEditMode(false)}
+          onSave={handleSaveClient}
+        />
+      )}
     </>
   );
 }

@@ -18,8 +18,6 @@ export default function CreateTenantForm({ onSuccess }: CreateTenantFormProps) {
     email: '',
     phone: '',
     webAddress: '',
-    password: '',
-    confirmPassword: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,29 +65,9 @@ export default function CreateTenantForm({ onSuccess }: CreateTenantFormProps) {
       return;
     }
 
-    if (!formData.webAddress.trim()) {
-      setError('Website address is required');
-      setLoading(false);
-      return;
-    }
+    // No validation for website field
 
-    if (!formData.password || !formData.confirmPassword) {
-      setError('Passwords are required');
-      setLoading(false);
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
-    }
-
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters');
-      setLoading(false);
-      return;
-    }
+    // No password required; password reset email will be sent
 
     try {
       const response = await fetch('/api/admin/create-tenant', {
@@ -104,7 +82,6 @@ export default function CreateTenantForm({ onSuccess }: CreateTenantFormProps) {
           primary_email: formData.email,
           phone: formData.phone,
           webAddress: formData.webAddress,
-          password: formData.password,
         })
       });
 
@@ -115,7 +92,7 @@ export default function CreateTenantForm({ onSuccess }: CreateTenantFormProps) {
         return;
       }
 
-      setSuccess(`✅ Tenant "${data.tenant.businessName}" created successfully! Configure branding on the Edit page.`);
+      setSuccess(` Tenant "${data.tenant.businessName}" created successfully! A password reset email will be sent to the admin user. Configure branding on the Edit page.`);
       setFormData({
         firstName: '',
         lastName: '',
@@ -123,8 +100,6 @@ export default function CreateTenantForm({ onSuccess }: CreateTenantFormProps) {
         email: '',
         phone: '',
         webAddress: '',
-        password: '',
-        confirmPassword: '',
       });
 
       if (onSuccess) {
@@ -209,43 +184,18 @@ export default function CreateTenantForm({ onSuccess }: CreateTenantFormProps) {
           </div>
 
           <div className={styles.field}>
-            <label>Website *</label>
+            <label>Website</label>
             <input
               type="text"
               name="webAddress"
               value={formData.webAddress}
               onChange={handleChange}
-              placeholder="e.g., https://eliteweddings.com"
-              required
+              placeholder="e.g., www.example.com or leave blank"
             />
           </div>
         </div>
 
-        <div className={styles.row}>
-          <div className={styles.field}>
-            <label>Admin Password *</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label>Confirm Password *</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="••••••••"
-              required
-            />
-          </div>
-        </div>
+        {/* Password fields removed; password reset email will be sent automatically */}
 
         <p style={{ color: '#666', fontSize: '0.9rem', margin: '1rem 0' }}>
           💡 After creating the tenant, you can customize branding and other settings on the Edit page.

@@ -30,6 +30,7 @@ interface TenantBrandingFormProps {
 export default function TenantBrandingForm({
   tenantId,
   initialBranding,
+  onSuccess,
   isInEditPage = false,
 }: TenantBrandingFormProps) {
 
@@ -193,6 +194,13 @@ export default function TenantBrandingForm({
       });
       setShowPreview(true);
       setSuccess(true);
+      
+      // Call onSuccess callback after successful save
+      if (onSuccess) {
+        setTimeout(() => {
+          onSuccess();
+        }, 1000);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -201,7 +209,12 @@ export default function TenantBrandingForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '600px' }}>
+    <form onSubmit={handleSubmit} style={{ 
+      maxWidth: '600px',
+      color: '#000',
+      fontFamily: 'Lora, serif',
+      fontStyle: 'italic'
+    }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
           Company Name

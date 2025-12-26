@@ -6,9 +6,16 @@ import { prisma } from '@/lib/prisma';
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
+    
+    console.log('List tenants session:', { 
+      sessionExists: !!session, 
+      role: (session?.user as any)?.role,
+      email: (session?.user as any)?.email 
+    });
 
     // Check authorization - only superadmin
     if (!session || (session.user as any)?.role !== 'SUPERADMIN') {
+      console.error('List tenants unauthorized:', { session, role: (session?.user as any)?.role });
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 403 }
@@ -19,8 +26,15 @@ export async function GET() {
     const tenants = await prisma.tenant.findMany({
       select: {
         id: true,
+        firstName: true,
+        lastName: true,
         businessName: true,
+        phone: true,
         email: true,
+        webAddress: true,
+        streetAddress: true,
+        city: true,
+        state: true,
         status: true,
         subscriptionTier: true,
         createdAt: true,
@@ -64,8 +78,15 @@ export async function GET() {
 
       return {
         id: tenant.id,
+        firstName: tenant.firstName,
+        lastName: tenant.lastName,
         businessName: tenant.businessName,
+        phone: tenant.phone,
         email: tenant.email,
+        webAddress: tenant.webAddress,
+        streetAddress: tenant.streetAddress,
+        city: tenant.city,
+        state: tenant.state,
         status: tenant.status,
         subscriptionTier: tenant.subscriptionTier,
         createdAt: tenant.createdAt,

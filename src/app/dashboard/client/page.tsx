@@ -57,7 +57,6 @@ export default async function ClientDashboard() {
   const backgroundColor = branding?.secondaryColor || '#D0CEB5';
   const backgroundColorWithOpacity = hexToRgba(backgroundColor, branding?.secondaryColorOpacity || 55);
   const fontColor = branding?.fontColor || '#000000';
-  const logoBackgroundRemoval = branding?.logoBackgroundRemoval || false;
   const companyName = branding?.companyName || 'The Missing Piece';
   const fontFamily = branding?.fontFamily || "'Poppins', sans-serif";
   const headerFontFamily = branding?.headerFontFamily || "'Playfair Display', serif";
@@ -70,7 +69,7 @@ export default async function ClientDashboard() {
       background: backgroundColorWithOpacity, 
       fontFamily, 
       color: fontColor,
-      maxWidth: layout.maxWidth,
+      maxWidth: '800px',
       margin: '0 auto'
     }}>
       
@@ -78,31 +77,29 @@ export default async function ClientDashboard() {
       {componentsBySection.header?.map((component) => (
         <div key={component.id} style={{ marginBottom: '2rem' }}>
           {component.type === 'header' && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '2rem', marginBottom: '2rem' }}>
+              <div style={{ flex: 1 }}>
+                <h1 style={{ color: accentColor, margin: 0, fontSize: '2rem', fontFamily: headerFontFamily }}>
+                  Welcome, {clientProfile?.couple1FirstName || 'friend'}!
+                </h1>
+                <p style={{ color: accentColor, fontSize: '0.95rem', margin: '0.5rem 0 0 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
+                  Coordinated by {companyName}
+                </p>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                 {branding?.logoUrl ? (
                   <img 
                     src={branding.logoUrl} 
                     alt={companyName} 
                     style={{ 
                       height: '50px', 
-                      marginBottom: '0.5rem', 
-                      backgroundColor: logoBackgroundRemoval ? 'transparent' : 'white',
-                      padding: logoBackgroundRemoval ? 0 : '0.25rem',
-                      borderRadius: logoBackgroundRemoval ? 0 : '4px'
+                      backgroundColor: 'transparent'
                     }} 
                   />
                 ) : (
-                  <span style={{ fontSize: '2.5rem', marginBottom: '0.5rem', display: 'block' }}>💍</span>
+                  <span style={{ fontSize: '2.5rem' }}>💍</span>
                 )}
-                <h1 style={{ color: accentColor, margin: 0, fontFamily: headerFontFamily }}>
-                  💍 My Wedding Planning Workspace
-                </h1>
-                <p style={{ color: accentColor, fontSize: '0.85rem', margin: '0.25rem 0 0 0', fontFamily: bodyFontFamily }}>
-                  Powered by {companyName}
-                </p>
               </div>
-              <LogoutButton primaryColor={accentColor} />
             </div>
           )}
         </div>
@@ -121,9 +118,6 @@ export default async function ClientDashboard() {
               boxShadow: `0 10px 40px ${accentColor}26`,
               fontFamily: bodyFontFamily
             }}>
-              <h2 style={{ color: accentColor, fontFamily: headerFontFamily }}>
-                Welcome, {clientProfile?.couple1FirstName}!
-              </h2>
               {features.showWeddingStats && (
                 <>
                   {clientProfile?.weddingDate && (
@@ -173,13 +167,24 @@ export default async function ClientDashboard() {
           marginTop: '4rem', 
           paddingTop: '2rem', 
           borderTop: `1px solid ${accentColor}40`,
-          textAlign: 'center',
-          fontSize: '0.85rem',
-          color: fontColor
+          textAlign: 'right',
+          fontSize: '0.8rem',
+          color: fontColor,
+          opacity: 0.6
         }}>
-          Powered by The Missing Piece Planning
+          Powered by The Missing Piece Planning and Events, LLC
         </div>
       )}
+
+      {/* Logout Button - Bottom Center */}
+      <div style={{ 
+        marginTop: '4rem', 
+        paddingTop: '2rem',
+        display: 'flex',
+        justifyContent: 'center'
+      }}>
+        <LogoutButton primaryColor={accentColor} />
+      </div>
     </div>
   );
 }

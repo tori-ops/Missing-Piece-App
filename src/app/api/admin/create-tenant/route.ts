@@ -71,17 +71,7 @@ export async function POST(request: NextRequest) {
     if (businessName.length > 100) validationErrors.push('Business name too long (max 100 characters)');
     if (phone.length > 20) validationErrors.push('Phone number too long (max 20 characters)');
     if (webAddress.length > 255) validationErrors.push('Web address too long (max 255 characters)');
-    
-    // Validate phone format (basic)
-    const phoneRegex = /^[\d\s\+\-\(\)\.\/x]+$/;
-    if (!phoneRegex.test(phone)) {
-      validationErrors.push('Invalid phone number format');
-    }
-    
-    // Validate web address format
-    if (webAddress && !webAddress.startsWith('http')) {
-      validationErrors.push('Web address must start with http:// or https://');
-    }
+    // No web address format validation; allow any string
     
     // Validate password if provided
     if (password && password.length < 8) {
