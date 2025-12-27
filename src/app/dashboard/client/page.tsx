@@ -22,18 +22,14 @@ export default async function ClientDashboard() {
   const userEmail = (session.user as any)?.email || '';
   console.log('ClientDashboard - Loading profile for:', userEmail);
   
+  // Fetch user first
   const user = await prisma.user.findUnique({
-    where: { email: userEmail },
-    include: { 
-      clientProfile: {
-        include: { tenant: true }
-      }
-    }
+    where: { email: userEmail }
   });
 
-  console.log('ClientDashboard - User found:', !!user, 'Has profile:', !!user?.clientProfile);
+  console.log('ClientDashboard - User found:', !!user);
 
-  if (!user || !user.clientProfile) {
+  if (!user || !user.clientId) {
     return (
       <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
         <h1>Profile Not Found</h1>
@@ -43,8 +39,25 @@ export default async function ClientDashboard() {
     );
   }
 
-  const clientProfile = user.clientProfile;
-  const tenant = clientProfile.tenant;
+  // Fetch client profile separately
+  const clientProfile = await prisma.clientProfile.findUnique({
+    where: { id: user.clientId }
+  });
+
+  if (!clientProfile) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+        <h1>Profile Not Found</h1>
+        <p>User email: {userEmail}</p>
+        <p>We couldn&apos;t find your client profile. Please contact support.</p>
+      </div>
+    );
+  }
+
+  // Fetch tenant separately
+  const tenant = await prisma.tenant.findUnique({
+    where: { id: clientProfile.tenantId }
+  });
 
   // Render dashboard using master template
   const dashboardConfig = await renderTemplateDashboard('CLIENT', user, tenant, { clientProfile });
