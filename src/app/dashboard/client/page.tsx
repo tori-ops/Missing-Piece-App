@@ -5,50 +5,82 @@ import { prisma } from '@/lib/prisma';
 import { hexToRgba } from '@/lib/branding';
 import LogoutButton from '@/components/LogoutButton';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ClientDashboard() {
-  const session = await getServerSession(authOptions);
+  try {
+    const session = await getServerSession(authOptions);
 
-  if (!session || (session.user as any)?.role !== 'CLIENT') {
-    redirect('/');
-  }
+    if (!session || (session.user as any)?.role !== 'CLIENT') {
+      redirect('/');
+    }
 
-  // Get client profile
-  const userEmail = (session.user as any)?.email || '';
-  
-  // Fetch user first
-  const user = await prisma.user.findUnique({
-    where: { email: userEmail }
-  });
+    // Get client profile
+    const userEmail = (session.user as any)?.email || '';
+    
+    // Fetch user first
+    let user;
+    try {
+      user = await prisma.user.findUnique({
+        where: { email: userEmail }
+      });
+    } catch (err) {
+      console.error('Error fetching user:', err);
+      return (
+        <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+          <h1>Database Error</h1>
+          <p>Unable to connect to database. Please try again later.</p>
+        </div>
+      );
+    }
 
-  if (!user || !user.clientId) {
-    return (
-      <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
-        <h1>Profile Not Found</h1>
-        <p>User email: {userEmail}</p>
-        <p>We couldn&apos;t find your client profile. Please contact support.</p>
-      </div>
-    );
-  }
+    if (!user || !user.clientId) {
+      return (
+        <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+          <h1>Profile Not Found</h1>
+          <p>User email: {userEmail}</p>
+          <p>We couldn&apos;t find your client profile. Please contact support.</p>
+        </div>
+      );
+    }
 
-  // Fetch client profile separately
-  const clientProfile = await prisma.clientProfile.findUnique({
-    where: { id: user.clientId }
-  });
+    // Fetch client profile separately
+    let clientProfile;
+    try {
+      clientProfile = await prisma.clientProfile.findUnique({
+        where: { id: user.clientId }
+      });
+    } catch (err) {
+      console.error('Error fetching client profile:', err);
+      return (
+        <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+          <h1>Database Error</h1>
+          <p>Unable to load your profile. Please try again later.</p>
+        </div>
+      );
+    }
 
-  if (!clientProfile) {
-    return (
-      <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
-        <h1>Profile Not Found</h1>
-        <p>User email: {userEmail}</p>
-        <p>We couldn&apos;t find your client profile. Please contact support.</p>
-      </div>
-    );
-  }
+    if (!clientProfile) {
+      return (
+        <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+          <h1>Profile Not Found</h1>
+          <p>User email: {userEmail}</p>
+          <p>We couldn&apos;t find your client profile. Please contact support.</p>
+        </div>
+      );
+    }
 
-  // Fetch tenant separately
-  const tenant = await prisma.tenant.findUnique({
-    where: { id: clientProfile.tenantId }
-  });
+    // Fetch tenant separately
+    let tenant;
+    try {
+      tenant = await prisma.tenant.findUnique({
+        where: { id: clientProfile.tenantId }
+      });
+    } catch (err) {
+      console.error('Error fetching tenant:', err);
+      // Tenant is optional for basic dashboard
+      tenant = null;
+    }
 
   // Use tenant branding with fallbacks
   const accentColor = tenant?.brandingPrimaryColor || '#274E13';
@@ -163,4 +195,16 @@ export default async function ClientDashboard() {
       </div>
     </div>
   );
+  } catch (error) {
+    console.error('ClientDashboard error:', error);
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+        <h1>Oops! Something went wrong</h1>
+        <p>We encountered an error loading your dashboard. Please try refreshing the page.</p>
+        <pre style={{ backgroundColor: '#f5f5f5', padding: '1rem', borderRadius: '4px', fontSize: '0.8rem', textAlign: 'left', overflow: 'auto' }}>
+          {error instanceof Error ? error.message : String(error)}
+        </pre>
+      </div>
+    );
+  }
 }
