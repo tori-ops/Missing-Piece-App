@@ -344,10 +344,9 @@ model Tenant {
   primary_email         String                @unique                  // Immutable login identifier
   webAddress            String
   
-  // Address Details
-  streetAddress         String?
-  city                  String?
-  state                 String?
+  // Wedding Details
+  weddingDate           DateTime?
+  budget                Float?
   
   // Subscription
   status                TenantStatus          @default(ACTIVE)
@@ -436,6 +435,9 @@ model ClientProfile {
   budgetCents           Int?                  // in cents for precision
   estimatedGuestCount   Int?                  // Estimated number of guests
   
+  // Feature Preferences
+  showAstrology         Boolean               @default(false)  // Client's preference for astrology data
+  
   // Status (INVITED = temp password sent, hasn't logged in; ACTIVE = logged in; GRADUATED = wedding happened)
   status                ClientInviteStatus    @default(INVITED)
   
@@ -450,6 +452,9 @@ model ClientProfile {
   inviteCodes           InviteCode[]
   createdBy             User?                 @relation("CreatedByUser", fields: [createdByUserId], references: [id], onDelete: SetNull)
   tenantAccessList      TenantAccess[]
+  weather               ClientWeather?
+  goldenHour            ClientGoldenHour?
+  astrology             ClientAstrology?
   
   @@index([tenantId])
   @@index([contactEmail])
@@ -615,4 +620,83 @@ model AuditLog {
   @@index([entity])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ============================================================================
+// CLIENT WEATHER & GOLDEN HOUR
+// ============================================================================
+
+model ClientWeather {
+  id                    String                @id @default(cuid())
+  clientId              String                @unique
+  eventDate             DateTime
+  venueLocation         Json                  // {lat, lng, address}
+  weatherData           Json                  // 8-week breakdown with daily weather
+  dataGeneratedAt       DateTime              @default(now())
+  lastUpdatedAt         DateTime              @updatedAt
+  
+  // Relations
+  clientProfile         ClientProfile         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  @@index([clientId])
+  @@map("client_weather")
+}
+
+model ClientGoldenHour {
+  id                    String                @id @default(cuid())
+  clientId              String                @unique
+  eventDate             DateTime
+  venueLocation         Json                  // {lat, lng, address}
+  sunriseTime           String                // HH:mm format
+  goldenHourStart       String                // HH:mm format
+  goldenHourEnd         String                // HH:mm format
+  solarNoon             String                // HH:mm format
+  sunsetTime            String                // HH:mm format
+  bestPhotoDirection    String?               // e.g., "Northeast", "Southwest"
+  bestPhotoTimeWindow   String?               // e.g., "6:45 PM - 7:15 PM"
+  photoRecommendations  String?               // Additional tips
+  dataGeneratedAt       DateTime              @default(now())
+  lastUpdatedAt         DateTime              @updatedAt
+  
+  // Relations
+  clientProfile         ClientProfile         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  @@index([clientId])
+  @@map("client_golden_hour")
+}
+
+model ClientAstrology {
+  id                    String                @id @default(cuid())
+  clientId              String                @unique
+  eventDate             DateTime
+  
+  // Moon Data
+  moonPhase             String                // "New Moon", "Waxing Crescent", "First Quarter", etc.
+  moonIllumination      Float                 // 0-100 percentage
+  nextFullMoon          DateTime?
+  nextNewMoon           DateTime?
+  
+  // Zodiac
+  zodiacSign            String                // e.g., "Virgo"
+  zodiacDates           String                // e.g., "Aug 23 - Sep 22"
+  
+  // Planetary Info
+  venusRetrograde       Boolean               @default(false)
+  mercuryRetrograde     Boolean               @default(false)
+  
+  // Lunar Nodes
+  lunarNodeSign         String?               // North node sign
+  southNodeSign         String?               // South node sign
+  
+  // Astrology Insights
+  astrologyInsights     String?               // Generated text about the date's astrological significance
+  
+  dataGeneratedAt       DateTime              @default(now())
+  lastUpdatedAt         DateTime              @updatedAt
+  
+  // Relations
+  clientProfile         ClientProfile         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  @@index([clientId])
+  @@map("client_astrology")
 }
