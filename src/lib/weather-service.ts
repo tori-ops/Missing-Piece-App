@@ -315,7 +315,7 @@ function getZodiacSign(date: Date): { sign: string; dates: string } {
 }
 
 /**
- * Calculate moon phase name from illumination percentage
+ * Get moon phase name from illumination percentage
  */
 function getMoonPhaseName(illumination: number): string {
   if (illumination < 1.25) return 'New Moon 🌑';
@@ -335,7 +335,7 @@ function findNextMoonPhase(
   startDate: Date,
   targetIllumination: 'full' | 'new'
 ): Date | null {
-  const target = targetIllumination === 'full' ? 50 : 0;
+  const target = targetIllumination === 'full' ? 0.5 : 0;
   let currentDate = new Date(startDate);
   const maxDaysToCheck = 30; // Check up to 30 days ahead
 
@@ -344,18 +344,18 @@ function findNextMoonPhase(
     const moonData = getMoonIllumination(currentDate);
 
     // Check if we've crossed the target
-    if (targetIllumination === 'full' && moonData.illumination > target) {
+    if (targetIllumination === 'full' && moonData.fraction > target) {
       const yesterday = new Date(currentDate);
       yesterday.setDate(yesterday.getDate() - 1);
       const moonDataYesterday = getMoonIllumination(yesterday);
-      if (moonDataYesterday.illumination < target) {
+      if (moonDataYesterday.fraction < target) {
         return currentDate;
       }
-    } else if (targetIllumination === 'new' && moonData.illumination < target) {
+    } else if (targetIllumination === 'new' && moonData.fraction < target) {
       const yesterday = new Date(currentDate);
       yesterday.setDate(yesterday.getDate() - 1);
       const moonDataYesterday = getMoonIllumination(yesterday);
-      if (moonDataYesterday.illumination > target) {
+      if (moonDataYesterday.fraction > target) {
         return currentDate;
       }
     }
@@ -400,7 +400,6 @@ function isVenusRetrograde(date: Date): boolean {
 function getLunarNodeSigns(date: Date): { north: string; south: string } {
   // Lunar nodes move slowly, ~one sign every 1.5 years
   // As of Dec 2024, nodes are in Pisces/Virgo
-  const month = date.getMonth();
   const year = date.getFullYear();
 
   // Simplified: nodes were in Pisces/Virgo as of late 2024
@@ -458,7 +457,7 @@ export function calculateAstrology(eventDate: Date): AstrologyData {
   const zodiac = getZodiacSign(eventDate);
   const lunarNodes = getLunarNodeSigns(eventDate);
 
-  const moonPhase = getMoonPhaseName(moonData.illumination);
+  const moonPhase = getMoonPhaseName(moonData.fraction * 100);
   const nextFullMoon = findNextMoonPhase(eventDate, 'full');
   const nextNewMoon = findNextMoonPhase(eventDate, 'new');
 
@@ -469,7 +468,7 @@ export function calculateAstrology(eventDate: Date): AstrologyData {
 
   return {
     moonPhase,
-    moonIllumination: Math.round(moonData.illumination * 100) / 100,
+    moonIllumination: Math.round(moonData.fraction * 10000) / 100,
     nextFullMoon,
     nextNewMoon,
     zodiacSign: zodiac.sign,

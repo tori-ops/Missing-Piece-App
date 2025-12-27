@@ -79,9 +79,6 @@ export async function POST(request: NextRequest) {
           webAddress: webAddress || '',
           status: status || 'ACTIVE',
           subscriptionTier: subscriptionTier || 'FREE',
-          streetAddress: streetAddress || null,
-          city: city || null,
-          state: state || null,
         },
       });
 
@@ -135,9 +132,6 @@ export async function POST(request: NextRequest) {
         phone: true,
         email: true,
         webAddress: true,
-        streetAddress: true,
-        city: true,
-        state: true,
         status: true,
         subscriptionTier: true,
       },
