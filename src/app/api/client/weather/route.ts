@@ -18,13 +18,9 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Fetch client profile
     const clientProfile = await prisma.clientProfile.findUnique({
       where: { id: clientId },
-      include: {
-        weather: true,
-        goldenHour: true,
-        astrology: true,
-      },
     });
 
     if (!clientProfile) {
@@ -34,7 +30,20 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    if (!clientProfile.weather || !clientProfile.goldenHour) {
+    // Fetch weather and golden hour data separately
+    const weather = await (prisma as any).clientWeather.findUnique({
+      where: { clientId },
+    });
+
+    const goldenHour = await (prisma as any).clientGoldenHour.findUnique({
+      where: { clientId },
+    });
+
+    const astrology = await (prisma as any).clientAstrology.findUnique({
+      where: { clientId },
+    });
+
+    if (!weather || !goldenHour) {
       return NextResponse.json(
         { error: 'Weather data not yet generated' },
         { status: 404 }
@@ -42,9 +51,9 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({
-      weather: clientProfile.weather,
-      goldenHour: clientProfile.goldenHour,
-      astrology: clientProfile.astrology,
+      weather,
+      goldenHour,
+      astrology,
       showAstrology: clientProfile.showAstrology,
       eventDate: clientProfile.weddingDate,
       venue: clientProfile.weddingLocation,

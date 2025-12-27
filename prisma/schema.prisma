@@ -457,9 +457,6 @@ model ClientProfile {
   inviteCodes           InviteCode[]
   createdBy             User?                 @relation("CreatedByUser", fields: [createdByUserId], references: [id], onDelete: SetNull)
   tenantAccessList      TenantAccess[]
-  weather               ClientWeather?
-  goldenHour            ClientGoldenHour?
-  astrology             ClientAstrology?
   
   @@index([tenantId])
   @@index([contactEmail])
@@ -640,9 +637,6 @@ model ClientWeather {
   dataGeneratedAt       DateTime              @default(now())
   lastUpdatedAt         DateTime              @updatedAt
   
-  // Relations
-  clientProfile         ClientProfile         @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  
   @@index([clientId])
   @@map("client_weather")
 }
@@ -662,9 +656,6 @@ model ClientGoldenHour {
   photoRecommendations  String?               // Additional tips
   dataGeneratedAt       DateTime              @default(now())
   lastUpdatedAt         DateTime              @updatedAt
-  
-  // Relations
-  clientProfile         ClientProfile         @relation(fields: [clientId], references: [id], onDelete: Cascade)
   
   @@index([clientId])
   @@map("client_golden_hour")
@@ -698,9 +689,6 @@ model ClientAstrology {
   
   dataGeneratedAt       DateTime              @default(now())
   lastUpdatedAt         DateTime              @updatedAt
-  
-  // Relations
-  clientProfile         ClientProfile         @relation(fields: [clientId], references: [id], onDelete: Cascade)
   
   @@index([clientId])
   @@map("client_astrology")
