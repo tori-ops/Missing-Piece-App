@@ -50,7 +50,11 @@ export async function GET(request: NextRequest) {
       website: result.website || ''
     });
   } catch (error) {
-    console.error('Places details error:', error);
-    return NextResponse.json({ error: 'Failed to fetch venue details' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Places details error:', {
+      error: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    return NextResponse.json({ error: `Failed to fetch venue details: ${errorMessage}` }, { status: 500 });
   }
 }

@@ -102,10 +102,13 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
   const handleVenueSelect = async (prediction: PlacePrediction) => {
     try {
       setVenueSearchLoading(true);
+      console.log('Fetching venue details for:', prediction.place_id);
       const response = await fetch(
         `/api/places/details?placeId=${encodeURIComponent(prediction.place_id)}`
       );
       const details: PlaceDetails = await response.json();
+      
+      console.log('Venue details received:', details);
 
       // Auto-fill venue and address information
       setFormData(prev => ({
