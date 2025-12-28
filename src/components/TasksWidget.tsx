@@ -29,6 +29,7 @@ export default function TasksWidget({
     <>
       {/* Widget Button - matches WeatherCard/AstrologyCard format */}
       <button
+        type="button"
         onClick={() => setIsOpen(true)}
         style={{
           background: primaryColor,
