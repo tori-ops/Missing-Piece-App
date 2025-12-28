@@ -17,32 +17,61 @@ export default async function TenantDashboard() {
       redirect('/');
     }
 
-    // Get tenant info with clients in single query to avoid pooler issues
+    // Get tenant info - split queries to avoid connection issues
     let user;
     try {
       user = await prisma.user.findUnique({
-        where: { email: session.user?.email || '' },
-        include: { 
-          tenant: {
-            include: {
-              clientProfiles: {
-                orderBy: { createdAt: 'desc' }
-              }
-            }
-          }
-        }
+        where: { email: session.user?.email || '' }
       });
     } catch (err) {
-      console.error('Error fetching tenant user:', err);
+      console.error('Error fetching user:', err);
       return (
         <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
           <h1>Database Error</h1>
-          <p>Unable to load your dashboard. Please try again later.</p>
+          <p>Unable to find your account. Please try again later.</p>
+          <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>{err instanceof Error ? err.message : 'Unknown error'}</p>
         </div>
       );
     }
 
-    const tenant = user?.tenant;
+    if (!user?.tenantId) {
+      return (
+        <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+          <h1>Tenant Account Not Found</h1>
+          <p>We couldn&apos;t find your tenant account. Please contact support.</p>
+        </div>
+      );
+    }
+
+    // Fetch tenant separately
+    let tenant;
+    try {
+      tenant = await prisma.tenant.findUnique({
+        where: { id: user.tenantId }
+      });
+    } catch (err) {
+      console.error('Error fetching tenant:', err);
+      return (
+        <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+          <h1>Database Error</h1>
+          <p>Unable to load tenant information. Please try again later.</p>
+          <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>{err instanceof Error ? err.message : 'Unknown error'}</p>
+        </div>
+      );
+    }
+
+    // Fetch clients separately
+    let clients: any[] = [];
+    try {
+      clients = await prisma.clientProfile.findMany({
+        where: { tenantId: user.tenantId },
+        orderBy: { createdAt: 'desc' }
+      });
+    } catch (err) {
+      console.error('Error fetching clients:', err);
+      // Clients are optional, don't fail if this errors
+      clients = [];
+    }
 
     if (!tenant) {
       return (
@@ -52,8 +81,6 @@ export default async function TenantDashboard() {
         </div>
       );
     }
-
-    const clients = tenant.clientProfiles || [];
     
     // Use tenant branding with fallbacks
     const accentColor = tenant.brandingPrimaryColor || '#274E13';
