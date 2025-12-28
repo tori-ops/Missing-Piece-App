@@ -19,7 +19,16 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
     couple2FirstName: client.couple2FirstName || '',
     couple2LastName: client.couple2LastName || '',
     weddingDate: client.weddingDate ? new Date(client.weddingDate).toISOString().split('T')[0] : '',
-    budget: client.budgetCents ? (client.budgetCents / 100).toString() : '',
+    weddingLocation: client.weddingLocation || '',
+    budgetCents: client.budgetCents ? (client.budgetCents / 100).toString() : '',
+    estimatedGuestCount: client.estimatedGuestCount ? client.estimatedGuestCount.toString() : '',
+    contactEmail: client.contactEmail || '',
+    contactPhone: client.contactPhone || '',
+    addressLine1: client.addressLine1 || '',
+    addressLine2: client.addressLine2 || '',
+    addressCity: client.addressCity || '',
+    addressState: client.addressState || '',
+    addressZip: client.addressZip || '',
     status: client.status || 'ACTIVE'
   });
 
@@ -50,7 +59,16 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
           couple2FirstName: formData.couple2FirstName,
           couple2LastName: formData.couple2LastName,
           weddingDate: formData.weddingDate,
-          budget: formData.budget ? parseFloat(formData.budget) : null,
+          weddingLocation: formData.weddingLocation,
+          budgetCents: formData.budgetCents ? parseFloat(formData.budgetCents) * 100 : null,
+          estimatedGuestCount: formData.estimatedGuestCount ? parseInt(formData.estimatedGuestCount) : null,
+          contactEmail: formData.contactEmail,
+          contactPhone: formData.contactPhone,
+          addressLine1: formData.addressLine1,
+          addressLine2: formData.addressLine2,
+          addressCity: formData.addressCity,
+          addressState: formData.addressState,
+          addressZip: formData.addressZip,
           status: formData.status
         })
       });
@@ -170,16 +188,126 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
             </div>
 
             <div className={styles.field}>
+              <label>Wedding Venue / Location</label>
+              <input
+                type="text"
+                name="weddingLocation"
+                value={formData.weddingLocation}
+                onChange={handleChange}
+                placeholder="e.g., The Grand Ballroom"
+              />
+            </div>
+          </div>
+
+          <div className={styles.row}>
+            <div className={styles.field}>
               <label>Budget ($)</label>
               <input
                 type="number"
-                name="budget"
-                value={formData.budget}
+                name="budgetCents"
+                value={formData.budgetCents}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label>Estimated Guest Count</label>
+              <input
+                type="number"
+                name="estimatedGuestCount"
+                value={formData.estimatedGuestCount}
                 onChange={handleChange}
                 min="0"
               />
             </div>
           </div>
+
+          <hr style={{ margin: '1.5rem 0', border: 'none', borderTop: '1px solid #EEE' }} />
+
+          <h3 style={{ color: '#274E13', marginBottom: '1rem', fontSize: '1rem' }}>Contact Information</h3>
+
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label>Primary Email</label>
+              <input
+                type="email"
+                name="contactEmail"
+                value={formData.contactEmail}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label>Phone Number</label>
+              <input
+                type="tel"
+                name="contactPhone"
+                value={formData.contactPhone}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <hr style={{ margin: '1.5rem 0', border: 'none', borderTop: '1px solid #EEE' }} />
+
+          <h3 style={{ color: '#274E13', marginBottom: '1rem', fontSize: '1rem' }}>Mailing Address</h3>
+
+          <div className={styles.field}>
+            <label>Street Address</label>
+            <input
+              type="text"
+              name="addressLine1"
+              value={formData.addressLine1}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label>Apartment / Suite</label>
+            <input
+              type="text"
+              name="addressLine2"
+              value={formData.addressLine2}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label>City</label>
+              <input
+                type="text"
+                name="addressCity"
+                value={formData.addressCity}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label>State</label>
+              <input
+                type="text"
+                name="addressState"
+                value={formData.addressState}
+                onChange={handleChange}
+                maxLength={2}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label>ZIP Code</label>
+              <input
+                type="text"
+                name="addressZip"
+                value={formData.addressZip}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <hr style={{ margin: '1.5rem 0', border: 'none', borderTop: '1px solid #EEE' }} />
 
           <div className={styles.field}>
             <label>Status</label>
