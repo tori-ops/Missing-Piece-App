@@ -278,9 +278,13 @@ export async function POST(req: NextRequest) {
     }, { status: 201 });
 
   } catch (error) {
-    console.error('Error creating client:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Error creating client:', {
+      error: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined
+    });
     return NextResponse.json(
-      { error: 'Failed to create client' },
+      { error: `Failed to create client: ${errorMessage}` },
       { status: 500 }
     );
   }
