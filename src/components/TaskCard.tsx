@@ -17,6 +17,9 @@ interface Task {
   updatedAt: string;
   source: 'MANUAL' | 'MEETING_NOTE';
   meetingNoteId?: string | null;
+  creatorName?: string;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 interface TaskCardProps {
@@ -204,6 +207,15 @@ export default function TaskCard({
       {/* Expanded Details */}
       {isExpanded && (
         <div style={{ marginTop: '1rem', borderTop: `1px solid ${primaryColor}15`, paddingTop: '1rem' }}>
+          {/* Creator Info */}
+          {task.creatorName && (
+            <div style={{ marginBottom: '1rem' }}>
+              <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.7 }}>
+                From: <strong>{task.creatorName}</strong>
+              </p>
+            </div>
+          )}
+
           {task.description && (
             <div style={{ marginBottom: '1rem' }}>
               <p style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: primaryColor, fontSize: '0.9rem' }}>
@@ -232,64 +244,68 @@ export default function TaskCard({
               marginTop: '1rem',
             }}
           >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                // TODO: Open edit modal
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                background: 'transparent',
-                border: `1px solid ${primaryColor}40`,
-                borderRadius: '4px',
-                padding: '0.4rem 0.8rem',
-                cursor: 'pointer',
-                color: primaryColor,
-                fontSize: '0.85rem',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}10`;
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-              }}
-            >
-              <Edit2 size={14} />
-              Edit
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (confirm('Are you sure you want to delete this task?')) {
-                  handleDelete();
-                }
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                background: 'transparent',
-                border: '1px solid #EF4444',
-                borderRadius: '4px',
-                padding: '0.4rem 0.8rem',
-                cursor: 'pointer',
-                color: '#EF4444',
-                fontSize: '0.85rem',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#FEE2E2';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-              }}
-            >
-              <Trash2 size={14} />
-              Delete
-            </button>
+            {task.canEdit && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // TODO: Open edit modal
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  background: 'transparent',
+                  border: `1px solid ${primaryColor}40`,
+                  borderRadius: '4px',
+                  padding: '0.4rem 0.8rem',
+                  cursor: 'pointer',
+                  color: primaryColor,
+                  fontSize: '0.85rem',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}10`;
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+                }}
+              >
+                <Edit2 size={14} />
+                Edit
+              </button>
+            )}
+            {task.canDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (confirm('Are you sure you want to delete this task?')) {
+                    handleDelete();
+                  }
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  background: 'transparent',
+                  border: '1px solid #EF4444',
+                  borderRadius: '4px',
+                  padding: '0.4rem 0.8rem',
+                  cursor: 'pointer',
+                  color: '#EF4444',
+                  fontSize: '0.85rem',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = '#FEE2E2';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+                }}
+              >
+                <Trash2 size={14} />
+                Delete
+              </button>
+            )}
           </div>
         </div>
       )}

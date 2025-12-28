@@ -69,9 +69,9 @@ export async function POST(req: NextRequest) {
     const userEmail = (session.user as any)?.email;
     const userRole = (session.user as any)?.role;
 
-    if (userRole !== 'TENANT') {
+    if (!userRole || !['TENANT', 'CLIENT'].includes(userRole)) {
       return NextResponse.json(
-        { error: 'Only tenants can create tasks' },
+        { error: 'Only tenants and clients can create tasks' },
         { status: 403 }
       );
     }
@@ -80,8 +80,17 @@ export async function POST(req: NextRequest) {
       where: { email: userEmail },
     });
 
-    if (!user || !user.tenantId) {
+    if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Validate user has required ID for their role
+    if (userRole === 'TENANT' && !user.tenantId) {
+      return NextResponse.json({ error: 'Tenant ID not found' }, { status: 400 });
+    }
+
+    if (userRole === 'CLIENT' && !user.clientId) {
+      return NextResponse.json({ error: 'Client ID not found' }, { status: 400 });
     }
 
     const body = await req.json();
@@ -94,8 +103,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate assignment permissions based on user role
+    if (userRole === 'CLIENT') {
+      // CLIENT can only assign to themselves (CLIENT) or their tenant
+      if (assigneeType === 'CLIENT' && assigneeId !== user.clientId) {
+        return NextResponse.json(
+          { error: 'You can only assign tasks to yourself' },
+          { status: 403 }
+        );
+      }
+      if (assigneeType === 'TENANT' && assigneeId !== user.tenantId) {
+        return NextResponse.json(
+          { error: 'You can only assign to your coordinator' },
+          { status: 403 }
+        );
+      }
+    }
+
     const task = await createTask({
-      tenantId: user.tenantId,
+      tenantId: userRole === 'TENANT' ? user.tenantId! : (user.tenantId || ''),
       clientId,
       title,
       description,

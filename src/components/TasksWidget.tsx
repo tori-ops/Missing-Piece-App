@@ -7,8 +7,9 @@ interface TasksWidgetProps {
   primaryColor: string;
   bodyFontFamily: string;
   textColor?: string;
-  clientId?: string; // If provided, show client-specific tasks. If not, show tenant tasks
+  clientId?: string;
   tenantId?: string;
+  userRole?: 'TENANT' | 'CLIENT';
 }
 
 export default function TasksWidget({
@@ -17,7 +18,11 @@ export default function TasksWidget({
   textColor = '#FFFFFF',
   clientId,
   tenantId,
+  userRole,
 }: TasksWidgetProps) {
+  // If userRole not provided, infer from which ID is given
+  // (typically widget is used with either clientId or tenantId but not both)
+  const role = userRole || (clientId && !tenantId ? 'CLIENT' : 'TENANT');
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -64,6 +69,7 @@ export default function TasksWidget({
           bodyFontFamily={bodyFontFamily}
           clientId={clientId}
           tenantId={tenantId}
+          userRole={role}
           onClose={() => setIsOpen(false)}
         />
       )}

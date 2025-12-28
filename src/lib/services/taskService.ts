@@ -29,17 +29,18 @@ export interface UpdateTaskInput {
 /**
  * List all tasks for a user (TENANT or CLIENT)
  * Enforces strict isolation - TENANTs see their tasks, CLIENTs see their own tasks
+ * Includes creator info for display
  */
 export async function listTasks(
-  _userId: string,
+  userId: string,
   userRole: 'TENANT' | 'CLIENT',
   tenantId: string,
   clientId?: string
-): Promise<Task[]> {
+) {
   try {
     if (userRole === 'TENANT') {
       // TENANT sees all tasks they're assigned to OR tasks in their tenant
-      return await prisma.task.findMany({
+      const tasks = await prisma.task.findMany({
         where: {
           tenantId,
           OR: [
@@ -47,18 +48,52 @@ export async function listTasks(
             { assigneeType: 'CLIENT' }, // Also show CLIENT tasks for visibility
           ],
         },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
         orderBy: { createdAt: 'desc' },
       });
+      
+      return tasks.map(task => ({
+        ...task,
+        canEdit: task.createdByUserId === userId,
+        canDelete: task.createdByUserId === userId || (task.assigneeType === 'TENANT' && task.assigneeId === tenantId),
+        creatorName: task.createdBy ? `${task.createdBy.firstName} ${task.createdBy.lastName}` : 'Unknown',
+      }));
     } else if (userRole === 'CLIENT' && clientId) {
       // CLIENT sees only tasks assigned to them
-      return await prisma.task.findMany({
+      const tasks = await prisma.task.findMany({
         where: {
           clientId,
           assigneeType: 'CLIENT',
           assigneeId: clientId,
         },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
         orderBy: { createdAt: 'desc' },
       });
+      
+      return tasks.map(task => ({
+        ...task,
+        canEdit: task.createdByUserId === userId,
+        canDelete: task.createdByUserId === userId || (task.assigneeType === 'CLIENT' && task.assigneeId === clientId),
+        creatorName: task.createdBy ? `${task.createdBy.firstName} ${task.createdBy.lastName}` : 'Unknown',
+      }));
     }
 
     return [];
@@ -70,17 +105,28 @@ export async function listTasks(
 
 /**
  * Get a single task by ID with access control
+ * Returns task with creator info
  */
 export async function getTaskById(
   taskId: string,
-  _userId: string,
+  userId: string,
   userRole: 'TENANT' | 'CLIENT',
   tenantId: string,
   clientId?: string
-): Promise<Task | null> {
+) {
   try {
     const task = await prisma.task.findUnique({
       where: { id: taskId },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
     });
 
     if (!task) return null;
@@ -97,7 +143,13 @@ export async function getTaskById(
       }
     }
 
-    return task;
+    // Add permission info
+    return {
+      ...task,
+      canEdit: task.createdByUserId === userId, // Only creator can edit title/description/date
+      canDelete: task.createdByUserId === userId || (task.assigneeType === userRole && task.assigneeId === (userRole === 'TENANT' ? tenantId : clientId)), // Creator OR assignee
+      creatorName: task.createdBy ? `${task.createdBy.firstName} ${task.createdBy.lastName}` : 'Unknown',
+    };
   } catch (error) {
     console.error('Error getting task:', error);
     throw error;
@@ -153,7 +205,9 @@ export async function createTask(input: CreateTaskInput): Promise<Task> {
 }
 
 /**
- * Update a task - with access control
+ * Update a task - with permission-based access control
+ * Creator: can edit all fields (title, description, dueDate, priority, status)
+ * Assignee (non-creator): can only change status
  */
 export async function updateTask(
   taskId: string,
@@ -162,7 +216,7 @@ export async function updateTask(
   userRole: 'TENANT' | 'CLIENT',
   tenantId: string,
   clientId?: string
-): Promise<Task> {
+) {
   try {
     // Verify access first
     const task = await getTaskById(taskId, userId, userRole, tenantId, clientId);
@@ -170,18 +224,47 @@ export async function updateTask(
       throw new Error('Task not found');
     }
 
+    // Check if user is the creator
+    const isCreator = task.createdByUserId === userId;
+
+    // Prepare update data based on permissions
+    const updateData: any = {};
+
+    if (isCreator) {
+      // Creator can edit all fields
+      if (input.status !== undefined) updateData.status = input.status;
+      if (input.description !== undefined) updateData.description = input.description;
+      if (input.dueDate !== undefined) updateData.dueDate = input.dueDate;
+      if (input.priority !== undefined) updateData.priority = input.priority;
+    } else {
+      // Non-creator (assignee) can only change status
+      if (input.status !== undefined) updateData.status = input.status;
+      // Silently ignore other fields for non-creators
+    }
+
+    updateData.updatedAt = new Date();
+
     const updated = await prisma.task.update({
       where: { id: taskId },
-      data: {
-        status: input.status,
-        description: input.description,
-        dueDate: input.dueDate,
-        priority: input.priority,
-        updatedAt: new Date(),
+      data: updateData,
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
       },
     });
 
-    return updated;
+    return {
+      ...updated,
+      canEdit: updated.createdByUserId === userId,
+      canDelete: updated.createdByUserId === userId || (updated.assigneeType === userRole && updated.assigneeId === (userRole === 'TENANT' ? tenantId : clientId)),
+      creatorName: updated.createdBy ? `${updated.createdBy.firstName} ${updated.createdBy.lastName}` : 'Unknown',
+    };
   } catch (error) {
     console.error('Error updating task:', error);
     throw error;
@@ -190,6 +273,8 @@ export async function updateTask(
 
 /**
  * Delete a task - with access control
+ * Creator: can delete anytime
+ * Assignee: can also delete
  */
 export async function deleteTask(
   taskId: string,
@@ -203,6 +288,15 @@ export async function deleteTask(
     const task = await getTaskById(taskId, userId, userRole, tenantId, clientId);
     if (!task) {
       throw new Error('Task not found');
+    }
+
+    // Check if user is creator or assignee
+    const isCreator = task.createdByUserId === userId;
+    const isAssignee = (task.assigneeType === 'TENANT' && task.assigneeId === tenantId && userRole === 'TENANT') || 
+                       (task.assigneeType === 'CLIENT' && task.assigneeId === clientId && userRole === 'CLIENT');
+
+    if (!isCreator && !isAssignee) {
+      throw new Error('Unauthorized: you cannot delete this task');
     }
 
     await prisma.task.delete({

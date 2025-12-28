@@ -23,7 +23,8 @@ interface TaskFormProps {
   bodyFontFamily: string;
   clientId?: string;
   tenantId?: string;
-  meetingNoteId?: string; // If creating from meeting note
+  userRole?: 'TENANT' | 'CLIENT';
+  meetingNoteId?: string;
   onTaskCreated: (task: Task) => void;
   onCancel: () => void;
 }
@@ -33,16 +34,19 @@ export default function TaskForm({
   bodyFontFamily,
   clientId,
   tenantId,
+  userRole = 'TENANT',
   meetingNoteId,
   onTaskCreated,
   onCancel,
 }: TaskFormProps) {
+  const defaultAssign = userRole === 'CLIENT' ? 'CLIENT_SELF' : 'TENANT_SELF';
+  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     dueDate: '',
     priority: 'MEDIUM',
-    assignTo: clientId ? 'CLIENT' : 'TENANT', // Default based on context
+    assignTo: defaultAssign,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -63,6 +67,17 @@ export default function TaskForm({
 
     setIsSubmitting(true);
     try {
+      let assigneeType: 'TENANT' | 'CLIENT';
+      let assigneeId: string;
+
+      if (formData.assignTo === 'TENANT_SELF' || formData.assignTo === 'CLIENT_TO_TENANT') {
+        assigneeType = 'TENANT';
+        assigneeId = tenantId || '';
+      } else {
+        assigneeType = 'CLIENT';
+        assigneeId = clientId || '';
+      }
+
       const response = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,8 +86,8 @@ export default function TaskForm({
           description: formData.description || null,
           dueDate: formData.dueDate || null,
           priority: formData.priority,
-          assigneeType: formData.assignTo,
-          assigneeId: formData.assignTo === 'CLIENT' ? clientId : tenantId,
+          assigneeType,
+          assigneeId,
           clientId: clientId || null,
           source: meetingNoteId ? 'MEETING_NOTE' : 'MANUAL',
           meetingNoteId: meetingNoteId || null,
@@ -283,8 +298,18 @@ export default function TaskForm({
               cursor: 'pointer',
             }}
           >
-            {tenantId && <option value="TENANT">Me (Tenant)</option>}
-            {clientId && <option value="CLIENT">Client</option>}
+            {userRole === 'TENANT' && (
+              <>
+                <option value="TENANT_SELF">Me (Tenant)</option>
+                {clientId && <option value="CLIENT_SELF">My Client</option>}
+              </>
+            )}
+            {userRole === 'CLIENT' && (
+              <>
+                <option value="CLIENT_SELF">Me (Client)</option>
+                {tenantId && <option value="CLIENT_TO_TENANT">My Coordinator (Tenant)</option>}
+              </>
+            )}
           </select>
         </div>
 

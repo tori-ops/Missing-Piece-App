@@ -19,6 +19,9 @@ interface Task {
   updatedAt: string;
   source: 'MANUAL' | 'MEETING_NOTE';
   meetingNoteId?: string | null;
+  creatorName?: string;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 interface TasksListProps {
@@ -26,6 +29,7 @@ interface TasksListProps {
   bodyFontFamily: string;
   clientId?: string;
   tenantId?: string;
+  userRole?: 'TENANT' | 'CLIENT';
   onClose: () => void;
 }
 
@@ -34,6 +38,7 @@ export default function TasksList({
   bodyFontFamily,
   clientId,
   tenantId,
+  userRole = 'TENANT',
   onClose,
 }: TasksListProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -240,6 +245,7 @@ export default function TasksList({
             bodyFontFamily={bodyFontFamily}
             clientId={clientId}
             tenantId={tenantId}
+            userRole={userRole}
             onTaskCreated={handleTaskCreated}
             onCancel={() => setShowForm(false)}
           />
