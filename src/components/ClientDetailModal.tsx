@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import EditClientModal from './EditClientModal';
+import WeddingDayWidget from './WeddingDayWidget';
 
 interface ClientDetailModalProps {
   client: any;
@@ -206,6 +207,22 @@ export default function ClientDetailModal({
               <div style={{ fontSize: '3rem', opacity: 0.2 }}>💍</div>
             </div>
           </InfoSection>
+
+          {/* Wedding Day Widget */}
+          {updatedClient.weddingDate && (
+            <InfoSection title="Your Wedding Day" icon="✨">
+              <WeddingDayWidget
+                weddingDate={updatedClient.weddingDate}
+                venueLat={updatedClient.venueLat}
+                venueLng={updatedClient.venueLng}
+                primaryColor={primaryColor}
+                fontColor={fontColor}
+                bodyFontFamily={bodyFontFamily}
+                headerFontFamily={headerFontFamily}
+                showAstrology={false}
+              />
+            </InfoSection>
+          )}
 
           {/* Status */}
           <InfoSection title="Account Status" icon="📌">

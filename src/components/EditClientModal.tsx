@@ -44,6 +44,7 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
     couple2LastName: client.couple2LastName || '',
     weddingDate: client.weddingDate ? new Date(client.weddingDate).toISOString().split('T')[0] : '',
     weddingLocation: client.weddingLocation || '',
+    ceremonyTime: client.ceremonyTime || '',
     budgetCents: client.budgetCents ? (client.budgetCents / 100).toString() : '',
     estimatedGuestCount: client.estimatedGuestCount ? client.estimatedGuestCount.toString() : '',
     contactEmail: client.contactEmail || '',
@@ -285,6 +286,19 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
               />
             </div>
 
+            <div className={styles.field}>
+              <label>Ceremony Time <span style={{ fontSize: '0.85rem', opacity: 0.7 }}>(optional - HH:MM, 24-hour)</span></label>
+              <input
+                type="time"
+                name="ceremonyTime"
+                value={formData.ceremonyTime}
+                onChange={handleChange}
+                placeholder="14:30"
+              />
+            </div>
+          </div>
+
+          <div className={styles.row}>
             <div className={styles.field} style={{ position: 'relative' }}>
               <label>Wedding Venue / Location</label>
               <input

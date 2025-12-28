@@ -432,6 +432,7 @@ model ClientProfile {
   
   // Wedding Details
   weddingDate           DateTime?
+  ceremonyTime          String?               // Ceremony time in HH:MM format (24-hour), used for astrology calculations
   weddingLocation       String?               // Venue name/location (e.g., "The Grand Ballroom")
   venueLat              Float?                // Venue latitude for weather/golden hour
   venueLng              Float?                // Venue longitude for weather/golden hour

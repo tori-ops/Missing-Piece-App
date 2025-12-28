@@ -1,4 +1,4 @@
-// Get detailed venue information from Google Places
+// Get detailed venue information from Google Places (NEW API)
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -15,40 +15,48 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Get place details
+    // Use NEW Google Places API v1 to get place details
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=formatted_address,geometry,phone_number,website,name&key=${apiKey}`,
-      { method: 'GET' }
+      `https://places.googleapis.com/v1/places/${placeId}?fields=displayName,formattedAddress,location,internationalPhoneNumber,nationalPhoneNumber,websiteUri`,
+      {
+        method: 'GET',
+        headers: {
+          'X-Goog-Api-Key': apiKey,
+        },
+      }
     );
 
     const data = await response.json();
 
-    if (data.error_message) {
-      console.error('Google Places API error:', data.error_message);
-      return NextResponse.json({ error: data.error_message }, { status: 500 });
+    if (!response.ok) {
+      console.error('Google Places API error:', data);
+      return NextResponse.json({ error: data.error?.message || 'API error' }, { status: 500 });
     }
 
-    const result = data.result || {};
-
     // Parse address into components
-    const addressParts = (result.formatted_address || '').split(',').map((s: string) => s.trim());
+    const formattedAddress = data.formattedAddress || '';
+    const addressParts = formattedAddress.split(',').map((s: string) => s.trim());
     const [address1, ...restAddress] = addressParts;
     const city = restAddress[restAddress.length - 2]?.trim() || '';
     const stateZip = restAddress[restAddress.length - 1]?.trim() || '';
     const [state, zip] = stateZip.split(/\s+/);
 
-    return NextResponse.json({
-      name: result.name || '',
-      address: result.formatted_address || '',
+    const result = {
+      name: data.displayName?.text || '',
+      address: formattedAddress,
       addressLine1: address1 || '',
       city: city,
       state: state || '',
       zip: zip || '',
-      lat: result.geometry?.location?.lat,
-      lng: result.geometry?.location?.lng,
-      phone: result.phone_number || '',
-      website: result.website || ''
-    });
+      lat: data.location?.latitude || 0,
+      lng: data.location?.longitude || 0,
+      phone: data.internationalPhoneNumber || data.nationalPhoneNumber || '',
+      website: data.websiteUri || ''
+    };
+
+    console.log('Place details result:', result);
+
+    return NextResponse.json(result);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('Places details error:', {
