@@ -31,8 +31,8 @@ export default function TasksWidget({
       <button
         onClick={() => setIsOpen(true)}
         style={{
-          background: 'transparent',
-          border: 'none',
+          background: primaryColor,
+          border: `2px solid ${primaryColor}`,
           borderRadius: '12px',
           padding: '1.5rem',
           cursor: 'pointer',
