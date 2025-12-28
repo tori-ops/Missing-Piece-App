@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import TenantBasicInfoForm from '@/components/TenantBasicInfoForm';
 import TenantBrandingForm from '@/components/TenantBrandingForm';
+import BrandingFooter from '@/components/BrandingFooter';
 
 export default async function TenantEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -129,6 +130,7 @@ export default async function TenantEditPage({ params }: { params: Promise<{ id:
           />
         </div>
       </div>
+      <BrandingFooter />
     </div>
   );
 }

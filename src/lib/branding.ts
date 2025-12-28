@@ -156,3 +156,28 @@ export function adjustColorLightness(hex: string, amount: number): string {
     .join('')
     .toUpperCase()}`;
 }
+
+/**
+ * Lightens a hex color by a specified amount
+ * @param hex - Hex color code (e.g., '#274E13')
+ * @param amount - Amount to lighten (0-255, where higher = lighter)
+ * @returns Lightened hex color
+ */
+export function lightenColor(hex: string, amount: number = 80): string {
+  const rgb = parseInt(hex.slice(1), 16);
+  let r = (rgb >> 16) & 255;
+  let g = (rgb >> 8) & 255;
+  let b = rgb & 255;
+
+  r = Math.min(255, r + amount);
+  g = Math.min(255, g + amount);
+  b = Math.min(255, b + amount);
+
+  return `#${[r, g, b]
+    .map((x) => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    })
+    .join('')
+    .toUpperCase()}`;
+}

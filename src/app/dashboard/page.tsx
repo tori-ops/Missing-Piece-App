@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
 import { authOptions } from '@/lib/auth';
+import BrandingFooter from '@/components/BrandingFooter';
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -26,9 +27,12 @@ export default async function Dashboard() {
 
   // Fallback
   return (
-    <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
-      <h1>Invalid Role: {userRole}</h1>
-      <p>Your account role is not recognized. Please contact support.</p>
-    </div>
+    <>
+      <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+        <h1>Invalid Role: {userRole}</h1>
+        <p>Your account role is not recognized. Please contact support.</p>
+      </div>
+      <BrandingFooter />
+    </>
   );
 }

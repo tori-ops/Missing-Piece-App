@@ -2,8 +2,8 @@ import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { hexToRgba } from '@/lib/branding';
 import ClientDashboardContent from './ClientDashboardContent';
+import BrandingFooter from '@/components/BrandingFooter';
 
 export const dynamic = 'force-dynamic';
 
@@ -83,10 +83,10 @@ export default async function ClientDashboard() {
     }
 
   // Use tenant branding with fallbacks
-  const accentColor = tenant?.brandingPrimaryColor || '#274E13';
-  const backgroundColor = tenant?.brandingSecondaryColor || '#D0CEB5';
-  const backgroundColorWithOpacity = hexToRgba(backgroundColor, tenant?.brandingSecondaryColorOpacity || 55);
-  const fontColor = tenant?.brandingFontColor || '#000000';
+  const primaryColor = tenant?.brandingPrimaryColor || '#274E13';
+  const secondaryColor = tenant?.brandingSecondaryColor || '#e1e0d0';
+  const backgroundColor = secondaryColor; // Main container uses secondary color
+  const fontColor = tenant?.brandingFontColor || '#1B5E20';
   const companyName = tenant?.brandingCompanyName || tenant?.businessName || 'The Missing Piece';
   const fontFamily = tenant?.brandingFontFamily || "'Poppins', sans-serif";
   const headerFontFamily = tenant?.brandingHeaderFontFamily || "'Playfair Display', serif";
@@ -94,28 +94,34 @@ export default async function ClientDashboard() {
   const logoUrl = tenant?.brandingLogoUrl;
 
   return (
-    <ClientDashboardContent 
-      clientProfile={clientProfile}
-      companyName={companyName}
-      accentColor={accentColor}
-      backgroundColor={backgroundColorWithOpacity}
-      fontColor={fontColor}
-      fontFamily={fontFamily}
-      headerFontFamily={headerFontFamily}
-      bodyFontFamily={bodyFontFamily}
-      logoUrl={logoUrl}
-    />
+    <>
+      <ClientDashboardContent 
+        clientProfile={clientProfile}
+        companyName={companyName}
+        primaryColor={primaryColor}
+        backgroundColor={backgroundColor}
+        fontColor={fontColor}
+        fontFamily={fontFamily}
+        headerFontFamily={headerFontFamily}
+        bodyFontFamily={bodyFontFamily}
+        logoUrl={logoUrl}
+      />
+      <BrandingFooter primaryColor={primaryColor} />
+    </>
   );
   } catch (error) {
     console.error('ClientDashboard error:', error);
     return (
-      <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
-        <h1>Oops! Something went wrong</h1>
-        <p>We encountered an error loading your dashboard. Please try refreshing the page.</p>
-        <pre style={{ backgroundColor: '#f5f5f5', padding: '1rem', borderRadius: '4px', fontSize: '0.8rem', textAlign: 'left', overflow: 'auto' }}>
-          {error instanceof Error ? error.message : String(error)}
-        </pre>
-      </div>
+      <>
+        <div style={{ padding: '2rem', textAlign: 'center', color: '#274E13' }}>
+          <h1>Oops! Something went wrong</h1>
+          <p>We encountered an error loading your dashboard. Please try refreshing the page.</p>
+          <pre style={{ backgroundColor: '#f5f5f5', padding: '1rem', borderRadius: '4px', fontSize: '0.8rem', textAlign: 'left', overflow: 'auto' }}>
+            {error instanceof Error ? error.message : String(error)}
+          </pre>
+        </div>
+        <BrandingFooter />
+      </>
     );
   }
 }

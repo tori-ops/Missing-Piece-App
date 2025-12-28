@@ -14,33 +14,56 @@ export async function GET(request: NextRequest) {
 
     const weddingDate = new Date(date);
     
+    // Calculate all planetary positions
     const sunData = calculateSunPosition(weddingDate);
     const moonData = calculateMoonPosition(weddingDate, time || undefined);
+    const mercuryData = calculateMercuryPosition(weddingDate);
     const venusData = calculateVenusPosition(weddingDate);
     const marsData = calculateMarsPosition(weddingDate);
+    const jupiterData = calculateJupiterPosition(weddingDate);
+    const saturnData = calculateSaturnPosition(weddingDate);
+    const chironData = calculateChiron(weddingDate);
+    const lilithData = calculateBlackMoonLilith(weddingDate);
     
     let risingData = null;
     let houses = null;
+    let rulingHourData = null;
+    let skyMapData = null;
+    
     if (time) {
       const [hours, minutes] = time.split(':').map(Number);
       risingData = calculateRisingSign(hours, minutes);
       houses = calculateHouses(hours, minutes, sunData, moonData, venusData, marsData);
+      rulingHourData = calculatePlanetaryRulingHour(hours, minutes);
+      skyMapData = calculateSkyMapData(hours, minutes);
     }
     
     const aspects = calculateAspects(sunData, moonData, venusData);
     const moonPhase = calculateMoonPhase(weddingDate);
+    
+    // Get all retrograde planets
+    const retrogradeStatus = getRetrogradePlanets(weddingDate);
 
     return NextResponse.json({
       date,
       sun: sunData,
       moon: moonData,
+      mercury: mercuryData,
       venus: venusData,
       mars: marsData,
+      jupiter: jupiterData,
+      saturn: saturnData,
+      chiron: chironData,
+      lilith: lilithData,
       rising: risingData,
       houses,
       aspects,
       moonPhase,
-      disclaimer: 'Astrology reflects meaning, not destiny. The true power lies in your commitment',
+      retrogradeStatus,
+      rulingHour: rulingHourData,
+      skyMap: skyMapData,
+      houseSystem: 'Whole Sign',
+      disclaimer: 'Astronomical data only. No prediction. No outcome interpretation.',
     });
   } catch (error) {
     console.error('Error calculating astrology:', error);
@@ -76,10 +99,16 @@ function calculateMoonPosition(date: Date, time?: string) {
   const moonLongitude = (218.316733 + 13.176396 * days) % 360;
   const { sign, degree } = getLongitudeSign(moonLongitude);
   
+  // Calculate next sign entry (approx 2.5 days per sign)
+  const moonSpeedPerDay = 13.176396;
+  const degreesUntilNextSign = 30 - degree;
+  const daysUntilNextSign = (degreesUntilNextSign / moonSpeedPerDay).toFixed(1);
+  
   return {
     sign,
     degree: degree.toFixed(1),
     longitude: moonLongitude.toFixed(2),
+    daysUntilNextSign,
   };
 }
 
@@ -174,7 +203,7 @@ function calculateAspects(sun: any, moon: any, venus: any) {
     aspects.push({
       type: `Sun ${sunMoonAspect.name} Moon`,
       angle: sunMoonAspect.angle,
-      meaning: sunMoonAspect.meaning,
+      orb: (Math.abs(sunMoonDiff - sunMoonAspect.angle)).toFixed(2),
     });
   }
   
@@ -184,7 +213,7 @@ function calculateAspects(sun: any, moon: any, venus: any) {
     aspects.push({
       type: `Sun ${sunVenusAspect.name} Venus`,
       angle: sunVenusAspect.angle,
-      meaning: sunVenusAspect.meaning,
+      orb: (Math.abs(sunVenusDiff - sunVenusAspect.angle)).toFixed(2),
     });
   }
   
@@ -194,7 +223,7 @@ function calculateAspects(sun: any, moon: any, venus: any) {
     aspects.push({
       type: `Moon ${moonVenusAspect.name} Venus`,
       angle: moonVenusAspect.angle,
-      meaning: moonVenusAspect.meaning,
+      orb: (Math.abs(moonVenusDiff - moonVenusAspect.angle)).toFixed(2),
     });
   }
 
@@ -205,19 +234,19 @@ function getAspect(angleDiff: number): any {
   const diff = angleDiff > 180 ? 360 - angleDiff : angleDiff;
   
   if (Math.abs(diff - 0) < 8) {
-    return { name: 'Conjunction', angle: 0, meaning: 'Union at 0°' };
+    return { name: 'Conjunction', angle: 0 };
   }
   if (Math.abs(diff - 60) < 8) {
-    return { name: 'Sextile', angle: 60, meaning: 'Support at 60°' };
+    return { name: 'Sextile', angle: 60 };
   }
   if (Math.abs(diff - 90) < 8) {
-    return { name: 'Square', angle: 90, meaning: 'Challenge at 90°' };
+    return { name: 'Square', angle: 90 };
   }
   if (Math.abs(diff - 120) < 8) {
-    return { name: 'Trine', angle: 120, meaning: 'Harmony at 120°' };
+    return { name: 'Trine', angle: 120 };
   }
   if (Math.abs(diff - 180) < 8) {
-    return { name: 'Opposition', angle: 180, meaning: 'Opposition at 180°' };
+    return { name: 'Opposition', angle: 180 };
   }
   
   return null;
@@ -225,7 +254,8 @@ function getAspect(angleDiff: number): any {
 
 function calculateMoonPhase(date: Date) {
   const days = getDaysSinceEpoch(date);
-  const phase = (days % 29.53) / 29.53;
+  const lunarAge = (days % 29.53);
+  const phase = lunarAge / 29.53;
   
   let phaseName = '';
   if (phase < 0.125) phaseName = 'New Moon';
@@ -240,6 +270,7 @@ function calculateMoonPhase(date: Date) {
   return {
     name: phaseName,
     percentage: (phase * 100).toFixed(1),
+    lunarAge: lunarAge.toFixed(1),
   };
 }
 
@@ -276,5 +307,163 @@ function getLongitudeSign(longitude: number): { sign: string; degree: number } {
   return {
     sign: signs[signIndex],
     degree,
+  };
+}
+
+function calculateMercuryPosition(date: Date) {
+  const days = getDaysSinceEpoch(date);
+  const mercuryMeanMotion = 4.0923;
+  const mercuryEpoch = 120.77;
+  
+  const mercuryLongitude = (mercuryEpoch + mercuryMeanMotion * days) % 360;
+  const { sign, degree } = getLongitudeSign(mercuryLongitude);
+  
+  return {
+    sign,
+    degree: degree.toFixed(1),
+    longitude: mercuryLongitude.toFixed(2),
+  };
+}
+
+function calculateJupiterPosition(date: Date) {
+  const days = getDaysSinceEpoch(date);
+  const jupiterMeanMotion = 0.0830;
+  const jupiterEpoch = 64.29;
+  
+  const jupiterLongitude = (jupiterEpoch + jupiterMeanMotion * days) % 360;
+  const { sign, degree } = getLongitudeSign(jupiterLongitude);
+  
+  return {
+    sign,
+    degree: degree.toFixed(1),
+    longitude: jupiterLongitude.toFixed(2),
+  };
+}
+
+function calculateSaturnPosition(date: Date) {
+  const days = getDaysSinceEpoch(date);
+  const saturnMeanMotion = 0.0334;
+  const saturnEpoch = 99.46;
+  
+  const saturnLongitude = (saturnEpoch + saturnMeanMotion * days) % 360;
+  const { sign, degree } = getLongitudeSign(saturnLongitude);
+  
+  return {
+    sign,
+    degree: degree.toFixed(1),
+    longitude: saturnLongitude.toFixed(2),
+  };
+}
+
+function calculateChiron(date: Date) {
+  const days = getDaysSinceEpoch(date);
+  const chironMeanMotion = 0.0134;
+  const chironEpoch = 337.37;
+  
+  const chironLongitude = (chironEpoch + chironMeanMotion * days) % 360;
+  const { sign, degree } = getLongitudeSign(chironLongitude);
+  
+  return {
+    sign,
+    degree: degree.toFixed(1),
+    longitude: chironLongitude.toFixed(2),
+  };
+}
+
+function calculateBlackMoonLilith(date: Date) {
+  const days = getDaysSinceEpoch(date);
+  // Black Moon Lilith (mean node) - more stable than true node
+  const lilithMeanMotion = -0.0529;
+  const lilithEpoch = 233.67;
+  
+  const lilithLongitude = (lilithEpoch + lilithMeanMotion * days) % 360;
+  const { sign, degree } = getLongitudeSign(lilithLongitude);
+  
+  return {
+    sign,
+    degree: degree.toFixed(1),
+    longitude: lilithLongitude.toFixed(2),
+  };
+}
+
+function calculatePlanetaryRulingHour(hours: number, minutes: number): any {
+  // Planetary hours follow a 7-planet cycle: Sun, Venus, Mercury, Moon, Saturn, Jupiter, Mars
+  const planetsInOrder = ['Sun', 'Venus', 'Mercury', 'Moon', 'Saturn', 'Jupiter', 'Mars'];
+  const totalMinutes = hours * 60 + minutes;
+  const hourOfDay = Math.floor(totalMinutes / 60);
+  
+  // Each planet rules approximately 24/7 = 3.43 hours
+  const planetIndex = hourOfDay % 7;
+  const rulingPlanet = planetsInOrder[planetIndex];
+  
+  return {
+    hour: hourOfDay.toString().padStart(2, '0') + ':00',
+    planet: rulingPlanet,
+    note: `${rulingPlanet} rules this hour`,
+  };
+}
+
+function calculateSkyMapData(hours: number, minutes: number): any {
+  // Create SVG-friendly data for sky map
+  // Map planets to approximate azimuth (0-360 degrees, where 0=North, 90=East, 180=South, 270=West)
+  // Using simplified calculation based on hour of day
+  
+  const totalMinutes = hours * 60 + minutes;
+  const hourProgress = (totalMinutes % 1440) / 1440; // Progress through 24-hour day
+  const baseSouth = hourProgress * 360; // Simple hourly rotation
+  
+  // Assign planets to approximate positions
+  const planetPositions = [
+    { name: 'Sun', azimuth: (baseSouth + 0) % 360, altitude: 45 },
+    { name: 'Moon', azimuth: (baseSouth + 45) % 360, altitude: 35 },
+    { name: 'Mercury', azimuth: (baseSouth + 90) % 360, altitude: 40 },
+    { name: 'Venus', azimuth: (baseSouth + 135) % 360, altitude: 50 },
+    { name: 'Mars', azimuth: (baseSouth + 180) % 360, altitude: 30 },
+    { name: 'Jupiter', azimuth: (baseSouth + 225) % 360, altitude: 25 },
+    { name: 'Saturn', azimuth: (baseSouth + 270) % 360, altitude: 20 },
+  ];
+  
+  return {
+    hour: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`,
+    planets: planetPositions,
+    horizon: 'Simplified celestial positions',
+  };
+}
+
+function getRetrogradePlanets(date: Date): any {
+  // Simplified retrograde detection based on date ranges for 2024-2025
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  
+  const retrograde: string[] = [];
+  
+  // Mercury retrograde periods (simplified)
+  if ((year === 2024 && month >= 11) || (year === 2025 && month <= 1 && day <= 15)) {
+    retrograde.push('Mercury');
+  }
+  
+  // Venus retrograde periods (simplified)
+  if (year === 2024 && month >= 11 && month <= 12) {
+    retrograde.push('Venus');
+  }
+  
+  // Mars retrograde (rare, none expected in 2024-2025)
+  // Jupiter retrograde periods (simplified)
+  if (year === 2024 && month >= 9 && month <= 12) {
+    retrograde.push('Jupiter');
+  }
+  if (year === 2025 && month <= 1) {
+    retrograde.push('Jupiter');
+  }
+  
+  // Saturn retrograde periods (simplified)
+  if (year === 2024 && month >= 9 && month <= 11) {
+    retrograde.push('Saturn');
+  }
+  
+  return {
+    retrograduatePlanets: retrograde.length > 0 ? retrograde : ['None'],
+    count: retrograde.length,
   };
 }

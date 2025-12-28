@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import EditClientModal from './EditClientModal';
-import WeddingDayWidget from './WeddingDayWidget';
 
 interface ClientDetailModalProps {
   client: any;
@@ -12,6 +11,7 @@ interface ClientDetailModalProps {
   headerFontFamily?: string;
   onClose: () => void;
   tenantId?: string;
+  onSaveSuccess?: () => void;
 }
 
 export default function ClientDetailModal({
@@ -21,10 +21,14 @@ export default function ClientDetailModal({
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
   onClose,
-  tenantId
+  tenantId,
+  onSaveSuccess
 }: ClientDetailModalProps) {
   const [editMode, setEditMode] = useState(false);
   const [updatedClient, setUpdatedClient] = useState(client);
+  const [isResendingEmail, setIsResendingEmail] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [emailFeedback, setEmailFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const weddingDate = updatedClient.weddingDate ? new Date(updatedClient.weddingDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Not set';
   const budget = updatedClient.budgetCents ? `$${(updatedClient.budgetCents / 100).toLocaleString()}` : 'Not set';
@@ -33,6 +37,34 @@ export default function ClientDetailModal({
   const handleSaveClient = (newClientData: any) => {
     setUpdatedClient(newClientData);
     setEditMode(false);
+    onSaveSuccess?.();
+  };
+
+  const handleResendEmail = async () => {
+    setIsResendingEmail(true);
+    setEmailFeedback(null);
+
+    try {
+      const response = await fetch('/api/tenant/resend-setup-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId: updatedClient.id })
+      });
+
+      if (response.ok) {
+        setEmailFeedback({ type: 'success', message: 'Email sent successfully' });
+        setShowConfirmation(false);
+        // Clear feedback after 3 seconds
+        setTimeout(() => setEmailFeedback(null), 3000);
+      } else {
+        const data = await response.json();
+        setEmailFeedback({ type: 'error', message: data.error || 'Failed to send email' });
+      }
+    } catch (error) {
+      setEmailFeedback({ type: 'error', message: 'An error occurred while sending the email' });
+    } finally {
+      setIsResendingEmail(false);
+    }
   };
 
   const InfoSection = ({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) => (
@@ -125,7 +157,7 @@ export default function ClientDetailModal({
               fontFamily: headerFontFamily,
               fontWeight: '600'
             }}>
-              {client.couple1FirstName} & {client.couple2FirstName || '?'} {client.couple1LastName}
+              {client.couple1FirstName} & {client.couple2FirstName || '?'}
             </h2>
             <p style={{ margin: '0.5rem 0 0 0', opacity: 0.9, fontSize: '0.95rem' }}>Wedding Client Profile</p>
           </div>
@@ -207,23 +239,6 @@ export default function ClientDetailModal({
               <div style={{ fontSize: '3rem', opacity: 0.2 }}>💍</div>
             </div>
           </InfoSection>
-
-          {/* Wedding Day Widget */}
-          {updatedClient.weddingDate && (
-            <InfoSection title="Your Wedding Day" icon="✨">
-              <WeddingDayWidget
-                weddingDate={updatedClient.weddingDate}
-                venueLat={updatedClient.venueLat}
-                venueLng={updatedClient.venueLng}
-                primaryColor={primaryColor}
-                fontColor={fontColor}
-                bodyFontFamily={bodyFontFamily}
-                headerFontFamily={headerFontFamily}
-                showAstrology={false}
-              />
-            </InfoSection>
-          )}
-
           {/* Status */}
           <InfoSection title="Account Status" icon="📌">
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
@@ -252,8 +267,24 @@ export default function ClientDetailModal({
           display: 'flex',
           gap: '1rem',
           justifyContent: 'flex-end',
-          background: `${primaryColor}04`
+          background: `${primaryColor}04`,
+          flexWrap: 'wrap'
         }}>
+          {emailFeedback && (
+            <div style={{
+              width: '100%',
+              padding: '0.75rem 1rem',
+              borderRadius: '8px',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              background: emailFeedback.type === 'success' ? '#E8F5E9' : '#FFEBEE',
+              color: emailFeedback.type === 'success' ? '#2E7D32' : '#C62828',
+              border: `2px solid ${emailFeedback.type === 'success' ? '#81C784' : '#EF5350'}`,
+              textAlign: 'center'
+            }}>
+              {emailFeedback.message}
+            </div>
+          )}
           <button
             onClick={onClose}
             style={{
@@ -276,6 +307,33 @@ export default function ClientDetailModal({
             }}
           >
             Close
+          </button>
+          <button
+            onClick={() => setShowConfirmation(true)}
+            style={{
+              background: 'white',
+              color: primaryColor,
+              border: `2px solid ${primaryColor}`,
+              padding: '0.75rem 1.75rem',
+              borderRadius: '8px',
+              fontSize: '1rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              fontFamily: bodyFontFamily,
+              transition: 'all 0.2s ease',
+              opacity: isResendingEmail ? 0.6 : 1
+            }}
+            disabled={isResendingEmail}
+            onMouseEnter={(e) => {
+              if (!isResendingEmail) {
+                (e.currentTarget as any).style.background = `${primaryColor}10`;
+              }
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as any).style.background = 'white';
+            }}
+          >
+            {isResendingEmail ? '📧 Sending...' : '📧 Resend Setup Email'}
           </button>
           <button
             onClick={() => setEditMode(true)}
@@ -313,6 +371,101 @@ export default function ClientDetailModal({
           onClose={() => setEditMode(false)}
           onSave={handleSaveClient}
         />
+      )}
+
+      {/* Confirmation Dialog */}
+      {showConfirmation && (
+        <>
+          <div
+            onClick={() => setShowConfirmation(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0,0,0,0.3)',
+              zIndex: 150
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              background: 'white',
+              borderRadius: '12px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+              zIndex: 151,
+              padding: '2rem',
+              maxWidth: '400px',
+              width: '90%',
+              fontFamily: bodyFontFamily
+            }}
+          >
+            <h3 style={{ color: primaryColor, margin: '0 0 1rem 0', fontSize: '1.3rem', fontFamily: headerFontFamily }}>
+              Resend Setup Email?
+            </h3>
+            <p style={{ color: fontColor, marginBottom: '1.5rem', lineHeight: '1.6' }}>
+              Send the account setup email to <strong>{updatedClient.contactEmail}</strong>? They'll receive a secure link to create their password.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setShowConfirmation(false)}
+                style={{
+                  background: 'white',
+                  color: primaryColor,
+                  border: `2px solid ${primaryColor}`,
+                  padding: '0.6rem 1.5rem',
+                  borderRadius: '8px',
+                  fontSize: '0.95rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontFamily: bodyFontFamily,
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as any).style.background = `${primaryColor}10`;
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as any).style.background = 'white';
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleResendEmail}
+                disabled={isResendingEmail}
+                style={{
+                  background: primaryColor,
+                  color: 'white',
+                  border: 'none',
+                  padding: '0.6rem 1.5rem',
+                  borderRadius: '8px',
+                  fontSize: '0.95rem',
+                  fontWeight: '600',
+                  cursor: isResendingEmail ? 'default' : 'pointer',
+                  fontFamily: bodyFontFamily,
+                  transition: 'all 0.2s ease',
+                  opacity: isResendingEmail ? 0.6 : 1,
+                  boxShadow: `0 4px 12px ${primaryColor}40`
+                }}
+                onMouseEnter={(e) => {
+                  if (!isResendingEmail) {
+                    (e.currentTarget as any).style.transform = 'translateY(-2px)';
+                    (e.currentTarget as any).style.boxShadow = `0 6px 16px ${primaryColor}50`;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isResendingEmail) {
+                    (e.currentTarget as any).style.transform = 'translateY(0)';
+                    (e.currentTarget as any).style.boxShadow = `0 4px 12px ${primaryColor}40`;
+                  }
+                }}
+              >
+                {isResendingEmail ? 'Sending...' : 'Send Email'}
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </>
   );

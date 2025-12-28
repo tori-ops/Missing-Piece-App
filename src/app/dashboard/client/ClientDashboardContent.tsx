@@ -6,12 +6,15 @@ import AstrologyCard from '@/components/AstrologyCard';
 import WeatherDetailView from '@/components/WeatherDetailView';
 import AstrologyDetailView from '@/components/AstrologyDetailView';
 import LogoutButton from '@/components/LogoutButton';
+
+import { lightenColor } from '@/lib/branding';
 import type { ClientProfile } from '@prisma/client';
 
 interface ClientDashboardContentProps {
   clientProfile: ClientProfile;
   companyName: string;
-  accentColor: string;
+  primaryColor: string;
+  
   backgroundColor: string;
   fontColor: string;
   fontFamily: string;
@@ -23,7 +26,8 @@ interface ClientDashboardContentProps {
 export default function ClientDashboardContent({
   clientProfile,
   companyName,
-  accentColor,
+  primaryColor,
+  
   backgroundColor,
   fontColor,
   fontFamily,
@@ -40,7 +44,7 @@ export default function ClientDashboardContent({
 
   if (isLoading) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center', color: accentColor }}>
+      <div style={{ padding: '2rem', textAlign: 'center', color: primaryColor }}>
         <p>Loading...</p>
       </div>
     );
@@ -65,7 +69,7 @@ export default function ClientDashboardContent({
         background: backgroundColor, 
         fontFamily, 
         color: fontColor,
-        maxWidth: '900px',
+        maxWidth: '700px',
         margin: '0 auto'
       }}>
         <WeatherDetailView
@@ -74,7 +78,7 @@ export default function ClientDashboardContent({
           venueLng={clientProfile.venueLng || undefined}
           venueName={clientProfile.weddingLocation || undefined}
           venueAddress={venueAddress || undefined}
-          primaryColor={accentColor}
+          primaryColor={primaryColor}
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
@@ -92,7 +96,7 @@ export default function ClientDashboardContent({
         background: backgroundColor, 
         fontFamily, 
         color: fontColor,
-        maxWidth: '900px',
+        maxWidth: '700px',
         margin: '0 auto'
       }}>
         <AstrologyDetailView
@@ -102,7 +106,7 @@ export default function ClientDashboardContent({
           venueLng={clientProfile.venueLng?.toString()}
           venueName={clientProfile.weddingLocation || undefined}
           venueAddress={venueAddress || undefined}
-          primaryColor={accentColor}
+          primaryColor={primaryColor}
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
@@ -114,22 +118,23 @@ export default function ClientDashboardContent({
 
   // Main dashboard view
   return (
+    <>
     <div style={{ 
       padding: '2rem', 
       minHeight: '100vh', 
       background: backgroundColor, 
       fontFamily, 
       color: fontColor,
-      maxWidth: '900px',
+      maxWidth: '700px',
       margin: '0 auto'
     }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '2rem', marginBottom: '3rem' }}>
         <div style={{ flex: 1 }}>
-          <h1 style={{ color: accentColor, margin: 0, fontSize: '2rem', fontFamily: headerFontFamily }}>
+          <h1 style={{ color: primaryColor, margin: 0, fontSize: '2.95rem', fontFamily: headerFontFamily }}>
             Welcome, {clientProfile.couple1FirstName}!
           </h1>
-          <p style={{ color: accentColor, fontSize: '0.95rem', margin: '0.5rem 0 0 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
+          <p style={{ color: primaryColor, fontSize: '1.25rem', margin: '0.5rem 0 0 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
             Coordinated by {companyName}
           </p>
         </div>
@@ -139,7 +144,7 @@ export default function ClientDashboardContent({
               src={logoUrl} 
               alt={companyName} 
               style={{ 
-                height: '50px', 
+                height: '100px', 
                 backgroundColor: 'transparent'
               }} 
             />
@@ -151,38 +156,33 @@ export default function ClientDashboardContent({
 
       {/* Wedding Details Card */}
       <div style={{ 
-        background: 'white', 
-        border: `2px solid ${accentColor}`, 
+        background: primaryColor, 
+        border: `2px solid ${primaryColor}`, 
         borderRadius: '8px', 
         padding: '2rem',
         marginBottom: '2rem',
-        boxShadow: `0 10px 40px ${accentColor}26`,
+        boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
         fontFamily: bodyFontFamily
       }}>
-        <h2 style={{ color: accentColor, marginTop: 0, fontFamily: headerFontFamily }}>Your Wedding Details</h2>
+        <h2 style={{ color: lightenColor(primaryColor, 100), marginTop: 0, marginBottom: '1.5rem', fontFamily: headerFontFamily, fontSize: '2.05rem' }}>Your Wedding Details</h2>
         {clientProfile.weddingDate && (
-          <p style={{ color: fontColor }}>
-            📅 Your Big Day: <strong>{new Date(clientProfile.weddingDate).toLocaleDateString()}</strong>
+          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '1.2rem' }}>
+            Your Big Day: <strong>{new Date(clientProfile.weddingDate).toLocaleDateString()}</strong>
           </p>
         )}
         {clientProfile.budgetCents && (
-          <p style={{ color: fontColor }}>
-            💰 Budget: <strong>${(clientProfile.budgetCents / 100).toLocaleString()}</strong>
+          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '1.2rem' }}>
+            Budget: <strong>${(clientProfile.budgetCents / 100).toLocaleString()}</strong>
           </p>
         )}
         {clientProfile.estimatedGuestCount && (
-          <p style={{ color: fontColor }}>
-            👥 Guest Count: <strong>{clientProfile.estimatedGuestCount}</strong>
+          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '1.2rem' }}>
+            Guest Count: <strong>{clientProfile.estimatedGuestCount}</strong>
           </p>
         )}
         {clientProfile.weddingLocation && (
-          <p style={{ color: fontColor }}>
-            🏛️ Venue: <strong>{clientProfile.weddingLocation}</strong>
-          </p>
-        )}
-        {clientProfile.addressLine1 && (
-          <p style={{ color: fontColor, fontSize: '0.9rem' }}>
-            📍 {clientProfile.addressLine1}{clientProfile.addressCity ? `, ${clientProfile.addressCity}` : ''}{clientProfile.addressState ? `, ${clientProfile.addressState}` : ''}
+          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '1.2rem' }}>
+            Venue: <strong>{clientProfile.weddingLocation}</strong>
           </p>
         )}
         {!clientProfile.weddingDate && !clientProfile.budgetCents && !clientProfile.estimatedGuestCount && (
@@ -197,43 +197,30 @@ export default function ClientDashboardContent({
         <div style={{ 
           marginBottom: '2rem',
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '1.5rem',
         }}>
           <WeatherCard
-            primaryColor={accentColor}
-            fontColor={fontColor}
+            primaryColor={primaryColor}
+            bodyFontFamily={bodyFontFamily}
+            textColor={lightenColor(primaryColor, 120)}
             onClick={() => setActiveView('weather')}
           />
           <AstrologyCard
-            primaryColor={accentColor}
-            fontColor={fontColor}
+            primaryColor={primaryColor}
+            bodyFontFamily={bodyFontFamily}
+            textColor={lightenColor(primaryColor, 120)}
             onClick={() => setActiveView('astrology')}
           />
         </div>
       )}
 
       {/* Footer */}
-      <div style={{ 
-        marginTop: '4rem', 
-        paddingTop: '2rem', 
-        borderTop: `1px solid ${accentColor}40`,
-        textAlign: 'center',
-        fontSize: '0.8rem',
-        color: fontColor,
-        opacity: 0.6,
-        marginBottom: '2rem'
-      }}>
-        Powered by {companyName}
-      </div>
-
       {/* Logout Button */}
-      <div style={{ 
-        display: 'flex',
-        justifyContent: 'center'
-      }}>
-        <LogoutButton primaryColor={accentColor} />
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <LogoutButton primaryColor={primaryColor} />
       </div>
     </div>
+    </>
   );
 }

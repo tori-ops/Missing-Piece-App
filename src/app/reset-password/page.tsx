@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import BrandingFooter from '@/components/BrandingFooter';
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -300,6 +301,7 @@ export default function ResetPasswordPage() {
       </div>
     }>
       <ResetPasswordForm />
+      <BrandingFooter />
     </Suspense>
   );
 }

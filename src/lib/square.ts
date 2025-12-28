@@ -1,9 +1,6 @@
 
-import { Client, Environment } from 'square';
-
-const squareClient = new Client({
-  environment: Environment.Sandbox,
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
-});
+// Square SDK is installed but not actively used
+// Placeholder for future implementation
+export const squareClient = null;
 
 export default squareClient;

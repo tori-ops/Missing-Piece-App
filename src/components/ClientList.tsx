@@ -20,10 +20,24 @@ export default function ClientList({
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif"
 }: ClientListProps) {
-  const [clients] = useState(initialClients);
+  const [clients, setClients] = useState(initialClients);
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [filterStatus, setFilterStatus] = useState<'ALL' | 'OK' | 'BEHIND' | 'OVER'>('ALL');
   const [sortBy, setSortBy] = useState<'date' | 'name'>('date');
+
+  const handleSaveSuccess = async () => {
+    // Refetch clients from API after successful save
+    try {
+      const response = await fetch(`/api/tenant/clients?tenantId=${tenantId}`);
+      const data = await response.json();
+      if (data.clients) {
+        setClients(data.clients);
+        setSelectedClient(null); // Close the modal
+      }
+    } catch (err) {
+      console.error('Failed to refetch clients:', err);
+    }
+  };
 
   // Placeholder status assignment (will be replaced with real logic later)
   const getClientStatus = (client: any) => {
@@ -231,6 +245,7 @@ export default function ClientList({
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
           onClose={() => setSelectedClient(null)}
+          onSaveSuccess={handleSaveSuccess}
         />
       )}
     </div>

@@ -14,27 +14,16 @@ interface AstrologyWidgetProps {
 
 interface AstrologyData {
   date: string;
-  sun: {
-    sign: string;
-    degree: string;
-  };
-  moon: {
-    sign: string;
-    degree: string;
-  };
-  venus: {
-    sign: string;
-    degree: string;
-    retrograde: boolean;
-  };
-  mars: {
-    sign: string;
-    degree: string;
-  };
-  rising?: {
-    sign: string;
-    note?: string;
-  };
+  sun: { sign: string; degree: string };
+  moon: { sign: string; degree: string; daysUntilNextSign: string };
+  mercury: { sign: string; degree: string };
+  venus: { sign: string; degree: string; retrograde: boolean };
+  mars: { sign: string; degree: string };
+  jupiter: { sign: string; degree: string };
+  saturn: { sign: string; degree: string };
+  chiron: { sign: string; degree: string };
+  lilith: { sign: string; degree: string };
+  rising?: { sign: string; note?: string };
   houses?: {
     sun: number;
     moon: number;
@@ -45,12 +34,28 @@ interface AstrologyData {
   aspects: Array<{
     type: string;
     angle: number;
-    meaning: string;
+    orb: string;
   }>;
   moonPhase: {
     name: string;
     percentage: string;
+    lunarAge: string;
   };
+  retrogradeStatus: {
+    retrograduatePlanets: string[];
+    count: number;
+  };
+  rulingHour?: {
+    hour: string;
+    planet: string;
+    note: string;
+  };
+  skyMap?: {
+    hour: string;
+    planets: Array<{ name: string; azimuth: number; altitude: number }>;
+    horizon: string;
+  };
+  houseSystem: string;
   disclaimer: string;
 }
 
@@ -90,10 +95,29 @@ export default function AstrologyWidget({
     };
 
     fetchAstrology();
-  }, [dateStr, displayCeremonyTime, lat, lng]);
+  }, [dateStr, lat, lng]);
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayCeremonyTime(e.target.value);
+  };
+
+  const handleCalculate = async () => {
+    try {
+      setLoading(true);
+      let url = `/api/wedding/astrology-enhanced?date=${dateStr}`;
+      if (displayCeremonyTime) url += `&time=${displayCeremonyTime}`;
+      if (lat && lng) url += `&lat=${lat}&lng=${lng}`;
+      
+      const res = await fetch(url);
+      const data = await res.json();
+      setAstrology(data);
+      setError(null);
+    } catch (err) {
+      setError('Failed to load astrology data');
+      console.error('Error fetching astrology data:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
@@ -140,203 +164,285 @@ export default function AstrologyWidget({
         <label style={{ color: fontColor, opacity: 0.6, fontSize: '0.85rem', display: 'block', marginBottom: '0.5rem' }}>
           Ceremony Time (optional)
         </label>
-        <input
-          type="time"
-          value={displayCeremonyTime}
-          onChange={handleTimeChange}
-          placeholder="HH:MM"
-          style={{
-            padding: '0.5rem',
-            fontSize: '0.95rem',
-            border: `1px solid ${primaryColor}40`,
-            borderRadius: '6px',
-            backgroundColor: `${primaryColor}08`,
-            color: fontColor,
-            fontFamily: "'Poppins', sans-serif",
-            cursor: 'pointer',
-            width: '100%',
-            maxWidth: '150px',
-            transition: 'all 0.2s ease',
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = primaryColor;
-            e.currentTarget.style.backgroundColor = `${primaryColor}15`;
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = `${primaryColor}40`;
-            e.currentTarget.style.backgroundColor = `${primaryColor}08`;
-          }}
-        />
-      </div>
-
-      {/* Sun Position */}
-      <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: `1px solid ${primaryColor}15` }}>
-        <h4 style={{ color: primaryColor, margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontFamily: headerFontFamily }}>
-          Sun
-        </h4>
-        <div style={{ color: fontColor, fontSize: '0.95rem', lineHeight: '1.6' }}>
-          <p style={{ margin: '0 0 0.5rem 0' }}>
-            Sign: <strong>{astrology.sun.sign}</strong>
-          </p>
-          <p style={{ margin: 0 }}>
-            Degree: <strong>{astrology.sun.degree}°</strong>
-          </p>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <input
+            type="time"
+            value={displayCeremonyTime}
+            onChange={handleTimeChange}
+            placeholder="HH:MM"
+            style={{
+              padding: '0.5rem',
+              fontSize: '0.95rem',
+              border: `1px solid ${primaryColor}40`,
+              borderRadius: '6px',
+              backgroundColor: `${primaryColor}08`,
+              color: fontColor,
+              fontFamily: "'Poppins', sans-serif",
+              cursor: 'pointer',
+              maxWidth: '150px',
+              transition: 'all 0.2s ease',
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = primaryColor;
+              e.currentTarget.style.backgroundColor = `${primaryColor}15`;
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = `${primaryColor}40`;
+              e.currentTarget.style.backgroundColor = `${primaryColor}08`;
+            }}
+          />
+          <button
+            onClick={handleCalculate}
+            style={{
+              padding: '0.5rem 1rem',
+              fontSize: '0.95rem',
+              backgroundColor: primaryColor,
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 600,
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = '0.85';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = '1';
+            }}
+          >
+            Calculate
+          </button>
         </div>
       </div>
 
-      {/* Moon Position */}
-      <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: `1px solid ${primaryColor}15` }}>
-        <h4 style={{ color: primaryColor, margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontFamily: headerFontFamily }}>
-          Moon
-        </h4>
-        <div style={{ color: fontColor, fontSize: '0.95rem', lineHeight: '1.6' }}>
-          <p style={{ margin: '0 0 0.5rem 0' }}>
-            Sign: <strong>{astrology.moon.sign}</strong>
-          </p>
-          <p style={{ margin: '0 0 0.5rem 0' }}>
-            Degree: <strong>{astrology.moon.degree}°</strong>
-          </p>
-          <p style={{ margin: 0 }}>
-            Phase: <strong>{astrology.moonPhase.name}</strong> ({astrology.moonPhase.percentage}% illuminated)
-          </p>
-        </div>
-      </div>
+      {/* 2-Column Grid Layout */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        {/* Sun */}
+        <Card title="Sun" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Sign: <strong>{astrology.sun.sign}</strong></p>
+          <p style={{ margin: 0 }}>Degree: <strong>{astrology.sun.degree}°</strong></p>
+        </Card>
 
-      {/* Venus Position */}
-      <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: `1px solid ${primaryColor}15` }}>
-        <h4 style={{ color: primaryColor, margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontFamily: headerFontFamily }}>
-          Venus
-        </h4>
-        <div style={{ color: fontColor, fontSize: '0.95rem', lineHeight: '1.6' }}>
-          <p style={{ margin: '0 0 0.5rem 0' }}>
-            Sign: <strong>{astrology.venus.sign}</strong>
-          </p>
-          <p style={{ margin: '0 0 0.5rem 0' }}>
-            Degree: <strong>{astrology.venus.degree}°</strong>
-          </p>
-          <p style={{ margin: 0 }}>
-            Retrograde: <strong>{astrology.venus.retrograde ? 'Yes' : 'No'}</strong>
-          </p>
-        </div>
-      </div>
+        {/* Moon */}
+        <Card title="Moon" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Sign: <strong>{astrology.moon.sign}</strong></p>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Degree: <strong>{astrology.moon.degree}°</strong></p>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Phase: <strong>{astrology.moonPhase.name}</strong></p>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Illumination: <strong>{astrology.moonPhase.percentage}%</strong></p>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Lunar Age: <strong>{astrology.moonPhase.lunarAge} days</strong></p>
+          <p style={{ margin: 0 }}>Next Sign: <strong>{astrology.moon.daysUntilNextSign}d</strong></p>
+        </Card>
 
-      {/* Mars Position */}
-      <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: `1px solid ${primaryColor}15` }}>
-        <h4 style={{ color: primaryColor, margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontFamily: headerFontFamily }}>
-          Mars
-        </h4>
-        <div style={{ color: fontColor, fontSize: '0.95rem', lineHeight: '1.6' }}>
-          <p style={{ margin: '0 0 0.5rem 0' }}>
-            Sign: <strong>{astrology.mars.sign}</strong>
-          </p>
-          <p style={{ margin: 0 }}>
-            Degree: <strong>{astrology.mars.degree}°</strong>
-          </p>
-        </div>
-      </div>
+        {/* Mercury */}
+        <Card title="Mercury" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Sign: <strong>{astrology.mercury.sign}</strong></p>
+          <p style={{ margin: 0 }}>Degree: <strong>{astrology.mercury.degree}°</strong></p>
+        </Card>
 
-      {/* Rising Sign - only if ceremony time provided */}
-      {astrology.rising && (
-        <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: `1px solid ${primaryColor}15` }}>
-          <h4 style={{ color: primaryColor, margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontFamily: headerFontFamily }}>
-            Rising Sign (Ascendant)
-          </h4>
-          <div style={{ color: fontColor, fontSize: '0.95rem', lineHeight: '1.6' }}>
-            <p style={{ margin: 0 }}>
-              Sign: <strong>{astrology.rising.sign}</strong>
+        {/* Venus */}
+        <Card title="Venus" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Sign: <strong>{astrology.venus.sign}</strong></p>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Degree: <strong>{astrology.venus.degree}°</strong></p>
+          <p style={{ margin: 0 }}>Retrograde: <strong>{astrology.venus.retrograde ? 'Yes' : 'No'}</strong></p>
+        </Card>
+
+        {/* Mars */}
+        <Card title="Mars" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Sign: <strong>{astrology.mars.sign}</strong></p>
+          <p style={{ margin: 0 }}>Degree: <strong>{astrology.mars.degree}°</strong></p>
+        </Card>
+
+        {/* Jupiter */}
+        <Card title="Jupiter" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Sign: <strong>{astrology.jupiter.sign}</strong></p>
+          <p style={{ margin: 0 }}>Degree: <strong>{astrology.jupiter.degree}°</strong></p>
+        </Card>
+
+        {/* Saturn */}
+        <Card title="Saturn" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Sign: <strong>{astrology.saturn.sign}</strong></p>
+          <p style={{ margin: 0 }}>Degree: <strong>{astrology.saturn.degree}°</strong></p>
+        </Card>
+
+        {/* Chiron */}
+        <Card title="Chiron" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Sign: <strong>{astrology.chiron.sign}</strong></p>
+          <p style={{ margin: 0 }}>Degree: <strong>{astrology.chiron.degree}°</strong></p>
+        </Card>
+
+        {/* Black Moon Lilith */}
+        <Card title="Black Moon Lilith" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>Sign: <strong>{astrology.lilith.sign}</strong></p>
+          <p style={{ margin: 0 }}>Degree: <strong>{astrology.lilith.degree}°</strong></p>
+        </Card>
+
+        {/* Rising Sign */}
+        {astrology.rising && (
+          <Card title="Rising Sign (Ascendant)" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+            <p style={{ margin: 0 }}>Sign: <strong>{astrology.rising.sign}</strong></p>
+          </Card>
+        )}
+
+        {/* Retrograde Status */}
+        <Card title="Retrograde Planets" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+          <p style={{ margin: 0 }}>
+            {astrology.retrogradeStatus.retrograduatePlanets.join(', ') || 'None'}
+          </p>
+          <p style={{ margin: '0.5rem 0 0 0', opacity: 0.6, fontSize: '0.85rem' }}>
+            {astrology.retrogradeStatus.count} retrograde
+          </p>
+        </Card>
+
+        {/* House System */}
+        {astrology.houses && (
+          <Card title="House System" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+            <p style={{ margin: '0 0 0.5rem 0' }}>System: <strong>{astrology.houseSystem}</strong></p>
+            <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.8 }}>
+              Planet house placements shown below
             </p>
-          </div>
-        </div>
-      )}
+          </Card>
+        )}
 
-      {/* Houses Grid - only if ceremony time provided */}
-      {astrology.houses && (
-        <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: `1px solid ${primaryColor}15` }}>
-          <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontSize: '1.1rem', fontFamily: headerFontFamily }}>
-            Houses
-          </h4>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-            <div style={{ background: `${primaryColor}08`, padding: '0.75rem', borderRadius: '6px', border: `1px solid ${primaryColor}15` }}>
-              <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', opacity: 0.7, fontWeight: 500 }}>
-                Sun
-              </p>
-              <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: fontColor }}>
-                House {astrology.houses.sun}
-              </p>
-            </div>
-            <div style={{ background: `${primaryColor}08`, padding: '0.75rem', borderRadius: '6px', border: `1px solid ${primaryColor}15` }}>
-              <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', opacity: 0.7, fontWeight: 500 }}>
-                Moon
-              </p>
-              <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: fontColor }}>
-                House {astrology.houses.moon}
-              </p>
-            </div>
-            <div style={{ background: `${primaryColor}08`, padding: '0.75rem', borderRadius: '6px', border: `1px solid ${primaryColor}15` }}>
-              <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', opacity: 0.7, fontWeight: 500 }}>
-                Venus
-              </p>
-              <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: fontColor }}>
-                House {astrology.houses.venus}
-              </p>
-            </div>
-            <div style={{ background: `${primaryColor}08`, padding: '0.75rem', borderRadius: '6px', border: `1px solid ${primaryColor}15` }}>
-              <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', opacity: 0.7, fontWeight: 500 }}>
-                Mars
-              </p>
-              <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: fontColor }}>
-                House {astrology.houses.mars}
-              </p>
-            </div>
-            <div style={{ background: `${primaryColor}08`, padding: '0.75rem', borderRadius: '6px', border: `1px solid ${primaryColor}15` }}>
-              <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', opacity: 0.7, fontWeight: 500 }}>
-                Rising
-              </p>
-              <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: fontColor }}>
-                House {astrology.houses.ascending}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+        {/* Planetary Ruling Hour */}
+        {astrology.rulingHour && (
+          <Card title="Ruling Hour" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+            <p style={{ margin: '0 0 0.5rem 0' }}>Time: <strong>{astrology.rulingHour.hour}</strong></p>
+            <p style={{ margin: 0 }}>Planet: <strong>{astrology.rulingHour.planet}</strong></p>
+          </Card>
+        )}
 
-      {/* Major Aspects */}
-      {astrology.aspects.length > 0 && (
-        <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: `1px solid ${primaryColor}15` }}>
-          <h4 style={{ color: primaryColor, margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontFamily: headerFontFamily }}>
-            Major Aspects
-          </h4>
-          <div style={{ color: fontColor, fontSize: '0.95rem', lineHeight: '1.8' }}>
+        {/* Planet-in-House Mappings */}
+        {astrology.houses && (
+          <>
+            <Card title="Sun in House" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+              <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>House {astrology.houses.sun}</p>
+            </Card>
+            <Card title="Moon in House" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+              <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>House {astrology.houses.moon}</p>
+            </Card>
+            <Card title="Venus in House" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+              <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>House {astrology.houses.venus}</p>
+            </Card>
+            <Card title="Mars in House" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+              <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>House {astrology.houses.mars}</p>
+            </Card>
+            <Card title="Rising in House" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
+              <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>House {astrology.houses.ascending}</p>
+            </Card>
+          </>
+        )}
+
+        {/* Major Aspects */}
+        {astrology.aspects.length > 0 && (
+          <Card title="Major Aspects" primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily}>
             {astrology.aspects.map((aspect, i) => (
-              <div key={i} style={{ marginBottom: '0.75rem' }}>
-                <p style={{ margin: '0 0 0.25rem 0', fontWeight: 600 }}>
-                  {aspect.type}: <strong>{aspect.angle}°</strong>
-                </p>
-                <p style={{ margin: 0, opacity: 0.8 }}>
-                  {aspect.meaning}
-                </p>
-              </div>
+              <p key={i} style={{ margin: i === 0 ? 0 : '0.5rem 0 0 0', fontSize: '0.9rem' }}>
+                <strong>{aspect.type}</strong>: {aspect.angle}° (orb {aspect.orb}°)
+              </p>
             ))}
-          </div>
+          </Card>
+        )}
+      </div>
+
+      {/* Full-Width Sky Map at Bottom */}
+      {astrology.skyMap && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <SkyMap skyMapData={astrology.skyMap} primaryColor={primaryColor} fontColor={fontColor} headerFontFamily={headerFontFamily} />
         </div>
       )}
+    </div>
+  );
+}
 
-      {/* Disclaimer */}
-      <div
+function Card({ title, children, primaryColor, fontColor, headerFontFamily }: any) {
+  return (
+    <div
+      style={{
+        background: `${primaryColor}08`,
+        border: `1px solid ${primaryColor}20`,
+        borderRadius: '8px',
+        padding: '1rem',
+      }}
+    >
+      <h5
         style={{
-          background: `${primaryColor}08`,
-          border: `1px dashed ${primaryColor}40`,
-          borderRadius: '8px',
-          padding: '1rem',
-          textAlign: 'center',
-          fontSize: '0.85rem',
-          color: fontColor,
-          opacity: 0.8,
-          fontStyle: 'italic',
+          color: primaryColor,
+          margin: '0 0 0.75rem 0',
+          fontSize: '1.5rem',
+          fontFamily: headerFontFamily,
+          fontWeight: 600,
         }}
       >
-        {astrology.disclaimer}
+        {title}
+      </h5>
+      <div style={{ color: fontColor, fontSize: '0.9rem', lineHeight: '1.5' }}>
+        {children}
       </div>
+    </div>
+  );
+}
+
+function SkyMap({ skyMapData, primaryColor, fontColor, headerFontFamily }: any) {
+  // Create a simple SVG sky map
+  const width = 500;
+  const height = 300;
+  const centerX = width / 2;
+  const centerY = height / 2;
+  
+  return (
+    <div
+      style={{
+        background: `${primaryColor}08`,
+        border: `1px solid ${primaryColor}20`,
+        borderRadius: '8px',
+        padding: '1.5rem',
+      }}
+    >
+      <h5
+        style={{
+          color: primaryColor,
+          margin: '0 0 1rem 0',
+          fontSize: '0.95rem',
+          fontFamily: headerFontFamily,
+          fontWeight: 600,
+        }}
+      >
+        Sky Map ({skyMapData.hour})
+      </h5>
+      <svg width="100%" height="320" viewBox={`0 0 ${width} ${height}`} style={{ background: '#0f1419', borderRadius: '6px' }}>
+        {/* Background circle */}
+        <circle cx={centerX} cy={centerY} r={120} fill="none" stroke={`${primaryColor}40`} strokeWidth="2" />
+        
+        {/* Cardinal directions - White text */}
+        <text x={centerX} y="20" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">N</text>
+        <text x={centerX} y={height - 5} textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">S</text>
+        <text x="15" y={centerY + 5} fill="white" fontSize="14" fontWeight="bold">W</text>
+        <text x={width - 15} y={centerY + 5} textAnchor="end" fill="white" fontSize="14" fontWeight="bold">E</text>
+        
+        {/* Horizon line (E-W) */}
+        <line x1="50" y1={centerY} x2={width - 50} y2={centerY} stroke={`${primaryColor}60`} strokeWidth="1" strokeDasharray="5,5" />
+        
+        {/* Plot planets - Golden dots (#edaf02) with white text */}
+        {skyMapData.planets.map((planet: any, i: number) => {
+          // Convert azimuth and altitude to SVG coordinates
+          const angle = (planet.azimuth - 90) * (Math.PI / 180); // Convert to math angle
+          const altitudeRadius = (90 - planet.altitude) * (120 / 90); // Map altitude to radius
+          const x = centerX + altitudeRadius * Math.cos(angle);
+          const y = centerY + altitudeRadius * Math.sin(angle);
+          
+          return (
+            <g key={i}>
+              <circle cx={x} cy={y} r="6" fill="#edaf02" opacity="0.8" />
+              <text x={x + 10} y={y - 5} fill="white" fontSize="11" fontWeight="bold">{planet.name}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <p style={{ color: fontColor, fontSize: '0.85rem', margin: '0.75rem 0 0 0', opacity: 0.7 }}>
+        Simplified celestial positions • Inner = Higher altitude • Outer = Lower altitude
+      </p>
     </div>
   );
 }
