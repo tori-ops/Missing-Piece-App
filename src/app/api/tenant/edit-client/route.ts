@@ -23,7 +23,20 @@ export async function PUT(request: NextRequest) {
       couple2FirstName,
       couple2LastName,
       weddingDate,
-      budget,
+      weddingLocation,
+      budgetCents,
+      estimatedGuestCount,
+      contactEmail,
+      contactPhone,
+      addressLine1,
+      addressLine2,
+      addressCity,
+      addressState,
+      addressZip,
+      venuePhone,
+      venueWebsite,
+      venueLat,
+      venueLng,
       status
     } = body;
 
@@ -52,17 +65,30 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Update client profile
+    // Update client profile with all provided fields
     const updatedClient = await prisma.clientProfile.update({
       where: { id: clientId },
       data: {
         couple1FirstName,
-        couple1LastName: couple1LastName || '',
+        couple1LastName: couple1LastName || null,
         couple2FirstName: couple2FirstName || null,
         couple2LastName: couple2LastName || null,
         weddingDate: weddingDate ? new Date(weddingDate) : null,
-        budgetCents: budget ? Math.round(budget * 100) : null,
-        status
+        weddingLocation: weddingLocation || null,
+        budgetCents: budgetCents || null,
+        estimatedGuestCount: estimatedGuestCount || null,
+        contactEmail: contactEmail || null,
+        contactPhone: contactPhone || null,
+        addressLine1: addressLine1 || null,
+        addressLine2: addressLine2 || null,
+        addressCity: addressCity || null,
+        addressState: addressState || null,
+        addressZip: addressZip || null,
+        venuePhone: venuePhone || null,
+        venueWebsite: venueWebsite || null,
+        venueLat: venueLat || null,
+        venueLng: venueLng || null,
+        status: status || 'ACTIVE'
       },
       include: { users: true }
     });

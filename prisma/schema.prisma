@@ -433,6 +433,10 @@ model ClientProfile {
   // Wedding Details
   weddingDate           DateTime?
   weddingLocation       String?               // Venue name/location (e.g., "The Grand Ballroom")
+  venueLat              Float?                // Venue latitude for weather/golden hour
+  venueLng              Float?                // Venue longitude for weather/golden hour
+  venuePhone            String?               // Venue phone number
+  venueWebsite          String?               // Venue website URL
   budgetCents           Int?                  // in cents for precision
   estimatedGuestCount   Int?                  // Estimated number of guests
   

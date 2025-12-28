@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import styles from './CreateClientForm.module.css';
 
 interface EditClientModalProps {
@@ -10,9 +10,33 @@ interface EditClientModalProps {
   onSave: (updatedClient: any) => void;
 }
 
+interface PlacePrediction {
+  place_id: string;
+  description: string;
+  main_text: string;
+}
+
+interface PlaceDetails {
+  name: string;
+  address: string;
+  addressLine1: string;
+  city: string;
+  state: string;
+  zip: string;
+  lat: number;
+  lng: number;
+  phone?: string;
+  website?: string;
+}
+
 export default function EditClientModal({ client, tenantId, onClose, onSave }: EditClientModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [venueSearchLoading, setVenueSearchLoading] = useState(false);
+  const [venueSuggestions, setVenueSuggestions] = useState<PlacePrediction[]>([]);
+  const [showVenueDropdown, setShowVenueDropdown] = useState(false);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+
   const [formData, setFormData] = useState({
     couple1FirstName: client.couple1FirstName || '',
     couple1LastName: client.couple1LastName || '',
@@ -29,6 +53,10 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
     addressCity: client.addressCity || '',
     addressState: client.addressState || '',
     addressZip: client.addressZip || '',
+    venuePhone: client.venuePhone || '',
+    venueWebsite: client.venueWebsite || '',
+    venueLat: client.venueLat ? client.venueLat.toString() : '',
+    venueLng: client.venueLng ? client.venueLng.toString() : '',
     status: client.status || 'ACTIVE'
   });
 
@@ -38,6 +66,69 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
       ...prev,
       [name]: value
     }));
+
+    // If typing in weddingLocation, trigger autocomplete search
+    if (name === 'weddingLocation') {
+      setShowVenueDropdown(true);
+      
+      // Clear existing timer
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+
+      // Only search if input is 2+ characters
+      if (value.length >= 2) {
+        setVenueSearchLoading(true);
+        debounceTimer.current = setTimeout(async () => {
+          try {
+            const response = await fetch(
+              `/api/places/autocomplete?input=${encodeURIComponent(value)}`
+            );
+            const data = await response.json();
+            setVenueSuggestions(data.predictions || []);
+          } catch (err) {
+            console.error('Autocomplete search failed:', err);
+            setVenueSuggestions([]);
+          } finally {
+            setVenueSearchLoading(false);
+          }
+        }, 300); // Debounce 300ms
+      } else {
+        setVenueSuggestions([]);
+      }
+    }
+  };
+
+  const handleVenueSelect = async (prediction: PlacePrediction) => {
+    try {
+      setVenueSearchLoading(true);
+      const response = await fetch(
+        `/api/places/details?placeId=${encodeURIComponent(prediction.place_id)}`
+      );
+      const details: PlaceDetails = await response.json();
+
+      // Auto-fill venue and address information
+      setFormData(prev => ({
+        ...prev,
+        weddingLocation: details.name,
+        addressLine1: details.addressLine1,
+        addressCity: details.city,
+        addressState: details.state,
+        addressZip: details.zip,
+        venuePhone: details.phone || '',
+        venueWebsite: details.website || '',
+        venueLat: details.lat.toString(),
+        venueLng: details.lng.toString()
+      }));
+
+      setShowVenueDropdown(false);
+      setVenueSuggestions([]);
+    } catch (err) {
+      console.error('Failed to get venue details:', err);
+      setError('Failed to load venue details');
+    } finally {
+      setVenueSearchLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,6 +160,10 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
           addressCity: formData.addressCity,
           addressState: formData.addressState,
           addressZip: formData.addressZip,
+          venuePhone: formData.venuePhone,
+          venueWebsite: formData.venueWebsite,
+          venueLat: formData.venueLat ? parseFloat(formData.venueLat) : null,
+          venueLng: formData.venueLng ? parseFloat(formData.venueLng) : null,
           status: formData.status
         })
       });
@@ -187,15 +282,70 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
               />
             </div>
 
-            <div className={styles.field}>
+            <div className={styles.field} style={{ position: 'relative' }}>
               <label>Wedding Venue / Location</label>
               <input
                 type="text"
                 name="weddingLocation"
                 value={formData.weddingLocation}
                 onChange={handleChange}
-                placeholder="e.g., The Grand Ballroom"
+                placeholder="Type venue name (e.g., Castle Farms)..."
+                autoComplete="off"
               />
+              {venueSearchLoading && (
+                <div style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '38px',
+                  color: '#666',
+                  fontSize: '0.9rem'
+                }}>
+                  Searching...
+                </div>
+              )}
+              {showVenueDropdown && venueSuggestions.length > 0 && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  background: 'white',
+                  border: '1px solid #DDD',
+                  borderRadius: '4px',
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                  zIndex: 1001,
+                  marginTop: '4px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                }}>
+                  {venueSuggestions.map((suggestion) => (
+                    <div
+                      key={suggestion.place_id}
+                      onClick={() => handleVenueSelect(suggestion)}
+                      style={{
+                        padding: '12px',
+                        borderBottom: '1px solid #EEE',
+                        cursor: 'pointer',
+                        transition: 'background 0.2s',
+                        fontSize: '0.95rem'
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLDivElement).style.background = '#F5F5F5';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLDivElement).style.background = 'white';
+                      }}
+                    >
+                      <div style={{ fontWeight: '600', color: '#274E13' }}>
+                        {suggestion.main_text}
+                      </div>
+                      <div style={{ fontSize: '0.85rem', color: '#999', marginTop: '4px' }}>
+                        {suggestion.description.replace(suggestion.main_text, '').trim()}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -304,6 +454,49 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
                 value={formData.addressZip}
                 onChange={handleChange}
               />
+            </div>
+          </div>
+
+          <hr style={{ margin: '1.5rem 0', border: 'none', borderTop: '1px solid #EEE' }} />
+
+          <h3 style={{ color: '#274E13', marginBottom: '1rem', fontSize: '1rem' }}>Venue Details</h3>
+
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label>Venue Phone</label>
+              <input
+                type="tel"
+                name="venuePhone"
+                value={formData.venuePhone}
+                onChange={handleChange}
+                placeholder="Venue contact number"
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label>Venue Website</label>
+              <input
+                type="url"
+                name="venueWebsite"
+                value={formData.venueWebsite}
+                onChange={handleChange}
+                placeholder="https://example.com"
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ padding: '0.75rem', background: '#F9F9F9', borderRadius: '4px' }}>
+              <label style={{ fontSize: '0.85rem', color: '#666' }}>Latitude</label>
+              <div style={{ fontSize: '0.95rem', color: '#333', fontWeight: '500' }}>
+                {formData.venueLat ? parseFloat(formData.venueLat).toFixed(4) : 'Not set'}
+              </div>
+            </div>
+            <div style={{ padding: '0.75rem', background: '#F9F9F9', borderRadius: '4px' }}>
+              <label style={{ fontSize: '0.85rem', color: '#666' }}>Longitude</label>
+              <div style={{ fontSize: '0.95rem', color: '#333', fontWeight: '500' }}>
+                {formData.venueLng ? parseFloat(formData.venueLng).toFixed(4) : 'Not set'}
+              </div>
             </div>
           </div>
 
