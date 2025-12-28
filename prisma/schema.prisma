@@ -169,6 +169,7 @@ model User {
   invitesCodes          InviteCode[]
   payments              Payment[]
   tenantAccessGranted   TenantAccess[]
+  createdTasks          Task[]
   
   @@index([email])
   @@index([tenantId])
@@ -390,6 +391,8 @@ model Tenant {
   inviteCodes           InviteCode[]
   payments              Payment[]
   auditLogs             AuditLog[]
+  meetingNotes          MeetingNote[]
+  tasks                 Task[]
   
   @@index([status])
   @@index([subscriptionTier])
@@ -455,6 +458,8 @@ model ClientProfile {
   inviteCodes           InviteCode[]
   createdBy             User?                 @relation("CreatedByUser", fields: [createdByUserId], references: [id], onDelete: SetNull)
   tenantAccessList      TenantAccess[]
+  meetingNotes          MeetingNote[]
+  tasks                 Task[]
   
   @@index([tenantId])
   @@index([contactEmail])
@@ -620,6 +625,127 @@ model AuditLog {
   @@index([entity])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ============================================================================
+// MEETING NOTES
+// ============================================================================
+
+enum OCRStatus {
+  PENDING
+  PROCESSING
+  COMPLETE
+  FAILED
+}
+
+model MeetingNote {
+  id                    String                @id @default(cuid())
+  tenantId              String
+  clientId              String?               // Optional - if meeting was with specific client
+  
+  // Content
+  title                 String
+  body                  String                // Typed and/or OCR extracted text
+  
+  // Dates
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  meetingDate           DateTime?             // If different than createdAt
+  
+  // OCR Support
+  hasAttachment         Boolean               @default(false)
+  attachmentPath        String?               // Storage path (if uploaded image/PDF)
+  ocrStatus             OCRStatus             @default(PENDING)
+  ocrError              String?               // Error message if OCR failed
+  
+  // Relations
+  tenant                Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client                ClientProfile?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  tasks                 Task[]                @relation("NoteTasks")
+  
+  @@index([tenantId])
+  @@index([clientId])
+  @@index([createdAt])
+  @@index([meetingDate])
+  @@index([ocrStatus])
+  @@map("meeting_notes")
+}
+
+// ============================================================================
+// TASKS
+// ============================================================================
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  BLOCKED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TaskAssigneeType {
+  TENANT
+  CLIENT
+}
+
+enum TaskSource {
+  MANUAL
+  MEETING_NOTE
+}
+
+model Task {
+  id                    String                @id @default(cuid())
+  tenantId              String                // Always linked to tenant for isolation
+  clientId              String?               // Optional - for client-specific tasks
+  
+  // Content
+  title                 String
+  description           String?
+  
+  // Dates
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  dueDate               DateTime?
+  
+  // Status & Priority
+  status                TaskStatus            @default(TODO)
+  priority              TaskPriority          @default(MEDIUM)
+  
+  // Assignment
+  assigneeType          TaskAssigneeType      // TENANT or CLIENT
+  assigneeId            String                // tenantId or clientId based on assigneeType
+  
+  // Tracking
+  createdByUserId       String
+  source                TaskSource            @default(MANUAL)
+  
+  // Meeting Note Link
+  meetingNoteId         String?
+  
+  // Task Grouping (for BOTH assignments)
+  taskGroupId           String?               // Links related tasks (e.g., same task sent to BOTH)
+  
+  // Relations
+  tenant                Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client                ClientProfile?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  createdBy             User                  @relation(fields: [createdByUserId], references: [id], onDelete: Restrict)
+  meetingNote           MeetingNote?          @relation("NoteTasks", fields: [meetingNoteId], references: [id], onDelete: SetNull)
+  
+  @@index([tenantId])
+  @@index([clientId])
+  @@index([assigneeType])
+  @@index([assigneeId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([createdAt])
+  @@index([meetingNoteId])
+  @@index([taskGroupId])
+  @@map("tasks")
 }
 
 // ============================================================================

@@ -6,6 +6,7 @@ import AstrologyCard from '@/components/AstrologyCard';
 import WeatherDetailView from '@/components/WeatherDetailView';
 import AstrologyDetailView from '@/components/AstrologyDetailView';
 import LogoutButton from '@/components/LogoutButton';
+import TasksWidget from '@/components/TasksWidget';
 
 import { lightenColor } from '@/lib/branding';
 import type { ClientProfile } from '@prisma/client';
@@ -192,7 +193,7 @@ export default function ClientDashboardContent({
         )}
       </div>
 
-      {/* Weather & Astrology Cards */}
+      {/* Weather & Astrology & Tasks Cards */}
       {clientProfile.weddingDate && clientProfile.venueLat && clientProfile.venueLng && (
         <div style={{ 
           marginBottom: '2rem',
@@ -212,6 +213,21 @@ export default function ClientDashboardContent({
             textColor={lightenColor(primaryColor, 120)}
             onClick={() => setActiveView('astrology')}
           />
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: primaryColor,
+            borderRadius: '8px',
+            padding: '1.5rem',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+          }}>
+            <TasksWidget
+              primaryColor={lightenColor(primaryColor, 120)}
+              bodyFontFamily={bodyFontFamily}
+              clientId={clientProfile.id}
+            />
+          </div>
         </div>
       )}
 
