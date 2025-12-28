@@ -349,10 +349,6 @@ model Tenant {
   city                  String?
   state                 String?
   
-  // Wedding Details
-  weddingDate           DateTime?
-  budget                Float?
-  
   // Subscription
   status                TenantStatus          @default(ACTIVE)
   subscriptionTier      SubscriptionTier      @default(FREE)
