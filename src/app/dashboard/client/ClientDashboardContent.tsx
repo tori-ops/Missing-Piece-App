@@ -213,21 +213,12 @@ export default function ClientDashboardContent({
             textColor={lightenColor(primaryColor, 120)}
             onClick={() => setActiveView('astrology')}
           />
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: primaryColor,
-            borderRadius: '8px',
-            padding: '1.5rem',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-          }}>
-            <TasksWidget
-              primaryColor={lightenColor(primaryColor, 120)}
-              bodyFontFamily={bodyFontFamily}
-              clientId={clientProfile.id}
-            />
-          </div>
+          <TasksWidget
+            primaryColor={primaryColor}
+            bodyFontFamily={bodyFontFamily}
+            textColor={lightenColor(primaryColor, 120)}
+            clientId={clientProfile.id}
+          />
         </div>
       )}
 
