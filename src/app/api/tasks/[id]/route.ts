@@ -12,9 +12,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session?.user) {
@@ -33,7 +34,7 @@ export async function GET(
     }
 
     const task = await getTaskById(
-      params.id,
+      id,
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
@@ -56,9 +57,10 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session?.user) {
@@ -80,7 +82,7 @@ export async function PATCH(
     const { status, description, dueDate, priority } = body;
 
     const task = await updateTask(
-      params.id,
+      id,
       {
         status,
         description,
@@ -105,9 +107,10 @@ export async function PATCH(
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session?.user) {
@@ -126,7 +129,7 @@ export async function DELETE(
     }
 
     await deleteTask(
-      params.id,
+      id,
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
