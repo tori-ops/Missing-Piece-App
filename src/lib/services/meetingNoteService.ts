@@ -81,17 +81,19 @@ export async function listMeetingNotes(
       console.log('CLIENT query - looking for notes with clientId:', clientId, 'userId:', userId, 'tenantId:', tenantId);
       const notes = await prisma.meetingNote.findMany({
         where: {
-          clientId,
           tenantId, // Ensure it's within their tenant
           OR: [
-            // Their own notes
-            { createdByUserId: userId },
-            // Notes created by TENANT users (planners)
+            // Notes created FOR them (assigned to their clientId)
+            { clientId },
+            // Notes created by TENANT users at tenant level (no specific client assignment)
             {
+              clientId: null,
               createdBy: {
                 role: 'TENANT',
               },
             },
+            // Their own notes (any they created themselves)
+            { createdByUserId: userId },
           ],
         },
         include: {
