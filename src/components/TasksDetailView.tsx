@@ -184,7 +184,7 @@ export default function TasksDetailView({
       </button>
 
       {/* Title */}
-      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0 }}>
+      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0, fontSize: '2.25em' }}>
         Tasks
       </h2>
 
@@ -211,7 +211,7 @@ export default function TasksDetailView({
         marginBottom: '2rem',
         fontFamily: bodyFontFamily,
       }}>
-        <h3 style={{ marginTop: 0, fontFamily: headerFontFamily }}>Create New Task</h3>
+        <h3 style={{ marginTop: 0, fontFamily: headerFontFamily, fontSize: '1.9em' }}>Create New Task</h3>
         <form onSubmit={handleCreateTask}>
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Title *</label>
@@ -313,7 +313,7 @@ export default function TasksDetailView({
         marginBottom: '2rem',
         fontFamily: bodyFontFamily,
       }}>
-        <h3 style={{ marginTop: 0, color: primaryColor, fontFamily: headerFontFamily }}>Filter Tasks</h3>
+        <h3 style={{ marginTop: 0, color: primaryColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>Filter Tasks</h3>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
           <div>
@@ -394,7 +394,7 @@ export default function TasksDetailView({
 
       {/* Task List */}
       <div>
-        <h3 style={{ color: primaryColor, fontFamily: headerFontFamily }}>
+        <h3 style={{ color: primaryColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>
           Tasks ({filteredTasks.length})
         </h3>
 
