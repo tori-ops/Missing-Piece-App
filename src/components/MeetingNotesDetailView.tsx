@@ -22,7 +22,6 @@ interface MeetingNotesDetailViewProps {
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
-  currentUserId: string;
   onBack: () => void;
 }
 
@@ -33,7 +32,6 @@ export default function MeetingNotesDetailView({
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
-  _currentUserId,
   onBack,
 }: MeetingNotesDetailViewProps) {
   const [notes, setNotes] = useState<MeetingNote[]>([]);

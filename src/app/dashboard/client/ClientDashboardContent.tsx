@@ -164,7 +164,6 @@ export default function ClientDashboardContent({
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
-          currentUserId={currentUserId}
           onBack={() => setActiveView('dashboard')}
         />
       </div>
