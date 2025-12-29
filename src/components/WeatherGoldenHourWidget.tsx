@@ -8,6 +8,7 @@ interface WeatherGoldenHourWidgetProps {
   venueLng?: number;
   primaryColor?: string;
   fontColor?: string;
+  bodyFontFamily?: string;
   headerFontFamily?: string;
 }
 
@@ -53,6 +54,7 @@ export default function WeatherGoldenHourWidget({
   venueLng,
   primaryColor = '#274E13',
   fontColor = '#000000',
+  bodyFontFamily = "'Georgia', serif",
   headerFontFamily = "'Playfair Display', serif",
 }: WeatherGoldenHourWidgetProps) {
   const [historicalData, setHistoricalData] = useState<HistoricalWeatherData | null>(null);
@@ -142,16 +144,16 @@ export default function WeatherGoldenHourWidget({
       {/* Overall Summary */}
       <div
         style={{
-          background: `linear-gradient(135deg, #274E1330 0%, #7FA55630 100%)`,
+          background: `linear-gradient(135deg, ${primaryColor}20 0%, ${primaryColor}10 100%)`,
           border: `1px solid ${primaryColor}30`,
           borderRadius: '12px',
           padding: '1.5rem',
         }}
       >
-        <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily }}>
+        <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.1rem' }}>
           Historical Weather Summary
         </h4>
-        <p style={{ color: fontColor, fontSize: '0.9rem', margin: '0 0 1rem 0', opacity: 0.7 }}>
+        <p style={{ color: fontColor, fontSize: '0.9rem', margin: '0 0 1rem 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
           Based on {historicalData.daily.length} days of data from the prior year
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '1rem' }}>
@@ -194,13 +196,13 @@ export default function WeatherGoldenHourWidget({
       {weddingWeekData.length > 0 && (
         <div
           style={{
-            background: `linear-gradient(135deg, #D9760630 0%, #F5933330 100%)`,
+            background: `linear-gradient(135deg, ${primaryColor}15 0%, ${primaryColor}05 100%)`,
             border: `2px solid ${primaryColor}`,
             borderRadius: '12px',
             padding: '1.5rem',
           }}
         >
-          <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily }}>
+          <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.1rem' }}>
             Wedding Week (Prior Year)
           </h4>
           <div style={{ display: 'grid', gap: '1rem' }}>

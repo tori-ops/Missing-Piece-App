@@ -51,7 +51,7 @@ export default function WeatherDetailView({
       </button>
 
       {/* Title */}
-      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0 }}>
+      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0, fontSize: '2.25em' }}>
         Weather & Golden Hour
       </h2>
 
