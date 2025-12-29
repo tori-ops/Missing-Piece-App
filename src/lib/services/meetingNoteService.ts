@@ -74,12 +74,25 @@ export async function listMeetingNotes(
         canDelete: note.createdByUserId === userId,
       }));
     } else if (userRole === 'CLIENT' && clientId) {
-      // CLIENT sees only notes created for them
-      console.log('CLIENT query - looking for notes with clientId:', clientId, 'tenantId:', tenantId);
+      // CLIENT sees:
+      // 1. Notes created FOR them (by TENANT users/planners)
+      // 2. Notes created BY them
+      // 3. But NOT notes created by other CLIENT users
+      console.log('CLIENT query - looking for notes with clientId:', clientId, 'userId:', userId, 'tenantId:', tenantId);
       const notes = await prisma.meetingNote.findMany({
         where: {
           clientId,
           tenantId, // Ensure it's within their tenant
+          OR: [
+            // Their own notes
+            { createdByUserId: userId },
+            // Notes created by TENANT users (planners)
+            {
+              createdBy: {
+                role: 'TENANT',
+              },
+            },
+          ],
         },
         include: {
           attachments: true,
@@ -89,6 +102,7 @@ export async function listMeetingNotes(
               firstName: true,
               lastName: true,
               email: true,
+              role: true,
             },
           },
         },
