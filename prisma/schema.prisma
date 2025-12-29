@@ -800,18 +800,18 @@ model MeetingNoteAttachment {
   id                    String                @id @default(cuid())
   
   // Relations
-  meetingNoteId         String
+  meetingNoteId         String                @map("meeting_note_id")
   meetingNote           MeetingNote           @relation("Attachments", fields: [meetingNoteId], references: [id], onDelete: Cascade)
   
   // File Metadata
-  fileName              String
-  filePath              String                // /uploads/meetings/[noteId]/[filename]
-  fileType              String                // 'image' or 'document'
-  fileSizeBytes         Int
-  mimeType              String
+  fileName              String                @map("file_name")
+  filePath              String                @map("file_path")  // /uploads/meetings/[noteId]/[filename]
+  fileType              String                @map("file_type") // 'image' or 'document'
+  fileSizeBytes         Int                   @map("file_size_bytes")
+  mimeType              String                @map("mime_type")
   
   // Timestamps
-  createdAt             DateTime              @default(now())
+  createdAt             DateTime              @default(now()) @map("created_at")
   
   @@index([meetingNoteId])
   @@map("meeting_note_attachments")
