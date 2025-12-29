@@ -23,6 +23,7 @@ interface ClientDashboardContentProps {
   headerFontFamily: string;
   bodyFontFamily: string;
   logoUrl?: string | null;
+  currentUserId: string;
 }
 
 export default function ClientDashboardContent({
@@ -36,6 +37,7 @@ export default function ClientDashboardContent({
   headerFontFamily,
   bodyFontFamily,
   logoUrl,
+  currentUserId,
 }: ClientDashboardContentProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [activeView, setActiveView] = useState<'dashboard' | 'weather' | 'astrology'>('dashboard');
@@ -228,6 +230,7 @@ export default function ClientDashboardContent({
             textColor={lightenColor(primaryColor, 120)}
             clientId={clientProfile.id}
             tenantId={clientProfile.tenantId}
+            currentUserId={currentUserId}
             userRole="CLIENT"
           />
         </div>

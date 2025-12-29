@@ -105,6 +105,7 @@ export default async function ClientDashboard() {
         headerFontFamily={headerFontFamily}
         bodyFontFamily={bodyFontFamily}
         logoUrl={logoUrl}
+        currentUserId={user.id}
       />
       <BrandingFooter primaryColor={primaryColor} />
     </>

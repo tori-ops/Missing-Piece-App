@@ -170,6 +170,7 @@ export default function TenantDashboardContent({
                 bodyFontFamily={bodyFontFamily}
                 textColor={lightenColor(primaryColor, 120)}
                 tenantId={user.tenantId}
+                currentUserId={user.id}
                 userRole="TENANT"
               />
             </div>

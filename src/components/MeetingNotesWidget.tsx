@@ -9,6 +9,7 @@ interface MeetingNotesWidgetProps {
   textColor?: string;
   clientId?: string;
   tenantId?: string;
+  currentUserId: string;
   userRole?: 'TENANT' | 'CLIENT';
 }
 
@@ -18,6 +19,7 @@ export default function MeetingNotesWidget({
   textColor = '#FFFFFF',
   clientId,
   tenantId,
+  currentUserId,
   userRole,
 }: MeetingNotesWidgetProps) {
   const role = userRole || (clientId && !tenantId ? 'CLIENT' : 'TENANT');
@@ -67,8 +69,9 @@ export default function MeetingNotesWidget({
           primaryColor={primaryColor}
           bodyFontFamily={bodyFontFamily}
           clientId={clientId}
-          tenantId={tenantId}
+          tenantId={tenantId || ''}
           userRole={role}
+          currentUserId={currentUserId}
           onClose={() => setIsOpen(false)}
         />
       )}

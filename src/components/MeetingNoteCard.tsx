@@ -25,8 +25,7 @@ interface MeetingNoteCardProps {
   };
   primaryColor: string;
   bodyFontFamily: string;
-  userRole: string;
-  currentUserId?: string;
+  currentUserId: string;
   onDelete: (id: string) => void;
   onUpdate: (note: any) => void;
 }
@@ -35,7 +34,6 @@ export default function MeetingNoteCard({
   note,
   primaryColor,
   bodyFontFamily,
-  _userRole,
   currentUserId,
   onDelete,
   onUpdate,

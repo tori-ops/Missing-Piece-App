@@ -32,6 +32,7 @@ interface MeetingNotesListProps {
   clientId?: string;
   tenantId: string;
   userRole: string;
+  currentUserId: string;
   onClose: () => void;
 }
 
@@ -41,6 +42,7 @@ export default function MeetingNotesList({
   clientId,
   tenantId,
   userRole,
+  currentUserId,
   onClose,
 }: MeetingNotesListProps) {
   const [notes, setNotes] = useState<MeetingNote[]>([]);
@@ -373,7 +375,7 @@ export default function MeetingNotesList({
                   note={note}
                   primaryColor={primaryColor}
                   bodyFontFamily={bodyFontFamily}
-                  userRole={userRole}
+                  currentUserId={currentUserId}
                   onDelete={handleNoteDeleted}
                   onUpdate={handleNoteUpdated}
                 />
