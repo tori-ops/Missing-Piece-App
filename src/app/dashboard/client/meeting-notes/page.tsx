@@ -46,17 +46,26 @@ export default async function MeetingNotesPage() {
   const clientProfile = user.clientProfile;
   const tenant = clientProfile.tenant;
 
+  // Use tenant branding with fallbacks
+  const primaryColor = tenant?.brandingPrimaryColor || '#274E13';
+  const backgroundColor = tenant?.brandingSecondaryColor || '#e1e0d0';
+  const fontColor = tenant?.brandingFontColor || '#1B5E20';
+  const fontFamily = tenant?.brandingFontFamily || "'Poppins', sans-serif";
+  const headerFontFamily = tenant?.brandingHeaderFontFamily || "'Playfair Display', serif";
+  const bodyFontFamily = tenant?.brandingBodyFontFamily || "'Poppins', sans-serif";
+  const logoUrl = tenant?.brandingLogoUrl || null;
+
   return (
     <MeetingNotesPageContent
       clientId={clientProfile.id}
       tenantId={clientProfile.tenantId}
-      primaryColor={tenant.brandingPrimaryColor}
-      backgroundColor={tenant.brandingSecondaryColor}
-      fontColor={tenant.brandingFontColor}
-      fontFamily={tenant.brandingFontFamily}
-      headerFontFamily={tenant.brandingHeaderFontFamily}
-      bodyFontFamily={tenant.brandingBodyFontFamily}
-      logoUrl={tenant.brandingLogoUrl}
+      primaryColor={primaryColor}
+      backgroundColor={backgroundColor}
+      fontColor={fontColor}
+      fontFamily={fontFamily}
+      headerFontFamily={headerFontFamily}
+      bodyFontFamily={bodyFontFamily}
+      logoUrl={logoUrl}
     />
   );
 }
