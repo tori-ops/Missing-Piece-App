@@ -135,7 +135,7 @@ export async function updateTaskComment(
   commentId: string,
   content: string,
   userId: string,
-  userRole: 'TENANT' | 'CLIENT',
+  _userRole: 'TENANT' | 'CLIENT',
   tenantId: string
 ): Promise<TaskCommentWithAuthor> {
   if (!content.trim()) {
