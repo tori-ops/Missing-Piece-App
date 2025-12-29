@@ -23,7 +23,6 @@ interface MeetingNote {
 }
 
 interface MeetingNotesPageContentProps {
-  _userId: string;
   clientId: string;
   tenantId: string;
   tenantName: string;
@@ -37,7 +36,6 @@ interface MeetingNotesPageContentProps {
 }
 
 export default function MeetingNotesPageContent({
-  _userId,
   clientId,
   tenantId,
   tenantName,
