@@ -201,9 +201,10 @@ export default function ClientDashboardContent({
         <div style={{ 
           marginBottom: '2rem',
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '1.5rem',
         }}>
+          {/* Row 1 */}
           <WeatherCard
             primaryColor={primaryColor}
             bodyFontFamily={bodyFontFamily}
@@ -224,6 +225,8 @@ export default function ClientDashboardContent({
             tenantId={clientProfile.tenantId}
             userRole="CLIENT"
           />
+          
+          {/* Row 2 */}
           <MeetingNotesWidget
             primaryColor={primaryColor}
             bodyFontFamily={bodyFontFamily}
@@ -233,6 +236,37 @@ export default function ClientDashboardContent({
             currentUserId={currentUserId}
             userRole="CLIENT"
           />
+          
+          {/* Placeholder dividers for future widgets */}
+          <div style={{
+            backgroundColor: lightenColor(primaryColor, 95),
+            borderRadius: '8px',
+            padding: '2rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '120px',
+            opacity: 0.4,
+            fontFamily: bodyFontFamily,
+            color: primaryColor,
+          }}>
+            <p style={{ margin: 0, fontSize: '0.9rem', textAlign: 'center' }}>Coming Soon</p>
+          </div>
+          
+          <div style={{
+            backgroundColor: lightenColor(primaryColor, 95),
+            borderRadius: '8px',
+            padding: '2rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '120px',
+            opacity: 0.4,
+            fontFamily: bodyFontFamily,
+            color: primaryColor,
+          }}>
+            <p style={{ margin: 0, fontSize: '0.9rem', textAlign: 'center' }}>Coming Soon</p>
+          </div>
         </div>
       )}
 
