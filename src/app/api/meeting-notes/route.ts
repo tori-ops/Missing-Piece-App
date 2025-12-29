@@ -109,8 +109,6 @@ export async function POST(req: NextRequest) {
     const tags = tagsJson ? JSON.parse(tagsJson) : [];
     const files = formData.getAll('attachments') as File[];
 
-    console.log('[API] Creating note:', { title, noteBody, clientId, userRole, userClientId: user.clientId });
-
     if (!title || !noteBody) {
       return NextResponse.json(
         { error: 'Missing required fields: title, body' },
@@ -141,8 +139,6 @@ export async function POST(req: NextRequest) {
       finalClientId = user.clientId || undefined;
     }
 
-    console.log('[API] Final clientId:', finalClientId, 'userRole:', userRole);
-
     const note = await createMeetingNote({
       tenantId: user.tenantId!,
       clientId: finalClientId,
@@ -154,7 +150,6 @@ export async function POST(req: NextRequest) {
       attachmentFiles: files.length > 0 ? files : undefined,
     });
 
-    console.log('[API] Note created successfully:', note.id, 'for clientId:', note.clientId);
     return NextResponse.json(note, { status: 201 });
   } catch (error) {
     console.error('POST /api/meeting-notes error:', error);

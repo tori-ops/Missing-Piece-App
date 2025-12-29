@@ -61,12 +61,9 @@ export default function MeetingNotesDetailView({
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const url = `/api/meeting-notes?clientId=${clientId}&tenantId=${tenantId}`;
-      console.log('Fetching notes from:', url);
-      const response = await fetch(url);
+      const response = await fetch(`/api/meeting-notes?clientId=${clientId}&tenantId=${tenantId}`);
       if (response.ok) {
         const data = await response.json();
-        console.log('Fetched notes:', data);
         setNotes(data);
       } else {
         const errorData = await response.json();
