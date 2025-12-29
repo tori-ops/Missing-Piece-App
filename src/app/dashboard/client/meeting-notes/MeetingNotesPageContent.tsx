@@ -25,7 +25,6 @@ interface MeetingNote {
 interface MeetingNotesPageContentProps {
   clientId: string;
   tenantId: string;
-  tenantName: string;
   primaryColor: string;
   backgroundColor: string;
   fontColor: string;
@@ -38,7 +37,6 @@ interface MeetingNotesPageContentProps {
 export default function MeetingNotesPageContent({
   clientId,
   tenantId,
-  tenantName,
   primaryColor,
   backgroundColor,
   fontColor,

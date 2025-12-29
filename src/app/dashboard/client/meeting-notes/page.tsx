@@ -49,10 +49,8 @@ export default async function MeetingNotesPage() {
 
   return (
     <MeetingNotesPageContent
-      userId={user.id}
       clientId={clientProfile.id}
       tenantId={clientProfile.tenantId}
-      tenantName={tenant.name}
       primaryColor={tenant.primaryColor}
       backgroundColor={tenant.backgroundColor}
       fontColor={tenant.fontColor}
