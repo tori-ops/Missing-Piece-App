@@ -84,21 +84,27 @@ export default function TasksDetailView({
           dueDate: newTaskDueDate ? new Date(newTaskDueDate).toISOString() : undefined,
           priority: newTaskPriority,
           clientId,
-          tenantId,
+          assigneeType: clientId ? 'CLIENT' : 'TENANT',
+          assigneeId: clientId || tenantId,
         }),
       });
 
-      if (response.ok) {
-        setSuccessMessage('Task created successfully!');
-        setNewTaskTitle('');
-        setNewTaskDescription('');
-        setNewTaskDueDate('');
-        setNewTaskPriority('MEDIUM');
-        await fetchTasks();
-        setTimeout(() => setSuccessMessage(''), 3000);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create task');
       }
+
+      setSuccessMessage('Task created successfully!');
+      setNewTaskTitle('');
+      setNewTaskDescription('');
+      setNewTaskDueDate('');
+      setNewTaskPriority('MEDIUM');
+      await fetchTasks();
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
       console.error('Failed to create task:', error);
+      setSuccessMessage(`Error: ${error instanceof Error ? error.message : 'Failed to create task'}`);
+      setTimeout(() => setSuccessMessage(''), 3000);
     }
   };
 
