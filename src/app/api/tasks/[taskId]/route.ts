@@ -5,17 +5,17 @@ import { getTaskById, updateTask, deleteTask } from '@/lib/services/taskService'
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * GET /api/tasks/[id] - Get a specific task
- * PATCH /api/tasks/[id] - Update a task
- * DELETE /api/tasks/[id] - Delete a task
+ * GET /api/tasks/[taskId] - Get a specific task
+ * PATCH /api/tasks/[taskId] - Update a task
+ * DELETE /api/tasks/[taskId] - Delete a task
  */
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ taskId: string }> }
 ) {
   try {
-    const { id } = await params;
+    const { taskId } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session?.user) {
@@ -34,7 +34,7 @@ export async function GET(
     }
 
     const task = await getTaskById(
-      id,
+      taskId,
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
@@ -47,7 +47,7 @@ export async function GET(
 
     return NextResponse.json(task);
   } catch (error) {
-    console.error('GET /api/tasks/[id] error:', error);
+    console.error('GET /api/tasks/[taskId] error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to fetch task' },
       { status: 500 }
@@ -57,10 +57,10 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ taskId: string }> }
 ) {
   try {
-    const { id } = await params;
+    const { taskId } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session?.user) {
@@ -82,7 +82,7 @@ export async function PATCH(
     const { status, description, dueDate, priority } = body;
 
     const task = await updateTask(
-      id,
+      taskId,
       {
         status,
         description,
@@ -97,7 +97,7 @@ export async function PATCH(
 
     return NextResponse.json(task);
   } catch (error) {
-    console.error('PATCH /api/tasks/[id] error:', error);
+    console.error('PATCH /api/tasks/[taskId] error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to update task' },
       { status: 500 }
@@ -107,10 +107,10 @@ export async function PATCH(
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ taskId: string }> }
 ) {
   try {
-    const { id } = await params;
+    const { taskId } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session?.user) {
@@ -129,7 +129,7 @@ export async function DELETE(
     }
 
     await deleteTask(
-      id,
+      taskId,
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
@@ -138,7 +138,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('DELETE /api/tasks/[id] error:', error);
+    console.error('DELETE /api/tasks/[taskId] error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to delete task' },
       { status: 500 }
