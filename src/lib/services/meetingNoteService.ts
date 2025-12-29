@@ -49,6 +49,7 @@ export async function listMeetingNotes(
           attachments: {
             select: {
               id: true,
+              meetingNoteId: true,
               fileName: true,
               filePath: true,
               fileType: true,
@@ -89,6 +90,7 @@ export async function listMeetingNotes(
           attachments: {
             select: {
               id: true,
+              meetingNoteId: true,
               fileName: true,
               filePath: true,
               fileType: true,
