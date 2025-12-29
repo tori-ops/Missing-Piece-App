@@ -299,7 +299,7 @@ export default function TasksDetailView({
                     fontFamily: bodyFontFamily,
                   }}
                 >
-                  <option value="">Unassigned (Tenant Level)</option>
+                  <option value="" disabled>Select a client...</option>
                   {clients.map((client) => (
                     <option key={client.id} value={client.id}>
                       {client.couple1FirstName && client.couple1LastName

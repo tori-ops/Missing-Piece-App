@@ -383,7 +383,7 @@ export default function MeetingNotesDetailView({
                   backgroundColor: '#ffffff',
                 }}
               >
-                <option value="">Tenant Level (No Specific Client)</option>
+                <option value="" disabled>Select a client...</option>
                 {clients.map((client) => {
                   const clientName = client.couple1FirstName && client.couple1LastName 
                     ? `${client.couple1FirstName} ${client.couple1LastName}` 

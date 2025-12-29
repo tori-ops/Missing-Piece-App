@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import ClientDetailModal from './ClientDetailModal';
 
 interface ClientListProps {
@@ -20,6 +21,7 @@ export default function ClientList({
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif"
 }: ClientListProps) {
+  const router = useRouter();
   const [clients, setClients] = useState(initialClients);
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [filterStatus, setFilterStatus] = useState<'ALL' | 'OK' | 'BEHIND' | 'OVER'>('ALL');
@@ -158,7 +160,7 @@ export default function ClientList({
           return (
             <div
               key={client.id}
-              onClick={() => setSelectedClient(client)}
+              onClick={() => router.push(`/dashboard/tenant/client/${client.id}`)}
               style={{
                 background: 'white',
                 border: `2px solid ${primaryColor}30`,
