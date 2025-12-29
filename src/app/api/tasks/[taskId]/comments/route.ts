@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ taskId: string }> }
 ) {
   const resolvedParams = await params;
