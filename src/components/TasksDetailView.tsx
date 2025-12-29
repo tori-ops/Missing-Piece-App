@@ -14,7 +14,7 @@ interface Task {
 }
 
 interface TasksDetailViewProps {
-  clientId: string;
+  clientId?: string;
   tenantId: string;
   primaryColor?: string;
   fontColor?: string;
@@ -49,12 +49,16 @@ export default function TasksDetailView({
   // Fetch tasks
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [clientId, tenantId]);
 
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/tasks?clientId=${clientId}&tenantId=${tenantId}`);
+      const params = new URLSearchParams({ tenantId });
+      if (clientId) {
+        params.append('clientId', clientId);
+      }
+      const response = await fetch(`/api/tasks?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
         setTasks(data);

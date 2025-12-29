@@ -1,11 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { lightenColor } from '@/lib/branding';
 import LogoutButton from '@/components/LogoutButton';
 import ClientList from '@/components/ClientList';
 import CreateClientFormModal from '@/components/CreateClientFormModal';
 import TasksWidget from '@/components/TasksWidget';
+import TasksDetailView from '@/components/TasksDetailView';
 import MeetingNotesWidget from '@/components/MeetingNotesWidget';
+import MeetingNotesDetailView from '@/components/MeetingNotesDetailView';
 import type { Tenant, ClientProfile } from '@prisma/client';
 
 interface TenantDashboardContentProps {
@@ -22,6 +25,8 @@ export default function TenantDashboardContent({
   clients,
   user,
 }: TenantDashboardContentProps) {
+  const [activeView, setActiveView] = useState<'dashboard' | 'tasks' | 'notes'>('dashboard');
+
   const primaryColor = tenant.brandingPrimaryColor || '#274E13';
   const secondaryColor = tenant.brandingSecondaryColor || '#e1e0d0';
   const backgroundColor = secondaryColor;
@@ -31,6 +36,35 @@ export default function TenantDashboardContent({
   const headerFontFamily = tenant.brandingHeaderFontFamily || "'Playfair Display', serif";
   const bodyFontFamily = tenant.brandingBodyFontFamily || "'Poppins', sans-serif";
   const logoUrl = tenant.brandingLogoUrl;
+
+  // If viewing tasks or notes detail view, show those full-screen
+  if (activeView === 'tasks') {
+    return (
+      <TasksDetailView
+        clientId={undefined}
+        tenantId={user.tenantId}
+        primaryColor={primaryColor}
+        fontColor={fontColor}
+        bodyFontFamily={bodyFontFamily}
+        headerFontFamily={headerFontFamily}
+        onBack={() => setActiveView('dashboard')}
+      />
+    );
+  }
+
+  if (activeView === 'notes') {
+    return (
+      <MeetingNotesDetailView
+        clientId={undefined}
+        tenantId={user.tenantId}
+        primaryColor={primaryColor}
+        fontColor={fontColor}
+        bodyFontFamily={bodyFontFamily}
+        headerFontFamily={headerFontFamily}
+        onBack={() => setActiveView('dashboard')}
+      />
+    );
+  }
 
   return (
     <>
@@ -148,6 +182,7 @@ export default function TenantDashboardContent({
                 primaryColor={lightenColor(primaryColor, 120)}
                 bodyFontFamily={bodyFontFamily}
                 tenantId={user.tenantId}
+                onClick={() => setActiveView('tasks')}
               />
             </div>
 
@@ -172,6 +207,7 @@ export default function TenantDashboardContent({
                 tenantId={user.tenantId}
                 currentUserId={user.id}
                 userRole="TENANT"
+                onClick={() => setActiveView('notes')}
               />
             </div>
           </div>

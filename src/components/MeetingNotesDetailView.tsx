@@ -16,7 +16,7 @@ interface MeetingNote {
 }
 
 interface MeetingNotesDetailViewProps {
-  clientId: string;
+  clientId?: string;
   tenantId: string;
   primaryColor?: string;
   fontColor?: string;
@@ -62,7 +62,11 @@ export default function MeetingNotesDetailView({
     try {
       setLoading(true);
       console.log('Fetching notes for clientId:', clientId, 'tenantId:', tenantId);
-      const response = await fetch(`/api/meeting-notes?clientId=${clientId}&tenantId=${tenantId}`);
+      const params = new URLSearchParams({ tenantId });
+      if (clientId) {
+        params.append('clientId', clientId);
+      }
+      const response = await fetch(`/api/meeting-notes?${params.toString()}`);
       console.log('Response status:', response.status);
       if (response.ok) {
         const data = await response.json();
@@ -88,7 +92,9 @@ export default function MeetingNotesDetailView({
       const formData = new FormData();
       formData.append('title', newNoteTitle);
       formData.append('body', newNoteBody);
-      formData.append('clientId', clientId);
+      if (clientId) {
+        formData.append('clientId', clientId);
+      }
       formData.append('tenantId', tenantId);
       if (newNoteMeetingDate) {
         formData.append('meetingDate', new Date(newNoteMeetingDate).toISOString());
