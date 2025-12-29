@@ -84,6 +84,7 @@ export default function WeatherDetailView({
         venueLng={venueLng}
         primaryColor={primaryColor}
         fontColor={fontColor}
+        bodyFontFamily={bodyFontFamily}
         headerFontFamily={headerFontFamily}
       />
 

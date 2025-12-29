@@ -9,6 +9,7 @@ import TasksWidget from '@/components/TasksWidget';
 import TasksDetailView from '@/components/TasksDetailView';
 import MeetingNotesWidget from '@/components/MeetingNotesWidget';
 import MeetingNotesDetailView from '@/components/MeetingNotesDetailView';
+import WeatherDetailView from '@/components/WeatherDetailView';
 import type { Tenant, ClientProfile } from '@prisma/client';
 
 interface TenantDashboardContentProps {
@@ -25,7 +26,8 @@ export default function TenantDashboardContent({
   clients,
   user,
 }: TenantDashboardContentProps) {
-  const [activeView, setActiveView] = useState<'dashboard' | 'tasks' | 'notes'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'tasks' | 'notes' | 'weather'>('dashboard');
+  const [selectedClientId, _setSelectedClientId] = useState<string | undefined>(undefined);
 
   const primaryColor = tenant.brandingPrimaryColor || '#274E13';
   const secondaryColor = tenant.brandingSecondaryColor || '#e1e0d0';
@@ -64,6 +66,25 @@ export default function TenantDashboardContent({
         onBack={() => setActiveView('dashboard')}
       />
     );
+  }
+
+  if (activeView === 'weather' && selectedClientId) {
+    const client = clients.find(c => c.id === selectedClientId);
+    if (client && client.weddingDate) {
+      return (
+        <WeatherDetailView
+          weddingDate={client.weddingDate.toISOString().split('T')[0]}
+          venueLat={client.venueLat || undefined}
+          venueLng={client.venueLng || undefined}
+          venueName={client.weddingLocation || undefined}
+          primaryColor={primaryColor}
+          fontColor={fontColor}
+          bodyFontFamily={bodyFontFamily}
+          headerFontFamily={headerFontFamily}
+          onBack={() => setActiveView('dashboard')}
+        />
+      );
+    }
   }
 
   return (
