@@ -253,7 +253,7 @@ export default function ClientDetailModal({
                 fontSize: '0.85rem',
                 fontWeight: '600'
               }}>
-                {(updatedClient.status === 'ACTIVE' || updatedClient.users?.length > 0) ? '✓ Active' : '⚠ Pending'}
+                {(updatedClient.status === 'ACTIVE' || updatedClient.users?.length > 0) ? '✓ OK' : '⚠ Pending'}
               </span>
             </div>
           </InfoSection>

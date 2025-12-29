@@ -230,7 +230,7 @@ export default function ClientList({
                     fontSize: '0.85rem',
                     fontWeight: '600'
                   }}>
-                    {(client.status === 'ACTIVE' || client.users?.length > 0) ? '✓ Active' : '⚠ Pending'}
+                    {(client.status === 'ACTIVE' || client.users?.length > 0) ? '✓ OK' : '⚠ Pending'}
                   </span>
                   
                   <span style={{
