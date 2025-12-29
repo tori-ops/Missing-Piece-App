@@ -282,7 +282,7 @@ export default function MeetingNotesDetailView({
         marginBottom: '2rem',
         fontFamily: bodyFontFamily,
       }}>
-        <h3 style={{ marginTop: 0, fontFamily: headerFontFamily }}>Create New Meeting Note</h3>
+        <h3 style={{ marginTop: 0, fontFamily: headerFontFamily, fontSize: '1.9em' }}>Create New Meeting Note</h3>
         <form onSubmit={handleCreateNote}>
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Title *</label>
@@ -440,7 +440,7 @@ export default function MeetingNotesDetailView({
         marginBottom: '2rem',
         fontFamily: bodyFontFamily,
       }}>
-        <h3 style={{ marginTop: 0, color: primaryColor, fontFamily: headerFontFamily }}>Filter Notes</h3>
+        <h3 style={{ marginTop: 0, color: primaryColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>Filter Notes</h3>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
           <div>
@@ -513,7 +513,7 @@ export default function MeetingNotesDetailView({
 
       {/* Notes List */}
       <div>
-        <h3 style={{ color: primaryColor, fontFamily: headerFontFamily }}>
+        <h3 style={{ color: primaryColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>
           Meeting Notes ({sortedNotes.length})
         </h3>
 
