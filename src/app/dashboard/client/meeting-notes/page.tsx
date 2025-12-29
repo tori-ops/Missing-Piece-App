@@ -25,14 +25,13 @@ export default async function MeetingNotesPage() {
           tenant: {
             select: {
               id: true,
-              name: true,
-              primaryColor: true,
-              backgroundColor: true,
-              fontColor: true,
-              fontFamily: true,
-              headerFontFamily: true,
-              bodyFontFamily: true,
-              logoUrl: true,
+              brandingPrimaryColor: true,
+              brandingBackgroundColor: true,
+              brandingFontColor: true,
+              brandingFontFamily: true,
+              brandingHeaderFontFamily: true,
+              brandingBodyFontFamily: true,
+              brandingLogoUrl: true,
             },
           },
         },
@@ -51,13 +50,13 @@ export default async function MeetingNotesPage() {
     <MeetingNotesPageContent
       clientId={clientProfile.id}
       tenantId={clientProfile.tenantId}
-      primaryColor={tenant.primaryColor}
-      backgroundColor={tenant.backgroundColor}
-      fontColor={tenant.fontColor}
-      fontFamily={tenant.fontFamily}
-      headerFontFamily={tenant.headerFontFamily}
-      bodyFontFamily={tenant.bodyFontFamily}
-      logoUrl={tenant.logoUrl}
+      primaryColor={tenant.brandingPrimaryColor}
+      backgroundColor={tenant.brandingBackgroundColor}
+      fontColor={tenant.brandingFontColor}
+      fontFamily={tenant.brandingFontFamily}
+      headerFontFamily={tenant.brandingHeaderFontFamily}
+      bodyFontFamily={tenant.brandingBodyFontFamily}
+      logoUrl={tenant.brandingLogoUrl}
     />
   );
 }
