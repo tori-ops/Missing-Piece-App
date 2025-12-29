@@ -253,8 +253,8 @@ export async function shouldSendNotification(
 export async function queueEmail(
   toEmail: string,
   subject: string,
-  htmlContent: string,
-  textContent: string,
+  _htmlContent: string,
+  _textContent: string,
   userId: string,
   notificationType: 'task_created' | 'task_completed' | 'task_commented' | 'meeting_note_created' | 'meeting_note_commented',
   relatedTaskId?: string,
@@ -269,8 +269,8 @@ export async function queueEmail(
   //   to: toEmail,
   //   from: 'noreply@themissingpiece.com',
   //   subject,
-  //   html: htmlContent,
-  //   text: textContent,
+  //   html: _htmlContent,
+  //   text: _textContent,
   // });
 
   // For now, log to console
