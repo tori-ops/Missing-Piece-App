@@ -196,14 +196,35 @@ export default function ClientDashboardContent({
         )}
       </div>
 
-      {/* Weather & Astrology & Tasks & Meeting Notes Cards */}
+      {/* Meeting Notes, Tasks, Weather & Astrology Cards */}
       {clientProfile.weddingDate && clientProfile.venueLat && clientProfile.venueLng && (
         <div style={{ 
           marginBottom: '2rem',
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '1.5rem',
         }}>
+          {/* Row 1 */}
+          <MeetingNotesWidget
+            primaryColor={primaryColor}
+            bodyFontFamily={bodyFontFamily}
+            textColor={lightenColor(primaryColor, 120)}
+            clientId={clientProfile.id}
+            tenantId={clientProfile.tenantId}
+            currentUserId={currentUserId}
+            userRole="CLIENT"
+          />
+          <TasksWidget
+            primaryColor={primaryColor}
+            bodyFontFamily={bodyFontFamily}
+            textColor={lightenColor(primaryColor, 120)}
+            clientId={clientProfile.id}
+            tenantId={clientProfile.tenantId}
+            userRole="CLIENT"
+          />
+          {/* Empty col for Row 1 */}
+          
+          {/* Row 2 */}
           <WeatherCard
             primaryColor={primaryColor}
             bodyFontFamily={bodyFontFamily}
@@ -216,23 +237,7 @@ export default function ClientDashboardContent({
             textColor={lightenColor(primaryColor, 120)}
             onClick={() => setActiveView('astrology')}
           />
-          <TasksWidget
-            primaryColor={primaryColor}
-            bodyFontFamily={bodyFontFamily}
-            textColor={lightenColor(primaryColor, 120)}
-            clientId={clientProfile.id}
-            tenantId={clientProfile.tenantId}
-            userRole="CLIENT"
-          />
-          <MeetingNotesWidget
-            primaryColor={primaryColor}
-            bodyFontFamily={bodyFontFamily}
-            textColor={lightenColor(primaryColor, 120)}
-            clientId={clientProfile.id}
-            tenantId={clientProfile.tenantId}
-            currentUserId={currentUserId}
-            userRole="CLIENT"
-          />
+          {/* Empty col for Row 2 */}
         </div>
       )}
 
