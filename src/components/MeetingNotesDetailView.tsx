@@ -19,6 +19,7 @@ interface MeetingNote {
 interface MeetingNotesDetailViewProps {
   clientId?: string;
   tenantId: string;
+  clients?: Array<{ id: string; fullName?: string; name?: string }>;
   primaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
@@ -29,6 +30,7 @@ interface MeetingNotesDetailViewProps {
 export default function MeetingNotesDetailView({
   clientId,
   tenantId,
+  clients = [],
   primaryColor = '#274E13',
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
@@ -42,6 +44,7 @@ export default function MeetingNotesDetailView({
   const [newNoteBody, setNewNoteBody] = useState('');
   const [newNoteMeetingDate, setNewNoteMeetingDate] = useState('');
   const [newNoteTags, setNewNoteTags] = useState('');
+  const [newNoteClientId, setNewNoteClientId] = useState<string>('');
   const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingType, setRecordingType] = useState<'voice' | 'camera' | null>(null);
@@ -94,8 +97,10 @@ export default function MeetingNotesDetailView({
       const formData = new FormData();
       formData.append('title', newNoteTitle);
       formData.append('body', newNoteBody);
-      if (clientId) {
-        formData.append('clientId', clientId);
+      // Use selected clientId if provided, or the component's clientId prop
+      const assignedClientId = newNoteClientId || clientId;
+      if (assignedClientId) {
+        formData.append('clientId', assignedClientId);
       }
       formData.append('tenantId', tenantId);
       if (newNoteMeetingDate) {
@@ -110,7 +115,7 @@ export default function MeetingNotesDetailView({
         formData.append('attachments', file);
       });
 
-      console.log('Creating note with clientId:', clientId, 'tenantId:', tenantId);
+      console.log('Creating note with clientId:', assignedClientId, 'tenantId:', tenantId);
       const response = await fetch('/api/meeting-notes', {
         method: 'POST',
         body: formData,
@@ -125,6 +130,7 @@ export default function MeetingNotesDetailView({
         setNewNoteBody('');
         setNewNoteMeetingDate('');
         setNewNoteTags('');
+        setNewNoteClientId('');
         setAttachmentFiles([]);
         await fetchNotes();
         setTimeout(() => setSuccessMessage(''), 3000);
@@ -355,6 +361,31 @@ export default function MeetingNotesDetailView({
               />
             </div>
           </div>
+
+          {!clientId && clients.length > 0 && (
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Assign to Client (Optional)</label>
+              <select
+                value={newNoteClientId}
+                onChange={(e) => setNewNoteClientId(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontFamily: bodyFontFamily,
+                  backgroundColor: '#ffffff',
+                }}
+              >
+                <option value="">Tenant Level (No Specific Client)</option>
+                {clients.map((client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.fullName || client.name || 'Unnamed Client'}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Attachments (Documents, Images)</label>

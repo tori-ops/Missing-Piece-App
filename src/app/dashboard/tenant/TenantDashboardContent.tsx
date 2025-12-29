@@ -229,6 +229,7 @@ export default function TenantDashboardContent({
           <MeetingNotesDetailView
             clientId={undefined}
             tenantId={user.tenantId}
+            clients={clients}
             primaryColor={primaryColor}
             fontColor={fontColor}
             bodyFontFamily={bodyFontFamily}
