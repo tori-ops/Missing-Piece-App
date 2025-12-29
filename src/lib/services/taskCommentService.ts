@@ -198,7 +198,7 @@ export async function updateTaskComment(
 export async function deleteTaskComment(
   commentId: string,
   userId: string,
-  userRole: 'TENANT' | 'CLIENT',
+  _userRole: 'TENANT' | 'CLIENT',
   tenantId: string
 ): Promise<void> {
   // Get the comment and verify ownership
