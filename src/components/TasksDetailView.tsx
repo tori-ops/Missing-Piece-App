@@ -22,6 +22,7 @@ interface Task {
 interface TasksDetailViewProps {
   clientId?: string;
   tenantId: string;
+  clients?: Array<{ id: string; couple1FirstName?: string; couple1LastName?: string; fullName?: string; name?: string }>;
   primaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
@@ -32,6 +33,7 @@ interface TasksDetailViewProps {
 export default function TasksDetailView({
   clientId,
   tenantId,
+  clients = [],
   primaryColor = '#274E13',
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
@@ -45,6 +47,7 @@ export default function TasksDetailView({
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newTaskDueDate, setNewTaskDueDate] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState<'LOW' | 'MEDIUM' | 'HIGH'>('MEDIUM');
+  const [newTaskClientId, setNewTaskClientId] = useState<string>('');
 
   // Filters
   const [filterStatus, setFilterStatus] = useState<'ALL' | 'TODO' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED'>('ALL');
@@ -89,9 +92,9 @@ export default function TasksDetailView({
           description: newTaskDescription || undefined,
           dueDate: newTaskDueDate ? new Date(newTaskDueDate).toISOString() : undefined,
           priority: newTaskPriority,
-          clientId,
-          assigneeType: clientId ? 'CLIENT' : 'TENANT',
-          assigneeId: clientId || tenantId,
+          clientId: newTaskClientId || clientId,
+          assigneeType: (newTaskClientId || clientId) ? 'CLIENT' : 'TENANT',
+          assigneeId: (newTaskClientId || clientId) || tenantId,
         }),
       });
 
@@ -105,6 +108,7 @@ export default function TasksDetailView({
       setNewTaskDescription('');
       setNewTaskDueDate('');
       setNewTaskPriority('MEDIUM');
+      setNewTaskClientId('');
       await fetchTasks();
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
@@ -280,6 +284,32 @@ export default function TasksDetailView({
                 <option value="HIGH">High</option>
               </select>
             </div>
+
+            {!clientId && clients.length > 0 && (
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Assign to Client</label>
+                <select
+                  value={newTaskClientId}
+                  onChange={(e) => setNewTaskClientId(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: 'none',
+                    borderRadius: '4px',
+                    fontFamily: bodyFontFamily,
+                  }}
+                >
+                  <option value="">Unassigned (Tenant Level)</option>
+                  {clients.map((client) => (
+                    <option key={client.id} value={client.id}>
+                      {client.couple1FirstName && client.couple1LastName
+                        ? `${client.couple1FirstName} ${client.couple1LastName}`
+                        : client.fullName || client.name || 'Unnamed Client'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Due Date</label>

@@ -25,7 +25,7 @@ interface MeetingNote {
 interface MeetingNotesDetailViewProps {
   clientId?: string;
   tenantId: string;
-  clients?: Array<{ id: string; fullName?: string; name?: string }>;
+  clients?: Array<{ id: string; couple1FirstName?: string; couple1LastName?: string; fullName?: string; name?: string }>;
   primaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
@@ -384,11 +384,16 @@ export default function MeetingNotesDetailView({
                 }}
               >
                 <option value="">Tenant Level (No Specific Client)</option>
-                {clients.map((client) => (
-                  <option key={client.id} value={client.id}>
-                    {client.fullName || client.name || 'Unnamed Client'}
-                  </option>
-                ))}
+                {clients.map((client) => {
+                  const clientName = client.couple1FirstName && client.couple1LastName 
+                    ? `${client.couple1FirstName} ${client.couple1LastName}` 
+                    : (client.fullName || client.name || 'Unnamed Client');
+                  return (
+                    <option key={client.id} value={client.id}>
+                      {clientName}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           )}

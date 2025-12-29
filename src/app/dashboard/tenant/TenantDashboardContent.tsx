@@ -217,6 +217,7 @@ export default function TenantDashboardContent({
           <TasksDetailView
             clientId={undefined}
             tenantId={user.tenantId}
+            clients={clients}
             primaryColor={primaryColor}
             fontColor={fontColor}
             bodyFontFamily={bodyFontFamily}
