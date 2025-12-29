@@ -42,10 +42,11 @@ export async function listMeetingNotes(
 ): Promise<MeetingNoteWithAttachments[]> {
   try {
     if (userRole === 'TENANT') {
-      // TENANT sees all notes in their tenant
+      // TENANT sees all notes in their tenant, or filtered to a specific client if provided
       const notes = await prisma.meetingNote.findMany({
         where: {
           tenantId,
+          ...(clientId ? { clientId } : {}), // Filter by clientId if provided
         },
         include: {
           attachments: true,
