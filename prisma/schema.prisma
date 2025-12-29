@@ -170,6 +170,10 @@ model User {
   payments              Payment[]
   tenantAccessGranted   TenantAccess[]
   createdTasks          Task[]
+  taskComments          TaskComment[]         @relation("TaskComments")
+  notificationLogs      NotificationLog[]     @relation("NotificationLogs")
+  notificationPrefs     NotificationPreference? @relation("NotificationPreferences")
+  meetingNotes          MeetingNote[]
   
   @@index([email])
   @@index([tenantId])
@@ -642,6 +646,7 @@ model MeetingNote {
   id                    String                @id @default(cuid())
   tenantId              String
   clientId              String?               // Optional - if meeting was with specific client
+  createdByUserId       String
   
   // Content
   title                 String
@@ -661,10 +666,14 @@ model MeetingNote {
   // Relations
   tenant                Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   client                ClientProfile?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  createdBy             User                  @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   tasks                 Task[]                @relation("NoteTasks")
+  attachments           MeetingNoteAttachment[] @relation("Attachments")
+  notifications         NotificationLog[]     @relation("NoteNotifications")
   
   @@index([tenantId])
   @@index([clientId])
+  @@index([createdByUserId])
   @@index([createdAt])
   @@index([meetingDate])
   @@index([ocrStatus])
@@ -736,6 +745,10 @@ model Task {
   createdBy             User                  @relation(fields: [createdByUserId], references: [id], onDelete: Restrict)
   meetingNote           MeetingNote?          @relation("NoteTasks", fields: [meetingNoteId], references: [id], onDelete: SetNull)
   
+  // New relations for comments and notifications
+  comments              TaskComment[]         @relation("TaskComments")
+  notifications         NotificationLog[]     @relation("TaskNotifications")
+  
   @@index([tenantId])
   @@index([clientId])
   @@index([assigneeType])
@@ -747,6 +760,122 @@ model Task {
   @@index([taskGroupId])
   @@map("tasks")
 }
+
+// ============================================================================
+// TASK COMMENTS
+// ============================================================================
+
+model TaskComment {
+  id                    String                @id @default(cuid())
+  
+  // Relations
+  taskId                String
+  task                  Task                  @relation("TaskComments", fields: [taskId], references: [id], onDelete: Cascade)
+  
+  createdByUserId       String
+  createdBy             User                  @relation("TaskComments", fields: [createdByUserId], references: [id], onDelete: Cascade)
+  
+  // Notifications about this comment
+  notifications         NotificationLog[]     @relation("CommentNotifications")
+  
+  // Content
+  content               String
+  
+  // Timestamps
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  
+  @@index([taskId])
+  @@index([createdByUserId])
+  @@index([createdAt])
+  @@map("task_comments")
+}
+
+
+// ============================================================================
+// MEETING NOTE ATTACHMENTS
+// ============================================================================
+
+model MeetingNoteAttachment {
+  id                    String                @id @default(cuid())
+  
+  // Relations
+  meetingNoteId         String
+  meetingNote           MeetingNote           @relation("Attachments", fields: [meetingNoteId], references: [id], onDelete: Cascade)
+  
+  // File Metadata
+  fileName              String
+  filePath              String                // /uploads/meetings/[noteId]/[filename]
+  fileType              String                // 'image' or 'document'
+  fileSizeBytes         Int
+  mimeType              String
+  
+  // Timestamps
+  createdAt             DateTime              @default(now())
+  
+  @@index([meetingNoteId])
+  @@map("meeting_note_attachments")
+}
+
+
+// ============================================================================
+// NOTIFICATION LOG (Accountability)
+// ============================================================================
+
+model NotificationLog {
+  id                    String                @id @default(cuid())
+  
+  // Recipient
+  recipientUserId       String
+  recipientEmail        String
+  recipientUser         User                  @relation("NotificationLogs", fields: [recipientUserId], references: [id], onDelete: Cascade)
+  
+  // Notification Details
+  notificationType      String                // 'task_created', 'task_status_changed', 'comment_added'
+  subject               String
+  
+  // What triggered it (optional foreign keys)
+  taskId                String?
+  task                  Task?                 @relation("TaskNotifications", fields: [taskId], references: [id], onDelete: SetNull)
+  
+  commentId             String?
+  comment               TaskComment?          @relation("CommentNotifications", fields: [commentId], references: [id], onDelete: SetNull)
+  
+  meetingNoteId         String?
+  meetingNote           MeetingNote?          @relation("NoteNotifications", fields: [meetingNoteId], references: [id], onDelete: SetNull)
+  
+  // Timestamp
+  sentAt                DateTime              @default(now())
+  
+  @@index([recipientUserId])
+  @@index([notificationType])
+  @@index([taskId])
+  @@index([sentAt])
+  @@map("notification_logs")
+}
+
+
+// ============================================================================
+// NOTIFICATION PREFERENCES (User Opt-Out)
+// ============================================================================
+
+model NotificationPreference {
+  id                    String                @id @default(cuid())
+  
+  userId                String                @unique
+  user                  User                  @relation("NotificationPreferences", fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Settings
+  notificationsEnabled  Boolean               @default(true)
+  
+  // Timestamps
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  
+  @@index([userId])
+  @@map("notification_preferences")
+}
+
 
 // ============================================================================
 // CLIENT WEATHER & GOLDEN HOUR
