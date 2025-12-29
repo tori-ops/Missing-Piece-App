@@ -25,8 +25,10 @@ const MAX_FILE_SIZE = 7 * 1024 * 1024; // 7MB
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
   try {
     const session = await getServerSession(authOptions);
 
@@ -47,7 +49,7 @@ export async function POST(
 
     // Verify user can edit this note (must be creator)
     const note = await getMeetingNoteById(
-      params.id,
+      id,
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
@@ -106,7 +108,7 @@ export async function POST(
       }
 
       // Create upload directory if it doesn't exist
-      const uploadDir = join(process.cwd(), 'public', 'uploads', 'meetings', params.id);
+      const uploadDir = join(process.cwd(), 'public', 'uploads', 'meetings', id);
       if (!existsSync(uploadDir)) {
         await mkdir(uploadDir, { recursive: true });
       }
@@ -115,7 +117,7 @@ export async function POST(
       const timestamp = Date.now();
       const extension = file.name.split('.').pop();
       const fileName = `${timestamp}-${Math.random().toString(36).substring(7)}.${extension}`;
-      const filePath = `/uploads/meetings/${params.id}/${fileName}`;
+      const filePath = `/uploads/meetings/${id}/${fileName}`;
       const fullPath = join(uploadDir, fileName);
 
       // Write file to disk
@@ -123,7 +125,7 @@ export async function POST(
       await writeFile(fullPath, Buffer.from(bytes));
 
       // Save attachment metadata to database
-      const attachment = await addAttachment(params.id, {
+      const attachment = await addAttachment(id, {
         fileName: file.name,
         filePath,
         fileType,
@@ -136,7 +138,7 @@ export async function POST(
 
     return NextResponse.json(uploadedAttachments, { status: 201 });
   } catch (error) {
-    console.error(`POST /api/meeting-notes/${params.id}/attachments error:`, error);
+    console.error(`POST /api/meeting-notes/${id}/attachments error:`, error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to upload attachments' },
       { status: 500 }

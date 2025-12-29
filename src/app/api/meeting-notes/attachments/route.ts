@@ -9,8 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 
 export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  req: NextRequest
 ) {
   try {
     const session = await getServerSession(authOptions);

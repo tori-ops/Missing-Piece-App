@@ -5,6 +5,7 @@ import LogoutButton from '@/components/LogoutButton';
 import ClientList from '@/components/ClientList';
 import CreateClientFormModal from '@/components/CreateClientFormModal';
 import TasksWidget from '@/components/TasksWidget';
+import MeetingNotesWidget from '@/components/MeetingNotesWidget';
 import type { Tenant, ClientProfile } from '@prisma/client';
 
 interface TenantDashboardContentProps {
@@ -147,6 +148,29 @@ export default function TenantDashboardContent({
                 primaryColor={lightenColor(primaryColor, 120)}
                 bodyFontFamily={bodyFontFamily}
                 tenantId={user.tenantId}
+              />
+            </div>
+
+            {/* Meeting Notes Widget */}
+            <div
+              style={{
+                background: primaryColor,
+                border: `2px solid ${primaryColor}`,
+                borderRadius: '8px',
+                padding: '1.5rem',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <MeetingNotesWidget
+                primaryColor={lightenColor(primaryColor, 120)}
+                bodyFontFamily={bodyFontFamily}
+                textColor={lightenColor(primaryColor, 120)}
+                tenantId={user.tenantId}
+                userRole="TENANT"
               />
             </div>
           </div>

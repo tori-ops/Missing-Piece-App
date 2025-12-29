@@ -12,8 +12,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
   try {
     const session = await getServerSession(authOptions);
 
@@ -33,7 +35,7 @@ export async function GET(
     }
 
     const note = await getMeetingNoteById(
-      params.id,
+      id,
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
@@ -46,7 +48,7 @@ export async function GET(
 
     return NextResponse.json(note);
   } catch (error) {
-    console.error(`GET /api/meeting-notes/${params.id} error:`, error);
+    console.error(`GET /api/meeting-notes/${id} error:`, error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to fetch meeting note' },
       { status: error instanceof Error && error.message.includes('Unauthorized') ? 403 : 500 }
@@ -56,8 +58,10 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
   try {
     const session = await getServerSession(authOptions);
 
@@ -80,7 +84,7 @@ export async function PUT(
     const { title, body: noteBody, meetingDate } = body;
 
     const updated = await updateMeetingNote(
-      params.id,
+      id,
       {
         title,
         body: noteBody,
@@ -94,7 +98,7 @@ export async function PUT(
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error(`PUT /api/meeting-notes/${params.id} error:`, error);
+    console.error(`PUT /api/meeting-notes/${id} error:`, error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to update meeting note' },
       { status: error instanceof Error && error.message.includes('Unauthorized') ? 403 : 500 }
@@ -104,8 +108,10 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
   try {
     const session = await getServerSession(authOptions);
 
@@ -125,7 +131,7 @@ export async function DELETE(
     }
 
     await deleteMeetingNote(
-      params.id,
+      id,
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
@@ -134,7 +140,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(`DELETE /api/meeting-notes/${params.id} error:`, error);
+    console.error(`DELETE /api/meeting-notes/${id} error:`, error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to delete meeting note' },
       { status: error instanceof Error && error.message.includes('Unauthorized') ? 403 : 500 }
