@@ -103,35 +103,60 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { title, description, dueDate, priority, assigneeType, assigneeId, clientId, meetingNoteId } = body;
 
-    if (!title || !assigneeType || !assigneeId) {
+    if (!title) {
       return NextResponse.json(
-        { error: 'Missing required fields: title, assigneeType, assigneeId' },
+        { error: 'Missing required field: title' },
         { status: 400 }
       );
     }
 
-    // Validate assignment permissions based on user role
-    if (userRole === 'CLIENT') {
-      // CLIENT can only assign to themselves (CLIENT) or their tenant
-      if (assigneeType === 'CLIENT' && assigneeId !== user.clientId) {
-        return NextResponse.json(
-          { error: 'You can only assign tasks to yourself' },
-          { status: 403 }
-        );
-      }
-      if (assigneeType === 'TENANT') {
-        if (!user.tenantId) {
+    // If not creating from a meeting note, require assigneeType and assigneeId
+    if (!meetingNoteId && (!assigneeType || !assigneeId)) {
+      return NextResponse.json(
+        { error: 'Missing required fields: assigneeType, assigneeId' },
+        { status: 400 }
+      );
+    }
+
+    // Validate assignment permissions based on user role (if assignee provided)
+    if (assigneeType && assigneeId) {
+      if (userRole === 'CLIENT') {
+        // CLIENT can only assign to themselves (CLIENT) or their tenant
+        if (assigneeType === 'CLIENT' && assigneeId !== user.clientId) {
           return NextResponse.json(
-            { error: 'Tenant not found for this client' },
-            { status: 400 }
-          );
-        }
-        if (assigneeId !== user.tenantId) {
-          return NextResponse.json(
-            { error: 'You can only assign to your coordinator' },
+            { error: 'You can only assign tasks to yourself' },
             { status: 403 }
           );
         }
+        if (assigneeType === 'TENANT') {
+          if (!user.tenantId) {
+            return NextResponse.json(
+              { error: 'Tenant not found for this client' },
+              { status: 400 }
+            );
+          }
+          if (assigneeId !== user.tenantId) {
+            return NextResponse.json(
+              { error: 'You can only assign to your coordinator' },
+              { status: 403 }
+            );
+          }
+        }
+      }
+    }
+
+    // Determine the effective assignee based on user role
+    let effectiveAssigneeType = assigneeType;
+    let effectiveAssigneeId = assigneeId;
+
+    if (!assigneeType || !assigneeId) {
+      // Default assignment based on user role
+      if (userRole === 'TENANT') {
+        effectiveAssigneeType = 'TENANT';
+        effectiveAssigneeId = user.tenantId;
+      } else if (userRole === 'CLIENT') {
+        effectiveAssigneeType = 'CLIENT';
+        effectiveAssigneeId = user.clientId;
       }
     }
 
@@ -142,8 +167,8 @@ export async function POST(req: NextRequest) {
       description,
       dueDate: dueDate ? new Date(dueDate) : undefined,
       priority,
-      assigneeType,
-      assigneeId,
+      assigneeType: effectiveAssigneeType,
+      assigneeId: effectiveAssigneeId,
       createdByUserId: user.id,
       meetingNoteId,
     });

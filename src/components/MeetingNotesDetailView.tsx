@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Trash2, FileText, Calendar } from 'lucide-react';
+import { Trash2, FileText, Calendar, Plus } from 'lucide-react';
+import CreateTaskFromNoteModal from './CreateTaskFromNoteModal';
 
 interface MeetingNote {
   id: string;
@@ -44,6 +45,7 @@ export default function MeetingNotesDetailView({
   const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingType, setRecordingType] = useState<'voice' | 'camera' | null>(null);
+  const [taskFromNoteModal, setTaskFromNoteModal] = useState<{ noteId: string; title: string; body: string } | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
@@ -584,28 +586,69 @@ export default function MeetingNotesDetailView({
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => handleDeleteNote(note.id)}
-                    style={{
-                      background: '#f44336',
-                      color: '#ffffff',
-                      border: 'none',
-                      borderRadius: '4px',
-                      padding: '0.5rem',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      fontFamily: bodyFontFamily,
-                    }}
-                    title="Delete note"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <button
+                      onClick={() => setTaskFromNoteModal({ noteId: note.id, title: note.title, body: note.body })}
+                      style={{
+                        background: primaryColor,
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        padding: '0.5rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        fontFamily: bodyFontFamily,
+                        fontSize: '0.85rem',
+                      }}
+                      title="Create task from this note"
+                    >
+                      <Plus size={18} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteNote(note.id)}
+                      style={{
+                        background: '#f44336',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        padding: '0.5rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        fontFamily: bodyFontFamily,
+                      }}
+                      title="Delete note"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+        )}
+
+        {/* Create Task from Note Modal */}
+        {taskFromNoteModal && (
+          <CreateTaskFromNoteModal
+            noteId={taskFromNoteModal.noteId}
+            noteTitle={taskFromNoteModal.title}
+            noteBody={taskFromNoteModal.body}
+            clientId={clientId}
+            tenantId={tenantId}
+            primaryColor={primaryColor}
+            fontColor={fontColor}
+            onClose={() => setTaskFromNoteModal(null)}
+            onTaskCreated={() => {
+              setTaskFromNoteModal(null);
+              setSuccessMessage('Task created successfully!');
+              setTimeout(() => setSuccessMessage(''), 3000);
+              // Note: Tasks widget will refresh when user navigates to it
+            }}
+          />
         )}
       </div>
     </div>
