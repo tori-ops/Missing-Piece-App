@@ -233,29 +233,12 @@ export async function createMeetingNote(
         body: input.body,
         meetingDate: input.meetingDate,
       },
-      include: {
-        attachments: true,
-      },
     });
 
-    // Handle file uploads asynchronously if provided
+    // TODO: Handle file uploads separately via async job or dedicated endpoint
+    // For now, just note the files for future processing
     if (input.attachmentFiles && input.attachmentFiles.length > 0) {
-      // Note: Files will be processed in background
-      // For now, create attachment records with empty file paths
-      // Actual file upload would require external storage service
-      const attachments = input.attachmentFiles.map((file) => ({
-        meetingNoteId: note.id,
-        fileName: file.name,
-        filePath: `attachments/${input.tenantId}/${note.id}/${file.name}`,
-        fileType: file.type.split('/')[1] || 'unknown',
-        mimeType: file.type,
-        fileSizeBytes: file.size,
-        createdAt: new Date(),
-      }));
-
-      // This would require a separate field to store file data
-      // For production, use: AWS S3, Azure Blob, Vercel Blob, etc.
-      console.log('Attachments ready for upload:', attachments);
+      console.log(`Note created - ${input.attachmentFiles.length} files pending upload for note ${note.id}`);
     }
 
     return note;
