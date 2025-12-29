@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * POST /api/tasks - Create a new task
  */
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -41,11 +41,18 @@ export async function GET() {
       return NextResponse.json({ error: 'Client ID not found' }, { status: 400 });
     }
 
+    // Get clientId from query params if provided (for filtering to specific client)
+    const { searchParams } = new URL(req.url);
+    const queryClientId = searchParams.get('clientId');
+
+    // Use query param clientId if provided, otherwise use user's clientId
+    const effectiveClientId = queryClientId || user.clientId || undefined;
+
     const tasks = await listTasks(
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
-      user.clientId || undefined
+      effectiveClientId
     );
 
     return NextResponse.json(tasks);

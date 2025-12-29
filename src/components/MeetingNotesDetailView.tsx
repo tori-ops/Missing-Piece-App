@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Trash2, FileText, Calendar } from 'lucide-react';
 
 interface MeetingNote {
@@ -41,6 +41,11 @@ export default function MeetingNotesDetailView({
   const [newNoteBody, setNewNoteBody] = useState('');
   const [newNoteMeetingDate, setNewNoteMeetingDate] = useState('');
   const [newNoteTags, setNewNoteTags] = useState('');
+  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingType, setRecordingType] = useState<'voice' | 'camera' | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // Filters
   const [filterKeyword, setFilterKeyword] = useState('');
@@ -73,17 +78,27 @@ export default function MeetingNotesDetailView({
     if (!newNoteTitle.trim() || !newNoteBody.trim()) return;
 
     try {
+      // Create FormData to handle file uploads
+      const formData = new FormData();
+      formData.append('title', newNoteTitle);
+      formData.append('body', newNoteBody);
+      formData.append('clientId', clientId);
+      formData.append('tenantId', tenantId);
+      if (newNoteMeetingDate) {
+        formData.append('meetingDate', new Date(newNoteMeetingDate).toISOString());
+      }
+      if (newNoteTags) {
+        formData.append('tags', JSON.stringify(newNoteTags.split(',').map(t => t.trim())));
+      }
+
+      // Add files to FormData
+      attachmentFiles.forEach((file) => {
+        formData.append('attachments', file);
+      });
+
       const response = await fetch('/api/meeting-notes', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: newNoteTitle,
-          body: newNoteBody,
-          meetingDate: newNoteMeetingDate ? new Date(newNoteMeetingDate).toISOString() : undefined,
-          tags: newNoteTags ? newNoteTags.split(',').map(t => t.trim()) : [],
-          clientId,
-          tenantId,
-        }),
+        body: formData,
       });
 
       if (response.ok) {
@@ -92,6 +107,7 @@ export default function MeetingNotesDetailView({
         setNewNoteBody('');
         setNewNoteMeetingDate('');
         setNewNoteTags('');
+        setAttachmentFiles([]);
         await fetchNotes();
         setTimeout(() => setSuccessMessage(''), 3000);
       }
@@ -110,6 +126,64 @@ export default function MeetingNotesDetailView({
       }
     } catch (error) {
       console.error('Failed to delete note:', error);
+    }
+  };
+
+  const startVoiceRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      const chunks: BlobPart[] = [];
+
+      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/mp3' });
+        const file = new File([blob], `voice-${Date.now()}.mp3`, { type: 'audio/mp3' });
+        setAttachmentFiles([...attachmentFiles, file]);
+        stream.getTracks().forEach(track => track.stop());
+        setIsRecording(false);
+        setRecordingType(null);
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingType('voice');
+    } catch (error) {
+      console.error('Failed to start voice recording:', error);
+    }
+  };
+
+  const startCameraRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+      streamRef.current = stream;
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      const chunks: BlobPart[] = [];
+
+      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/mp4' });
+        const file = new File([blob], `video-${Date.now()}.mp4`, { type: 'video/mp4' });
+        setAttachmentFiles([...attachmentFiles, file]);
+        stream.getTracks().forEach(track => track.stop());
+        setIsRecording(false);
+        setRecordingType(null);
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingType('camera');
+    } catch (error) {
+      console.error('Failed to start camera recording:', error);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
     }
   };
 
@@ -255,6 +329,63 @@ export default function MeetingNotesDetailView({
                 }}
               />
             </div>
+          </div>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Attachments (Documents, Images)</label>
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+              <input
+                type="file"
+                multiple
+                onChange={(e) => setAttachmentFiles(Array.from(e.target.files || []))}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontFamily: bodyFontFamily,
+                }}
+              />
+              <button
+                type="button"
+                onClick={isRecording && recordingType === 'voice' ? stopRecording : startVoiceRecording}
+                style={{
+                  padding: '0.75rem 1rem',
+                  background: isRecording && recordingType === 'voice' ? '#d32f2f' : '#ffffff',
+                  color: isRecording && recordingType === 'voice' ? '#ffffff' : primaryColor,
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontFamily: bodyFontFamily,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {isRecording && recordingType === 'voice' ? '⏹ Stop Voice' : '🎤 Voice'}
+              </button>
+              <button
+                type="button"
+                onClick={isRecording && recordingType === 'camera' ? stopRecording : startCameraRecording}
+                style={{
+                  padding: '0.75rem 1rem',
+                  background: isRecording && recordingType === 'camera' ? '#d32f2f' : '#ffffff',
+                  color: isRecording && recordingType === 'camera' ? '#ffffff' : primaryColor,
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontFamily: bodyFontFamily,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {isRecording && recordingType === 'camera' ? '⏹ Stop Camera' : '📹 Camera'}
+              </button>
+            </div>
+            {attachmentFiles.length > 0 && (
+              <div style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+                {attachmentFiles.length} file(s) selected: {attachmentFiles.map(f => f.name).join(', ')}
+              </div>
+            )}
           </div>
 
           <button

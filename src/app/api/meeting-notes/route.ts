@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * POST /api/meeting-notes - Create a new meeting note
  */
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -41,11 +41,18 @@ export async function GET() {
       return NextResponse.json({ error: 'Client ID not found' }, { status: 400 });
     }
 
+    // Get clientId from query params if provided (for filtering to specific client)
+    const { searchParams } = new URL(req.url);
+    const queryClientId = searchParams.get('clientId');
+
+    // Use query param clientId if provided, otherwise use user's clientId
+    const effectiveClientId = queryClientId || user.clientId || undefined;
+
     const notes = await listMeetingNotes(
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
-      user.clientId || undefined
+      effectiveClientId
     );
 
     return NextResponse.json(notes);
@@ -92,8 +99,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Client ID not found' }, { status: 400 });
     }
 
-    const body = await req.json();
-    const { title, body: noteBody, meetingDate, clientId } = body;
+    // Parse FormData for file uploads
+    const formData = await req.formData();
+    const title = formData.get('title') as string;
+    const noteBody = formData.get('body') as string;
+    const meetingDate = formData.get('meetingDate') as string;
+    const clientId = formData.get('clientId') as string;
+    const tagsJson = formData.get('tags') as string;
+    const tags = tagsJson ? JSON.parse(tagsJson) : [];
+    const files = formData.getAll('attachments') as File[];
 
     if (!title || !noteBody) {
       return NextResponse.json(
@@ -132,6 +146,8 @@ export async function POST(req: NextRequest) {
       title,
       body: noteBody,
       meetingDate: meetingDate ? new Date(meetingDate) : undefined,
+      tags,
+      attachmentFiles: files.length > 0 ? files : undefined,
     });
 
     return NextResponse.json(note, { status: 201 });

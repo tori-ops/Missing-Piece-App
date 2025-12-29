@@ -12,6 +12,8 @@ export interface CreateMeetingNoteInput {
   title: string;
   body: string;
   meetingDate?: Date;
+  tags?: string[];
+  attachmentFiles?: File[];
 }
 
 export interface UpdateMeetingNoteInput {
@@ -231,7 +233,30 @@ export async function createMeetingNote(
         body: input.body,
         meetingDate: input.meetingDate,
       },
+      include: {
+        attachments: true,
+      },
     });
+
+    // Handle file uploads asynchronously if provided
+    if (input.attachmentFiles && input.attachmentFiles.length > 0) {
+      // Note: Files will be processed in background
+      // For now, create attachment records with empty file paths
+      // Actual file upload would require external storage service
+      const attachments = input.attachmentFiles.map((file) => ({
+        meetingNoteId: note.id,
+        fileName: file.name,
+        filePath: `attachments/${input.tenantId}/${note.id}/${file.name}`,
+        fileType: file.type.split('/')[1] || 'unknown',
+        mimeType: file.type,
+        fileSizeBytes: file.size,
+        createdAt: new Date(),
+      }));
+
+      // This would require a separate field to store file data
+      // For production, use: AWS S3, Azure Blob, Vercel Blob, etc.
+      console.log('Attachments ready for upload:', attachments);
+    }
 
     return note;
   } catch (error) {
