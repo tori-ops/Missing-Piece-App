@@ -7,13 +7,13 @@ import MeetingNotesPageContent from './MeetingNotesPageContent';
 export default async function MeetingNotesPage() {
   const session = await getServerSession(authOptions);
   
-  if (!session || !session.user?.id) {
+  if (!session || !(session.user as any)?.email) {
     redirect('/login');
   }
 
-  // Get user's tenant and client info
+  // Get user by email
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { email: (session.user as any).email },
     select: {
       id: true,
       firstName: true,
