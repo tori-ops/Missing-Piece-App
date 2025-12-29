@@ -210,12 +210,13 @@ export async function logNotification(
 ) {
   return prisma.notificationLog.create({
     data: {
-      userId,
-      type,
+      recipientUserId: userId,
+      recipientEmail: '', // Will be fetched from user in actual implementation
+      notificationType: type,
+      subject: '', // Will be set based on notification type
       taskId: relatedTaskId,
       meetingNoteId: relatedMeetingNoteId,
       commentId: relatedCommentId,
-      sentAt: new Date(),
     },
   });
 }
