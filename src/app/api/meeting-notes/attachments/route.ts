@@ -21,12 +21,13 @@ export async function DELETE(
     const userEmail = (session.user as any)?.email;
     const userRole = (session.user as any)?.role;
     
-    // Get attachmentId from URL search params or path
+    // Get attachmentId and noteId from URL search params
     const url = new URL(req.url);
     const attachmentId = url.searchParams.get('attachmentId');
+    const noteId = url.searchParams.get('noteId');
 
-    if (!attachmentId) {
-      return NextResponse.json({ error: 'Attachment ID is required' }, { status: 400 });
+    if (!attachmentId || !noteId) {
+      return NextResponse.json({ error: 'Attachment ID and Note ID are required' }, { status: 400 });
     }
 
     const user = await prisma.user.findUnique({
@@ -39,7 +40,7 @@ export async function DELETE(
 
     // Verify user can edit this note (must be creator)
     const note = await getMeetingNoteById(
-      params.id,
+      noteId,
       user.id,
       userRole as 'TENANT' | 'CLIENT',
       user.tenantId || '',
