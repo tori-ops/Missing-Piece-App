@@ -5,6 +5,7 @@ import AstrologyWidget from './AstrologyWidget';
 interface AstrologyDetailViewProps {
   weddingDate: string;
   ceremonyTime?: string;
+  clientId?: string;
   venueLat?: string;
   venueLng?: string;
   venueName?: string;
@@ -19,6 +20,7 @@ interface AstrologyDetailViewProps {
 export default function AstrologyDetailView({
   weddingDate,
   ceremonyTime,
+  clientId,
   venueLat,
   venueLng,
   venueName,
@@ -53,7 +55,7 @@ export default function AstrologyDetailView({
       </button>
 
       {/* Title */}
-      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0 }}>
+      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0, fontSize: '2.25em' }}>
         Astrology & Moon Phase
       </h2>
 
@@ -83,10 +85,12 @@ export default function AstrologyDetailView({
       <AstrologyWidget
         weddingDate={weddingDate}
         ceremonyTime={ceremonyTime}
+        clientId={clientId}
         lat={venueLat}
         lng={venueLng}
         primaryColor={primaryColor}
         fontColor={fontColor}
+        bodyFontFamily={bodyFontFamily}
         headerFontFamily={headerFontFamily}
       />
 

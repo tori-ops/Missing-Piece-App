@@ -7,8 +7,10 @@ interface AstrologyWidgetProps {
   ceremonyTime?: string;
   lat?: string;
   lng?: string;
+  clientId?: string;
   primaryColor?: string;
   fontColor?: string;
+  bodyFontFamily?: string;
   headerFontFamily?: string;
 }
 
@@ -64,11 +66,14 @@ export default function AstrologyWidget({
   ceremonyTime,
   lat,
   lng,
+  clientId,
   primaryColor = '#274E13',
   fontColor = '#000000',
+  bodyFontFamily = "'Georgia', serif",
   headerFontFamily = "'Playfair Display', serif",
 }: AstrologyWidgetProps) {
   const [displayCeremonyTime, setDisplayCeremonyTime] = useState<string>(ceremonyTime || '');
+  const [isSaving, setIsSaving] = useState(false);
   const dateStr = new Date(weddingDate).toISOString().split('T')[0];
   const [astrology, setAstrology] = useState<AstrologyData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -101,6 +106,29 @@ export default function AstrologyWidget({
     setDisplayCeremonyTime(e.target.value);
   };
 
+  const saveCeremonyTime = async () => {
+    if (!clientId || !displayCeremonyTime) return;
+    
+    try {
+      setIsSaving(true);
+      const res = await fetch('/api/client/ceremony-times', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientId,
+          ceremonyType: 'Main Ceremony',
+          timeOfDay: displayCeremonyTime,
+        }),
+      });
+      
+      if (!res.ok) throw new Error('Failed to save');
+    } catch (err) {
+      console.error('Error saving ceremony time:', err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleCalculate = async () => {
     try {
       setLoading(true);
@@ -112,6 +140,11 @@ export default function AstrologyWidget({
       const data = await res.json();
       setAstrology(data);
       setError(null);
+      
+      // Save ceremony time if clientId is provided
+      if (clientId && displayCeremonyTime) {
+        await saveCeremonyTime();
+      }
     } catch (err) {
       setError('Failed to load astrology data');
       console.error('Error fetching astrology data:', err);
@@ -154,7 +187,7 @@ export default function AstrologyWidget({
           color: primaryColor,
           margin: '0 0 1.5rem 0',
           fontFamily: headerFontFamily,
-          fontSize: '1.4rem',
+          fontSize: '1.9em',
         }}
       >
         Celestial Profile
@@ -177,7 +210,7 @@ export default function AstrologyWidget({
               borderRadius: '6px',
               backgroundColor: `${primaryColor}08`,
               color: fontColor,
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: bodyFontFamily,
               cursor: 'pointer',
               maxWidth: '150px',
               transition: 'all 0.2s ease',
@@ -193,6 +226,7 @@ export default function AstrologyWidget({
           />
           <button
             onClick={handleCalculate}
+            disabled={loading || isSaving}
             style={{
               padding: '0.5rem 1rem',
               fontSize: '0.95rem',
@@ -200,19 +234,24 @@ export default function AstrologyWidget({
               color: '#ffffff',
               border: 'none',
               borderRadius: '6px',
-              cursor: 'pointer',
+              cursor: loading || isSaving ? 'not-allowed' : 'pointer',
               fontFamily: "'Poppins', sans-serif",
               fontWeight: 600,
               transition: 'all 0.2s ease',
+              opacity: loading || isSaving ? 0.6 : 1,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = '0.85';
+              if (!loading && !isSaving) {
+                e.currentTarget.style.opacity = '0.85';
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = '1';
+              if (!loading && !isSaving) {
+                e.currentTarget.style.opacity = '1';
+              }
             }}
           >
-            Calculate
+            {loading || isSaving ? 'Processing...' : 'Calculate'}
           </button>
         </div>
       </div>

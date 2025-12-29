@@ -108,6 +108,7 @@ export default function ClientDashboardContent({
         <AstrologyDetailView
           weddingDate={clientProfile.weddingDate!.toISOString().split('T')[0]}
           ceremonyTime={clientProfile.ceremonyTime || undefined}
+          clientId={clientProfile.id}
           venueLat={clientProfile.venueLat?.toString()}
           venueLng={clientProfile.venueLng?.toString()}
           venueName={clientProfile.weddingLocation || undefined}
