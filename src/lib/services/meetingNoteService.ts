@@ -146,6 +146,7 @@ export async function getMeetingNoteById(
         attachments: {
           select: {
             id: true,
+            meetingNoteId: true,
             fileName: true,
             filePath: true,
             fileType: true,
