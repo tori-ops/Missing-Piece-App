@@ -135,8 +135,8 @@ export async function POST(req: NextRequest) {
         }
       }
     } else {
-      // CLIENT can only create notes for themselves (not assignable)
-      finalClientId = undefined;
+      // CLIENT can only create notes for themselves
+      finalClientId = user.clientId || undefined;
     }
 
     const note = await createMeetingNote({
