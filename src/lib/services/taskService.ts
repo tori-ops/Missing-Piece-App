@@ -49,6 +49,13 @@ export async function listTasks(
           ],
         },
         include: {
+          client: {
+            select: {
+              id: true,
+              couple1FirstName: true,
+              couple1LastName: true,
+            },
+          },
           createdBy: {
             select: {
               id: true,

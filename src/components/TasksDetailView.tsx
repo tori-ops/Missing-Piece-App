@@ -11,6 +11,12 @@ interface Task {
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   dueDate?: string;
   createdAt: string;
+  clientId?: string;
+  client?: {
+    id: string;
+    couple1FirstName?: string;
+    couple1LastName?: string;
+  };
 }
 
 interface TasksDetailViewProps {
@@ -423,9 +429,25 @@ export default function TasksDetailView({
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                   <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: '0 0 0.5rem 0', color: fontColor }}>
-                      {task.title}
-                    </h4>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+                      <h4 style={{ margin: '0', color: fontColor }}>
+                        {task.title}
+                      </h4>
+                      {task.client && !clientId && (
+                        <span style={{
+                          display: 'inline-block',
+                          background: primaryColor,
+                          color: '#ffffff',
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: '20px',
+                          fontSize: '0.75rem',
+                          fontWeight: '600',
+                          whiteSpace: 'nowrap',
+                        }}>
+                          {task.client.couple1FirstName} {task.client.couple1LastName}
+                        </span>
+                      )}
+                    </div>
                     {task.description && (
                       <p style={{ margin: '0 0 0.75rem 0', color: fontColor, opacity: 0.8, fontSize: '0.9rem' }}>
                         {task.description}
