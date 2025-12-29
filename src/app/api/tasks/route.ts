@@ -112,17 +112,25 @@ export async function POST(req: NextRequest) {
           { status: 403 }
         );
       }
-      if (assigneeType === 'TENANT' && assigneeId !== user.tenantId) {
-        return NextResponse.json(
-          { error: 'You can only assign to your coordinator' },
-          { status: 403 }
-        );
+      if (assigneeType === 'TENANT') {
+        if (!user.tenantId) {
+          return NextResponse.json(
+            { error: 'Tenant not found for this client' },
+            { status: 400 }
+          );
+        }
+        if (assigneeId !== user.tenantId) {
+          return NextResponse.json(
+            { error: 'You can only assign to your coordinator' },
+            { status: 403 }
+          );
+        }
       }
     }
 
     const task = await createTask({
       tenantId: userRole === 'TENANT' ? user.tenantId! : (user.tenantId || ''),
-      clientId,
+      clientId: userRole === 'CLIENT' ? user.clientId : (clientId || undefined),
       title,
       description,
       dueDate: dueDate ? new Date(dueDate) : undefined,
