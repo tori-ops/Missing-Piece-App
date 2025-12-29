@@ -223,14 +223,14 @@ export default function ClientList({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    background: client.status === 'ACTIVE' ? '#E8F5E9' : '#FFEBEE',
-                    color: client.status === 'ACTIVE' ? '#2E7D32' : '#C62828',
+                    background: (client.status === 'ACTIVE' || client.users?.length > 0) ? '#E8F5E9' : '#FFEBEE',
+                    color: (client.status === 'ACTIVE' || client.users?.length > 0) ? '#2E7D32' : '#C62828',
                     padding: '0.4rem 0.8rem',
                     borderRadius: '6px',
                     fontSize: '0.85rem',
                     fontWeight: '600'
                   }}>
-                    {client.status === 'ACTIVE' ? '✓ Active' : '⚠ Pending'}
+                    {(client.status === 'ACTIVE' || client.users?.length > 0) ? '✓ Active' : '⚠ Pending'}
                   </span>
                   
                   <span style={{
