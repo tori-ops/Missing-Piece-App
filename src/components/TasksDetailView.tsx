@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, Trash2, Check } from 'lucide-react';
+import { Trash2, Check } from 'lucide-react';
 
 interface Task {
   id: string;
