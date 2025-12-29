@@ -35,7 +35,7 @@ export default function MeetingNoteCard({
   note,
   primaryColor,
   bodyFontFamily,
-  userRole,
+  _userRole,
   currentUserId,
   onDelete,
   onUpdate,
