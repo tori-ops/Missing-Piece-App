@@ -150,7 +150,7 @@ export default function WeatherGoldenHourWidget({
           padding: '1.5rem',
         }}
       >
-        <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.1rem' }}>
+        <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.9em' }}>
           Historical Weather Summary
         </h4>
         <p style={{ color: fontColor, fontSize: '0.9rem', margin: '0 0 1rem 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
@@ -202,7 +202,7 @@ export default function WeatherGoldenHourWidget({
             padding: '1.5rem',
           }}
         >
-          <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.1rem' }}>
+          <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.9em' }}>
             Wedding Week (Prior Year)
           </h4>
           <div style={{ display: 'grid', gap: '1rem' }}>
