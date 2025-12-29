@@ -23,7 +23,7 @@ interface MeetingNote {
 }
 
 interface MeetingNotesPageContentProps {
-  userId: string;
+  _userId: string;
   clientId: string;
   tenantId: string;
   tenantName: string;
