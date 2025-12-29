@@ -96,14 +96,15 @@ export default function MeetingNotesPageContent({
       fontFamily, 
       color: fontColor
     }}>
-      {/* Header with back button */}
+      {/* Header with back button and logo */}
       <div style={{ 
         display: 'flex', 
         alignItems: 'center', 
         gap: '1rem', 
         marginBottom: '2rem',
         maxWidth: '900px',
-        margin: '0 auto 2rem'
+        margin: '0 auto 2rem',
+        justifyContent: 'space-between',
       }}>
         <button
           onClick={() => router.back()}
@@ -135,6 +136,16 @@ export default function MeetingNotesPageContent({
         }}>
           Meeting Notes
         </h1>
+        {logoUrl && (
+          <img 
+            src={logoUrl} 
+            alt="Company logo" 
+            style={{ 
+              height: '60px', 
+              backgroundColor: 'transparent'
+            }} 
+          />
+        )}
       </div>
 
       <div style={{
