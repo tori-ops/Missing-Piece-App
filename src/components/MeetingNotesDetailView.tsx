@@ -61,10 +61,16 @@ export default function MeetingNotesDetailView({
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/meeting-notes?clientId=${clientId}&tenantId=${tenantId}`);
+      const url = `/api/meeting-notes?clientId=${clientId}&tenantId=${tenantId}`;
+      console.log('Fetching notes from:', url);
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
+        console.log('Fetched notes:', data);
         setNotes(data);
+      } else {
+        const errorData = await response.json();
+        console.error('Fetch notes error:', errorData);
       }
     } catch (error) {
       console.error('Failed to fetch notes:', error);
@@ -110,9 +116,16 @@ export default function MeetingNotesDetailView({
         setAttachmentFiles([]);
         await fetchNotes();
         setTimeout(() => setSuccessMessage(''), 3000);
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to create note:', errorData);
+        setSuccessMessage(`Error: ${errorData.error || 'Failed to create note'}`);
+        setTimeout(() => setSuccessMessage(''), 3000);
       }
     } catch (error) {
       console.error('Failed to create note:', error);
+      setSuccessMessage(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setTimeout(() => setSuccessMessage(''), 3000);
     }
   };
 
