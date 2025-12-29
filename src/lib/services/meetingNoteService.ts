@@ -41,6 +41,7 @@ export async function listMeetingNotes(
   clientId?: string
 ): Promise<MeetingNoteWithAttachments[]> {
   try {
+    console.log('listMeetingNotes - userId:', userId, 'userRole:', userRole, 'tenantId:', tenantId, 'clientId:', clientId);
     if (userRole === 'TENANT') {
       // TENANT sees all notes in their tenant, or filtered to a specific client if provided
       const notes = await prisma.meetingNote.findMany({
@@ -62,6 +63,7 @@ export async function listMeetingNotes(
         orderBy: { createdAt: 'desc' },
       });
 
+      console.log('TENANT query returned', notes.length, 'notes');
       return notes.map((note) => ({
         ...note,
         attachments: note.attachments || [],
@@ -73,6 +75,7 @@ export async function listMeetingNotes(
       }));
     } else if (userRole === 'CLIENT' && clientId) {
       // CLIENT sees only notes created for them
+      console.log('CLIENT query - looking for notes with clientId:', clientId, 'tenantId:', tenantId);
       const notes = await prisma.meetingNote.findMany({
         where: {
           clientId,
@@ -92,6 +95,7 @@ export async function listMeetingNotes(
         orderBy: { createdAt: 'desc' },
       });
 
+      console.log('CLIENT query returned', notes.length, 'notes');
       return notes.map((note) => ({
         ...note,
         attachments: note.attachments || [],
@@ -101,6 +105,8 @@ export async function listMeetingNotes(
         canEdit: note.createdByUserId === userId,
         canDelete: note.createdByUserId === userId,
       }));
+    } else {
+      console.log('CLIENT role but no clientId provided, returning empty');
     }
 
     return [];
