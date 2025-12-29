@@ -66,6 +66,22 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    // If user is a CLIENT, activate their profile (INVITED → ACTIVE)
+    if (user.role === 'CLIENT') {
+      await prisma.clientProfile.updateMany({
+        where: {
+          users: {
+            some: {
+              id: user.id
+            }
+          }
+        },
+        data: {
+          status: 'ACTIVE'
+        }
+      });
+    }
+
     // Log audit trail
     try {
       await prisma.auditLog.create({

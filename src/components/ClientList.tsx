@@ -217,6 +217,22 @@ export default function ClientList({
                   }}>
                     {statusColor.badge} {status}
                   </span>
+                  
+                  {/* Account Status Badge */}
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    background: client.status === 'ACTIVE' ? '#E8F5E9' : '#FFEBEE',
+                    color: client.status === 'ACTIVE' ? '#2E7D32' : '#C62828',
+                    padding: '0.4rem 0.8rem',
+                    borderRadius: '6px',
+                    fontSize: '0.85rem',
+                    fontWeight: '600'
+                  }}>
+                    {client.status === 'ACTIVE' ? '✓ Active' : '⚠ Pending'}
+                  </span>
+                  
                   <span style={{
                     display: 'inline-block',
                     background: client.users?.length > 0 ? `${primaryColor}20` : '#FFE9E9',

@@ -246,15 +246,14 @@ export default function ClientDetailModal({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                background: client.users?.length > 0 ? `${primaryColor}20` : '#FFE9E9',
-                color: client.users?.length > 0 ? primaryColor : '#C62828',
-                padding: '0.6rem 1.2rem',
-                borderRadius: '8px',
-                fontSize: '0.95rem',
-                fontWeight: '600',
-                border: `2px solid ${client.users?.length > 0 ? `${primaryColor}40` : '#FFB3B3'}`
+                background: updatedClient.status === 'ACTIVE' ? '#E8F5E9' : '#FFEBEE',
+                color: updatedClient.status === 'ACTIVE' ? '#2E7D32' : '#C62828',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '6px',
+                fontSize: '0.85rem',
+                fontWeight: '600'
               }}>
-                {client.users?.length > 0 ? '✓ Active' : '○ Pending Invitation'}
+                {updatedClient.status === 'ACTIVE' ? '✓ Active' : '⚠ Pending'}
               </span>
             </div>
           </InfoSection>
