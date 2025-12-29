@@ -306,8 +306,8 @@ export default function TaskForm({
             )}
             {userRole === 'CLIENT' && (
               <>
-                <option value="CLIENT_SELF">Me (Client)</option>
-                {tenantId && <option value="CLIENT_TO_TENANT">My Coordinator (Tenant)</option>}
+                <option value="CLIENT_SELF">Me</option>
+                {tenantId && <option value="CLIENT_TO_TENANT">Planner</option>}
               </>
             )}
           </select>
