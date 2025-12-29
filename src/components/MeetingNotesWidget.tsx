@@ -18,14 +18,14 @@ export default function MeetingNotesWidget({
   textColor = '#FFFFFF',
   clientId,
   tenantId,
-  currentUserId,
+  _currentUserId,
   userRole,
 }: MeetingNotesWidgetProps) {
   const router = useRouter();
   const role = userRole || (clientId && !tenantId ? 'CLIENT' : 'TENANT');
 
   const handleClick = () => {
-    router.push('/dashboard/client/meeting-notes');
+    router.push(`/dashboard/client/meeting-notes?userId=${currentUserId}`);
   };
 
   return (

@@ -4,12 +4,19 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import MeetingNotesPageContent from './MeetingNotesPageContent';
 
-export default async function MeetingNotesPage() {
+interface MeetingNotesPageProps {
+  searchParams: Promise<{ userId?: string }>;
+}
+
+export default async function MeetingNotesPage({ searchParams }: MeetingNotesPageProps) {
   const session = await getServerSession(authOptions);
   
   if (!session || !(session.user as any)?.email) {
     redirect('/login');
   }
+
+  const params = await searchParams;
+  const currentUserId = params.userId;
 
   // Get user by email
   const user = await prisma.user.findUnique({
@@ -59,6 +66,7 @@ export default async function MeetingNotesPage() {
     <MeetingNotesPageContent
       clientId={clientProfile.id}
       tenantId={clientProfile.tenantId}
+      currentUserId={currentUserId}
       primaryColor={primaryColor}
       backgroundColor={backgroundColor}
       fontColor={fontColor}
