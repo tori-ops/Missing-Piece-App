@@ -78,6 +78,15 @@ export default function TaskForm({
         assigneeId = clientId || '';
       }
 
+      console.log('TaskForm submission:', {
+        assignTo: formData.assignTo,
+        assigneeType,
+        assigneeId,
+        clientId,
+        tenantId,
+        userRole,
+      });
+
       const response = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
