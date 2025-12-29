@@ -26,7 +26,7 @@ export default async function MeetingNotesPage() {
             select: {
               id: true,
               brandingPrimaryColor: true,
-              brandingBackgroundColor: true,
+              brandingSecondaryColor: true,
               brandingFontColor: true,
               brandingFontFamily: true,
               brandingHeaderFontFamily: true,
@@ -51,7 +51,7 @@ export default async function MeetingNotesPage() {
       clientId={clientProfile.id}
       tenantId={clientProfile.tenantId}
       primaryColor={tenant.brandingPrimaryColor}
-      backgroundColor={tenant.brandingBackgroundColor}
+      backgroundColor={tenant.brandingSecondaryColor}
       fontColor={tenant.brandingFontColor}
       fontFamily={tenant.brandingFontFamily}
       headerFontFamily={tenant.brandingHeaderFontFamily}
