@@ -56,14 +56,17 @@ export default function MeetingNotesDetailView({
   // Fetch notes
   useEffect(() => {
     fetchNotes();
-  }, []);
+  }, [clientId, tenantId]);
 
   const fetchNotes = async () => {
     try {
       setLoading(true);
+      console.log('Fetching notes for clientId:', clientId, 'tenantId:', tenantId);
       const response = await fetch(`/api/meeting-notes?clientId=${clientId}&tenantId=${tenantId}`);
+      console.log('Response status:', response.status);
       if (response.ok) {
         const data = await response.json();
+        console.log('Fetched notes:', data);
         setNotes(data);
       } else {
         const errorData = await response.json();
@@ -99,12 +102,16 @@ export default function MeetingNotesDetailView({
         formData.append('attachments', file);
       });
 
+      console.log('Creating note with clientId:', clientId, 'tenantId:', tenantId);
       const response = await fetch('/api/meeting-notes', {
         method: 'POST',
         body: formData,
       });
 
+      console.log('Create response status:', response.status);
       if (response.ok) {
+        const createdNote = await response.json();
+        console.log('Note created successfully:', createdNote);
         setSuccessMessage('Meeting note created successfully!');
         setNewNoteTitle('');
         setNewNoteBody('');

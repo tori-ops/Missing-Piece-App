@@ -44,9 +44,14 @@ export async function GET(req: NextRequest) {
     // Get clientId from query params if provided (for filtering to specific client)
     const { searchParams } = new URL(req.url);
     const queryClientId = searchParams.get('clientId');
+    const queryTenantId = searchParams.get('tenantId');
+
+    console.log('GET /api/meeting-notes - userRole:', userRole, 'userEmail:', userEmail, 'queryClientId:', queryClientId, 'queryTenantId:', queryTenantId, 'user.clientId:', user.clientId, 'user.tenantId:', user.tenantId);
 
     // Use query param clientId if provided, otherwise use user's clientId
     const effectiveClientId = queryClientId || user.clientId || undefined;
+
+    console.log('effectiveClientId:', effectiveClientId);
 
     const notes = await listMeetingNotes(
       user.id,
@@ -55,6 +60,7 @@ export async function GET(req: NextRequest) {
       effectiveClientId
     );
 
+    console.log('Found notes:', notes.length);
     return NextResponse.json(notes);
   } catch (error) {
     console.error('GET /api/meeting-notes error:', error);
@@ -109,6 +115,8 @@ export async function POST(req: NextRequest) {
     const tags = tagsJson ? JSON.parse(tagsJson) : [];
     const files = formData.getAll('attachments') as File[];
 
+    console.log('POST /api/meeting-notes - userRole:', userRole, 'userEmail:', userEmail, 'formClientId:', clientId, 'user.clientId:', user.clientId, 'user.tenantId:', user.tenantId);
+
     if (!title || !noteBody) {
       return NextResponse.json(
         { error: 'Missing required fields: title, body' },
@@ -139,6 +147,8 @@ export async function POST(req: NextRequest) {
       finalClientId = user.clientId || undefined;
     }
 
+    console.log('finalClientId:', finalClientId, 'Creating note...');
+
     const note = await createMeetingNote({
       tenantId: user.tenantId!,
       clientId: finalClientId,
@@ -150,6 +160,7 @@ export async function POST(req: NextRequest) {
       attachmentFiles: files.length > 0 ? files : undefined,
     });
 
+    console.log('Note created:', note.id);
     return NextResponse.json(note, { status: 201 });
   } catch (error) {
     console.error('POST /api/meeting-notes error:', error);
