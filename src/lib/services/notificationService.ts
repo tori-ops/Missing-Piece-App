@@ -32,6 +32,7 @@ export async function getUserNotificationPreferences(userId: string) {
 export async function updateNotificationPreferences(
   userId: string,
   preferences: {
+    notificationsEnabled?: boolean;
     emailOnTaskCreated?: boolean;
     emailOnTaskCompleted?: boolean;
     emailOnTaskCommented?: boolean;
@@ -39,10 +40,15 @@ export async function updateNotificationPreferences(
     emailOnMeetingNoteCommented?: boolean;
   }
 ) {
+  // Filter out undefined values to only update provided fields
+  const updateData = Object.fromEntries(
+    Object.entries(preferences).filter(([, value]) => value !== undefined)
+  );
+
   return prisma.notificationPreference.upsert({
     where: { userId },
     create: { userId, ...preferences },
-    update: preferences,
+    update: updateData,
   });
 }
 

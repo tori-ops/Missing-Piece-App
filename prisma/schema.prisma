@@ -867,6 +867,11 @@ model NotificationPreference {
   
   // Settings
   notificationsEnabled  Boolean               @default(true)
+  emailOnTaskCreated    Boolean               @default(true)
+  emailOnTaskCompleted  Boolean               @default(true)
+  emailOnTaskCommented  Boolean               @default(true)
+  emailOnMeetingNoteCreated Boolean            @default(true)
+  emailOnMeetingNoteCommented Boolean          @default(true)
   
   // Timestamps
   createdAt             DateTime              @default(now())
