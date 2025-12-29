@@ -60,7 +60,7 @@ export async function DELETE(
       where: { id: attachmentId },
     });
 
-    if (!attachment || attachment.meetingNoteId !== params.id) {
+    if (!attachment || attachment.meetingNoteId !== noteId) {
       return NextResponse.json({ error: 'Attachment not found' }, { status: 404 });
     }
 
