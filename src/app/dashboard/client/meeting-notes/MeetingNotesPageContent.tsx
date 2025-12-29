@@ -299,7 +299,7 @@ export default function MeetingNotesPageContent({
                       Attachments ({note.attachments.length})
                     </p>
                     <ul style={{
-                      list: 'none',
+                      listStyle: 'none',
                       padding: 0,
                       margin: 0,
                       display: 'flex',
