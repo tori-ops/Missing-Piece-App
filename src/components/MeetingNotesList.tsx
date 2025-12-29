@@ -100,24 +100,6 @@ export default function MeetingNotesList({
     return true;
   });
 
-  const handleNoteCreated = async () => {
-    setIsFormOpen(false);
-    // Refresh notes
-    try {
-      const params = new URLSearchParams({
-        tenantId,
-        ...(clientId && { clientId }),
-      });
-      const response = await fetch(`/api/meeting-notes?${params}`);
-      if (response.ok) {
-        const data = await response.json();
-        setNotes(Array.isArray(data) ? data : []);
-      }
-    } catch (err) {
-      console.error('Failed to refresh notes:', err);
-    }
-  };
-
   const handleNoteDeleted = (deletedNoteId: string) => {
     setNotes((prev) => prev.filter((note) => note.id !== deletedNoteId));
   };
