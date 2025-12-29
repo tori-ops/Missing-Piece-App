@@ -27,6 +27,11 @@ export interface MeetingNoteWithAttachments extends MeetingNote {
   creatorName: string;
   canEdit: boolean;
   canDelete: boolean;
+  client?: {
+    id: string;
+    couple1FirstName?: string;
+    couple1LastName?: string;
+  };
 }
 
 /**
@@ -51,6 +56,13 @@ export async function listMeetingNotes(
         },
         include: {
           attachments: true,
+          client: {
+            select: {
+              id: true,
+              couple1FirstName: true,
+              couple1LastName: true,
+            },
+          },
           createdBy: {
             select: {
               id: true,
@@ -67,6 +79,11 @@ export async function listMeetingNotes(
       return notes.map((note) => ({
         ...note,
         attachments: note.attachments || [],
+        client: note.client ? { 
+          id: note.client.id, 
+          couple1FirstName: note.client.couple1FirstName, 
+          couple1LastName: note.client.couple1LastName 
+        } : undefined,
         creatorName: note.createdBy
           ? `${note.createdBy.firstName} ${note.createdBy.lastName}`
           : 'Unknown',
@@ -98,6 +115,13 @@ export async function listMeetingNotes(
         },
         include: {
           attachments: true,
+          client: {
+            select: {
+              id: true,
+              couple1FirstName: true,
+              couple1LastName: true,
+            },
+          },
           createdBy: {
             select: {
               id: true,
@@ -115,6 +139,11 @@ export async function listMeetingNotes(
       return notes.map((note) => ({
         ...note,
         attachments: note.attachments || [],
+        client: note.client ? { 
+          id: note.client.id, 
+          couple1FirstName: note.client.couple1FirstName, 
+          couple1LastName: note.client.couple1LastName 
+        } : undefined,
         creatorName: note.createdBy
           ? `${note.createdBy.firstName} ${note.createdBy.lastName}`
           : 'Unknown',

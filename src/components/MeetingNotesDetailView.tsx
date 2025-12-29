@@ -10,6 +10,12 @@ interface MeetingNote {
   body: string;
   meetingDate?: string;
   createdAt: string;
+  clientId?: string;
+  client?: {
+    id: string;
+    couple1FirstName?: string;
+    couple1LastName?: string;
+  };
   attachments?: Array<{
     id: string;
     fileName: string;
@@ -567,9 +573,25 @@ export default function MeetingNotesDetailView({
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                   <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: '0 0 0.5rem 0', color: fontColor, fontFamily: headerFontFamily }}>
-                      {note.title}
-                    </h4>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+                      <h4 style={{ margin: '0', color: fontColor, fontFamily: headerFontFamily }}>
+                        {note.title}
+                      </h4>
+                      {note.client && !clientId && (
+                        <span style={{
+                          display: 'inline-block',
+                          background: primaryColor,
+                          color: '#ffffff',
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: '20px',
+                          fontSize: '0.75rem',
+                          fontWeight: '600',
+                          whiteSpace: 'nowrap',
+                        }}>
+                          {note.client.couple1FirstName} {note.client.couple1LastName}
+                        </span>
+                      )}
+                    </div>
 
                     {note.meetingDate && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: fontColor, fontSize: '0.9rem' }}>
