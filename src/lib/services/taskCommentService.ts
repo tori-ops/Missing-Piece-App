@@ -86,7 +86,7 @@ export async function createTaskComment(
   // Verify user has access to the task
   const task = await prisma.task.findUnique({
     where: { id: taskId },
-    select: { id: true, assignedTo: true, assignedToClientId: true, tenantId: true },
+    select: { id: true, assigneeId: true, assigneeType: true, tenantId: true },
   });
 
   if (!task || task.tenantId !== tenantId) {
@@ -99,7 +99,7 @@ export async function createTaskComment(
       where: { tenantId },
       select: { id: true },
     });
-    if (!client || task.assignedToClientId !== client.id) {
+    if (!client || (task.assigneeType === 'CLIENT' && task.assigneeId !== client.id)) {
       throw new Error('Unauthorized');
     }
   }
