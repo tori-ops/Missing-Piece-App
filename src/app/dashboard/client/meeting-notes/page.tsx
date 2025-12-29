@@ -18,7 +18,7 @@ export default async function MeetingNotesPage() {
       id: true,
       firstName: true,
       lastName: true,
-      clientProfiles: {
+      clientProfile: {
         select: {
           id: true,
           tenantId: true,
@@ -40,11 +40,11 @@ export default async function MeetingNotesPage() {
     },
   });
 
-  if (!user || user.clientProfiles.length === 0) {
+  if (!user || !user.clientProfile) {
     redirect('/dashboard/client');
   }
 
-  const clientProfile = user.clientProfiles[0];
+  const clientProfile = user.clientProfile;
   const tenant = clientProfile.tenant;
 
   return (
