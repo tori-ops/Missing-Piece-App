@@ -48,18 +48,7 @@ export async function listMeetingNotes(
           tenantId,
         },
         include: {
-          attachments: {
-            select: {
-              id: true,
-              meetingNoteId: true,
-              fileName: true,
-              filePath: true,
-              fileType: true,
-              fileSizeBytes: true,
-              mimeType: true,
-              createdAt: true,
-            },
-          },
+          attachments: true,
           createdBy: {
             select: {
               id: true,
@@ -74,7 +63,7 @@ export async function listMeetingNotes(
 
       return notes.map((note) => ({
         ...note,
-        attachments: note.attachments,
+        attachments: note.attachments || [],
         creatorName: note.createdBy
           ? `${note.createdBy.firstName} ${note.createdBy.lastName}`
           : 'Unknown',
@@ -89,18 +78,7 @@ export async function listMeetingNotes(
           tenantId, // Ensure it's within their tenant
         },
         include: {
-          attachments: {
-            select: {
-              id: true,
-              meetingNoteId: true,
-              fileName: true,
-              filePath: true,
-              fileType: true,
-              fileSizeBytes: true,
-              mimeType: true,
-              createdAt: true,
-            },
-          },
+          attachments: true,
           createdBy: {
             select: {
               id: true,
@@ -115,7 +93,7 @@ export async function listMeetingNotes(
 
       return notes.map((note) => ({
         ...note,
-        attachments: note.attachments,
+        attachments: note.attachments || [],
         creatorName: note.createdBy
           ? `${note.createdBy.firstName} ${note.createdBy.lastName}`
           : 'Unknown',
@@ -145,18 +123,7 @@ export async function getMeetingNoteById(
     const note = await prisma.meetingNote.findUnique({
       where: { id: noteId },
       include: {
-        attachments: {
-          select: {
-            id: true,
-            meetingNoteId: true,
-            fileName: true,
-            filePath: true,
-            fileType: true,
-            fileSizeBytes: true,
-            mimeType: true,
-            createdAt: true,
-          },
-        },
+        attachments: true,
         createdBy: {
           select: {
             id: true,
