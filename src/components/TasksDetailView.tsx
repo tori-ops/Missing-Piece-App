@@ -1,0 +1,507 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { ChevronDown, Trash2, Check } from 'lucide-react';
+
+interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED';
+  priority: 'LOW' | 'MEDIUM' | 'HIGH';
+  dueDate?: string;
+  createdAt: string;
+}
+
+interface TasksDetailViewProps {
+  clientId: string;
+  tenantId: string;
+  primaryColor?: string;
+  fontColor?: string;
+  bodyFontFamily?: string;
+  headerFontFamily?: string;
+  onBack: () => void;
+}
+
+export default function TasksDetailView({
+  clientId,
+  tenantId,
+  primaryColor = '#274E13',
+  fontColor = '#000000',
+  bodyFontFamily = "'Poppins', sans-serif",
+  headerFontFamily = "'Playfair Display', serif",
+  onBack,
+}: TasksDetailViewProps) {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [newTaskDescription, setNewTaskDescription] = useState('');
+  const [newTaskDueDate, setNewTaskDueDate] = useState('');
+  const [newTaskPriority, setNewTaskPriority] = useState<'LOW' | 'MEDIUM' | 'HIGH'>('MEDIUM');
+
+  // Filters
+  const [filterStatus, setFilterStatus] = useState<'ALL' | 'TODO' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED'>('ALL');
+  const [filterPriority, setFilterPriority] = useState<'ALL' | 'LOW' | 'MEDIUM' | 'HIGH'>('ALL');
+  const [filterKeyword, setFilterKeyword] = useState('');
+  const [filterDueDate, setFilterDueDate] = useState('');
+
+  // Fetch tasks
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/tasks?clientId=${clientId}&tenantId=${tenantId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setTasks(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch tasks:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateTask = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTaskTitle.trim()) return;
+
+    try {
+      const response = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newTaskTitle,
+          description: newTaskDescription || undefined,
+          dueDate: newTaskDueDate ? new Date(newTaskDueDate).toISOString() : undefined,
+          priority: newTaskPriority,
+          clientId,
+          tenantId,
+        }),
+      });
+
+      if (response.ok) {
+        setSuccessMessage('Task created successfully!');
+        setNewTaskTitle('');
+        setNewTaskDescription('');
+        setNewTaskDueDate('');
+        setNewTaskPriority('MEDIUM');
+        await fetchTasks();
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Failed to create task:', error);
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      const response = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+      if (response.ok) {
+        setSuccessMessage('Task deleted successfully!');
+        await fetchTasks();
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Failed to delete task:', error);
+    }
+  };
+
+  const handleCompleteTask = async (taskId: string) => {
+    try {
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'DONE' }),
+      });
+      if (response.ok) {
+        setSuccessMessage('Task completed!');
+        await fetchTasks();
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Failed to update task:', error);
+    }
+  };
+
+  // Filter tasks
+  const filteredTasks = tasks.filter((task) => {
+    if (filterStatus !== 'ALL' && task.status !== filterStatus) return false;
+    if (filterPriority !== 'ALL' && task.priority !== filterPriority) return false;
+    if (filterKeyword && !task.title.toLowerCase().includes(filterKeyword.toLowerCase())) return false;
+    if (filterDueDate && task.dueDate && new Date(task.dueDate).toDateString() !== new Date(filterDueDate).toDateString()) return false;
+    return true;
+  });
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'HIGH': return '#d32f2f';
+      case 'MEDIUM': return '#f57c00';
+      case 'LOW': return '#388e3c';
+      default: return primaryColor;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'DONE': return '#388e3c';
+      case 'IN_PROGRESS': return '#1976d2';
+      case 'BLOCKED': return '#d32f2f';
+      case 'TODO': return '#757575';
+      default: return primaryColor;
+    }
+  };
+
+  return (
+    <div style={{ animation: 'slideIn 0.3s ease' }}>
+      {/* Back Button */}
+      <button
+        onClick={onBack}
+        style={{
+          background: 'none',
+          border: 'none',
+          color: primaryColor,
+          cursor: 'pointer',
+          fontSize: '1rem',
+          marginBottom: '1.5rem',
+          padding: 0,
+          fontFamily: bodyFontFamily,
+          fontWeight: '600',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+        }}
+      >
+        ← Back to Dashboard
+      </button>
+
+      {/* Title */}
+      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0 }}>
+        Tasks
+      </h2>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div style={{
+          background: '#c8e6c9',
+          color: '#2e7d32',
+          padding: '1rem',
+          borderRadius: '4px',
+          marginBottom: '1.5rem',
+          fontFamily: bodyFontFamily,
+        }}>
+          {successMessage}
+        </div>
+      )}
+
+      {/* Create Task Form */}
+      <div style={{
+        background: primaryColor,
+        color: '#ffffff',
+        padding: '1.5rem',
+        borderRadius: '8px',
+        marginBottom: '2rem',
+        fontFamily: bodyFontFamily,
+      }}>
+        <h3 style={{ marginTop: 0, fontFamily: headerFontFamily }}>Create New Task</h3>
+        <form onSubmit={handleCreateTask}>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Title *</label>
+            <input
+              type="text"
+              value={newTaskTitle}
+              onChange={(e) => setNewTaskTitle(e.target.value)}
+              placeholder="Task title"
+              required
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: 'none',
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Description</label>
+            <textarea
+              value={newTaskDescription}
+              onChange={(e) => setNewTaskDescription(e.target.value)}
+              placeholder="Task description (optional)"
+              rows={3}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: 'none',
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+                resize: 'vertical',
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Priority</label>
+              <select
+                value={newTaskPriority}
+                onChange={(e) => setNewTaskPriority(e.target.value as 'LOW' | 'MEDIUM' | 'HIGH')}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontFamily: bodyFontFamily,
+                }}
+              >
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+              </select>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Due Date</label>
+              <input
+                type="date"
+                value={newTaskDueDate}
+                onChange={(e) => setNewTaskDueDate(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontFamily: bodyFontFamily,
+                }}
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              background: '#ffffff',
+              color: primaryColor,
+              border: 'none',
+              borderRadius: '4px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              fontFamily: bodyFontFamily,
+            }}
+          >
+            Create Task
+          </button>
+        </form>
+      </div>
+
+      {/* Filters */}
+      <div style={{
+        background: '#f5f5f5',
+        padding: '1.5rem',
+        borderRadius: '8px',
+        marginBottom: '2rem',
+        fontFamily: bodyFontFamily,
+      }}>
+        <h3 style={{ marginTop: 0, color: primaryColor, fontFamily: headerFontFamily }}>Filter Tasks</h3>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Status</label>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value as any)}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: `1px solid ${primaryColor}`,
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+              }}
+            >
+              <option value="ALL">All</option>
+              <option value="TODO">To Do</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="DONE">Done</option>
+              <option value="BLOCKED">Blocked</option>
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Priority</label>
+            <select
+              value={filterPriority}
+              onChange={(e) => setFilterPriority(e.target.value as any)}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: `1px solid ${primaryColor}`,
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+              }}
+            >
+              <option value="ALL">All</option>
+              <option value="LOW">Low</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HIGH">High</option>
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Due Date</label>
+            <input
+              type="date"
+              value={filterDueDate}
+              onChange={(e) => setFilterDueDate(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: `1px solid ${primaryColor}`,
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Keyword</label>
+            <input
+              type="text"
+              value={filterKeyword}
+              onChange={(e) => setFilterKeyword(e.target.value)}
+              placeholder="Search tasks..."
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: `1px solid ${primaryColor}`,
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Task List */}
+      <div>
+        <h3 style={{ color: primaryColor, fontFamily: headerFontFamily }}>
+          Tasks ({filteredTasks.length})
+        </h3>
+
+        {loading ? (
+          <p style={{ color: fontColor, fontFamily: bodyFontFamily }}>Loading tasks...</p>
+        ) : filteredTasks.length === 0 ? (
+          <p style={{ color: fontColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No tasks found.</p>
+        ) : (
+          <div style={{ display: 'grid', gap: '1rem' }}>
+            {filteredTasks.map((task) => (
+              <div
+                key={task.id}
+                style={{
+                  border: `2px solid ${getStatusColor(task.status)}`,
+                  borderRadius: '8px',
+                  padding: '1.5rem',
+                  background: '#f9f9f9',
+                  fontFamily: bodyFontFamily,
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{ margin: '0 0 0.5rem 0', color: fontColor }}>
+                      {task.title}
+                    </h4>
+                    {task.description && (
+                      <p style={{ margin: '0 0 0.75rem 0', color: fontColor, opacity: 0.8, fontSize: '0.9rem' }}>
+                        {task.description}
+                      </p>
+                    )}
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                      <span style={{
+                        background: getStatusColor(task.status),
+                        color: '#ffffff',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '16px',
+                        fontSize: '0.85rem',
+                        fontWeight: '600',
+                      }}>
+                        {task.status.replace('_', ' ')}
+                      </span>
+                      <span style={{
+                        background: getPriorityColor(task.priority),
+                        color: '#ffffff',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '16px',
+                        fontSize: '0.85rem',
+                        fontWeight: '600',
+                      }}>
+                        {task.priority}
+                      </span>
+                      {task.dueDate && (
+                        <span style={{
+                          background: '#e0e0e0',
+                          color: fontColor,
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: '16px',
+                          fontSize: '0.85rem',
+                        }}>
+                          Due: {new Date(task.dueDate).toLocaleDateString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    {task.status !== 'DONE' && (
+                      <button
+                        onClick={() => handleCompleteTask(task.id)}
+                        style={{
+                          background: '#4caf50',
+                          color: '#ffffff',
+                          border: 'none',
+                          borderRadius: '4px',
+                          padding: '0.5rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          fontFamily: bodyFontFamily,
+                        }}
+                        title="Mark as complete"
+                      >
+                        <Check size={18} />
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDeleteTask(task.id)}
+                      style={{
+                        background: '#f44336',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        padding: '0.5rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        fontFamily: bodyFontFamily,
+                      }}
+                      title="Delete task"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

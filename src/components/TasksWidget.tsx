@@ -10,6 +10,7 @@ interface TasksWidgetProps {
   clientId?: string;
   tenantId?: string;
   userRole?: 'TENANT' | 'CLIENT';
+  onClick?: () => void;
 }
 
 export default function TasksWidget({
@@ -19,18 +20,27 @@ export default function TasksWidget({
   clientId,
   tenantId,
   userRole,
+  onClick,
 }: TasksWidgetProps) {
   // If userRole not provided, infer from which ID is given
   // (typically widget is used with either clientId or tenantId but not both)
   const role = userRole || (clientId && !tenantId ? 'CLIENT' : 'TENANT');
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      setIsOpen(true);
+    }
+  };
+
   return (
     <>
       {/* Widget Button - matches WeatherCard/AstrologyCard format */}
       <button
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={handleClick}
         style={{
           background: primaryColor,
           border: `2px solid ${primaryColor}`,

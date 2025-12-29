@@ -11,6 +11,7 @@ interface MeetingNotesWidgetProps {
   tenantId?: string;
   currentUserId: string;
   userRole?: 'TENANT' | 'CLIENT';
+  onClick?: () => void;
 }
 
 export default function MeetingNotesWidget({
@@ -21,16 +22,25 @@ export default function MeetingNotesWidget({
   tenantId,
   currentUserId,
   userRole,
+  onClick,
 }: MeetingNotesWidgetProps) {
   const role = userRole || (clientId && !tenantId ? 'CLIENT' : 'TENANT');
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      setIsOpen(true);
+    }
+  };
 
   return (
     <>
       {/* Widget Button - matches Tasks/Weather/Astrology format */}
       <button
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={handleClick}
         style={{
           background: primaryColor,
           border: `2px solid ${primaryColor}`,

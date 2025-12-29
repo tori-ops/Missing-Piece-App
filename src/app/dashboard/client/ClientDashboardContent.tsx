@@ -5,6 +5,8 @@ import WeatherCard from '@/components/WeatherCard';
 import AstrologyCard from '@/components/AstrologyCard';
 import WeatherDetailView from '@/components/WeatherDetailView';
 import AstrologyDetailView from '@/components/AstrologyDetailView';
+import TasksDetailView from '@/components/TasksDetailView';
+import MeetingNotesDetailView from '@/components/MeetingNotesDetailView';
 import LogoutButton from '@/components/LogoutButton';
 import TasksWidget from '@/components/TasksWidget';
 import MeetingNotesWidget from '@/components/MeetingNotesWidget';
@@ -40,7 +42,7 @@ export default function ClientDashboardContent({
   currentUserId,
 }: ClientDashboardContentProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [activeView, setActiveView] = useState<'dashboard' | 'weather' | 'astrology'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'weather' | 'astrology' | 'tasks' | 'notes'>('dashboard');
 
   useEffect(() => {
     setIsLoading(false);
@@ -114,6 +116,55 @@ export default function ClientDashboardContent({
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
+          onBack={() => setActiveView('dashboard')}
+        />
+      </div>
+    );
+  }
+
+  if (activeView === 'tasks') {
+    return (
+      <div style={{ 
+        padding: '2rem', 
+        minHeight: '100vh', 
+        background: backgroundColor, 
+        fontFamily, 
+        color: fontColor,
+        maxWidth: '700px',
+        margin: '0 auto'
+      }}>
+        <TasksDetailView
+          clientId={clientProfile.id}
+          tenantId={clientProfile.tenantId}
+          primaryColor={primaryColor}
+          fontColor={fontColor}
+          bodyFontFamily={bodyFontFamily}
+          headerFontFamily={headerFontFamily}
+          onBack={() => setActiveView('dashboard')}
+        />
+      </div>
+    );
+  }
+
+  if (activeView === 'notes') {
+    return (
+      <div style={{ 
+        padding: '2rem', 
+        minHeight: '100vh', 
+        background: backgroundColor, 
+        fontFamily, 
+        color: fontColor,
+        maxWidth: '700px',
+        margin: '0 auto'
+      }}>
+        <MeetingNotesDetailView
+          clientId={clientProfile.id}
+          tenantId={clientProfile.tenantId}
+          primaryColor={primaryColor}
+          fontColor={fontColor}
+          bodyFontFamily={bodyFontFamily}
+          headerFontFamily={headerFontFamily}
+          currentUserId={currentUserId}
           onBack={() => setActiveView('dashboard')}
         />
       </div>
@@ -213,6 +264,7 @@ export default function ClientDashboardContent({
             tenantId={clientProfile.tenantId}
             currentUserId={currentUserId}
             userRole="CLIENT"
+            onClick={() => setActiveView('notes')}
           />
           <TasksWidget
             primaryColor={primaryColor}
@@ -221,6 +273,7 @@ export default function ClientDashboardContent({
             clientId={clientProfile.id}
             tenantId={clientProfile.tenantId}
             userRole="CLIENT"
+            onClick={() => setActiveView('tasks')}
           />
           {/* Empty col for Row 1 */}
           
