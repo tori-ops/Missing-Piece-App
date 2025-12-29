@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Send, X } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 interface TaskCommentFormProps {
   taskId: string;
