@@ -59,7 +59,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ taskId: string; commentId: string }> }
 ) {
   const resolvedParams = await params;
