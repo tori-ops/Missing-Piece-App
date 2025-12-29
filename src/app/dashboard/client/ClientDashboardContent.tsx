@@ -218,6 +218,7 @@ export default function ClientDashboardContent({
             bodyFontFamily={bodyFontFamily}
             textColor={lightenColor(primaryColor, 120)}
             clientId={clientProfile.id}
+            tenantId={clientProfile.tenantId}
           />
         </div>
       )}
