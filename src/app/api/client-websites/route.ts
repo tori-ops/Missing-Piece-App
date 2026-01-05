@@ -96,6 +96,16 @@ export async function GET(request: Request) {
       include: {
         registries: {
           orderBy: { registryOrder: 'asc' }
+        },
+        clientProfile: {
+          select: {
+            couple1FirstName: true,
+            couple1LastName: true,
+            couple2FirstName: true,
+            couple2LastName: true,
+            weddingLocation: true,
+            weddingDate: true
+          }
         }
       }
     });

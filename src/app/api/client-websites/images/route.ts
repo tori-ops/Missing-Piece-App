@@ -2,15 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-// Increase max payload size for image uploads
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '100mb',
-    },
-  },
-};
-
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,19 +9,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Check request size before parsing
+    const contentLength = request.headers.get('content-length');
+    if (contentLength && parseInt(contentLength) > 100 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File too large. Maximum 100MB per request.' }, { status: 413 });
+    }
+
     let formData;
     try {
       formData = await request.formData();
-    } catch (parseError) {
+    } catch (parseError: any) {
       console.error('Form data parse error:', parseError);
-      return NextResponse.json({ error: 'Invalid request format' }, { status: 400 });
+      const errorMessage = parseError?.message || 'Failed to parse form data';
+      return NextResponse.json({ error: `Request error: ${errorMessage}` }, { status: 400 });
     }
 
     const file = formData.get('file') as File;
     const clientId = formData.get('clientId') as string;
 
-    if (!file || !clientId) {
-      return NextResponse.json({ error: 'Missing file or clientId' }, { status: 400 });
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    if (!clientId) {
+      return NextResponse.json({ error: 'No clientId provided' }, { status: 400 });
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File too large. Maximum 50MB per image.' }, { status: 413 });
     }
 
     // Import at runtime to avoid build-time issues

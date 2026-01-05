@@ -14,10 +14,16 @@ interface WebsiteData {
   colorAccent: string;
   urlEnding1: string | null;
   urlEnding2: string | null;
-  allowTenantEdits: boolean;
-  createdAt: Date;
   updatedAt: Date;
   registries?: RegistryData[];
+  clientProfile?: {
+    couple1FirstName: string;
+    couple1LastName: string;
+    couple2FirstName: string | null;
+    couple2LastName: string | null;
+    weddingLocation: string | null;
+    weddingDate: Date | null;
+  };
 }
 
 interface RegistryData {
@@ -49,7 +55,7 @@ export default function TenantWebsiteInfoView({
   const [website, setWebsite] = useState<WebsiteData | null>(null);
   const [images, setImages] = useState<ImageData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const headerFontFamily = website?.headerFont || 'Great Vibes';
   const bodyFontFamily = website?.bodyFont || 'Poppins';
@@ -57,18 +63,30 @@ export default function TenantWebsiteInfoView({
   useEffect(() => {
     const loadWebsiteData = async () => {
       try {
+        setError(null);
+        console.log('Fetching website data for clientId:', clientId);
+        
         const response = await fetch(`/api/client-websites?clientId=${clientId}`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data.website) {
-            setWebsite(data.website);
-          }
-          if (data.images) {
-            setImages(data.images);
-          }
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `API returned ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Response data:', data);
+        
+        if (data.website) {
+          setWebsite(data.website);
+        }
+        if (data.images) {
+          setImages(data.images);
         }
       } catch (error) {
         console.error('Error loading website data:', error);
+        setError(error instanceof Error ? error.message : 'Failed to load website data');
       } finally {
         setLoading(false);
       }
@@ -78,7 +96,6 @@ export default function TenantWebsiteInfoView({
 
     // Set up auto-refresh every 5 seconds
     const interval = setInterval(loadWebsiteData, 5000);
-    setRefreshInterval(interval);
 
     return () => {
       clearInterval(interval);
@@ -93,6 +110,14 @@ export default function TenantWebsiteInfoView({
     );
   }
 
+  if (error) {
+    return (
+      <div style={{ padding: '2rem', color: '#C62828', backgroundColor: '#F4433615', borderRadius: '4px' }}>
+        <p>Error loading information: {error}</p>
+      </div>
+    );
+  }
+
   if (!website) {
     return (
       <div style={{ padding: '2rem', color: fontColor }}>
@@ -101,7 +126,27 @@ export default function TenantWebsiteInfoView({
     );
   }
 
-  // Format the last updated date
+  // Format couple names
+  const coupleName = website.clientProfile
+    ? `${website.clientProfile.couple1FirstName} ${website.clientProfile.couple1LastName}${
+        website.clientProfile.couple2FirstName
+          ? ` & ${website.clientProfile.couple2FirstName} ${website.clientProfile.couple2LastName}`
+          : ''
+      }`
+    : 'Couple';
+
+  // Format wedding date
+  const weddingDate = website.clientProfile?.weddingDate
+    ? new Date(website.clientProfile.weddingDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    : 'Date TBD';
+
+  const venue = website.clientProfile?.weddingLocation || 'Venue TBD';
+
+  // Format last updated
   const lastUpdatedDate = new Date(website.updatedAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -111,320 +156,369 @@ export default function TenantWebsiteInfoView({
   });
 
   return (
-    <div style={{ fontFamily: bodyFontFamily, color: fontColor }}>
-      {/* Last Updated Info */}
+    <div style={{ fontFamily: bodyFontFamily, color: fontColor, lineHeight: '1.6' }}>
+      {/* Header Section */}
       <div style={{
-        padding: '0.75rem 1rem',
-        marginBottom: '1.5rem',
+        padding: '2rem',
         backgroundColor: primaryColor + '10',
         borderLeft: `4px solid ${primaryColor}`,
-        borderRadius: '4px',
-        fontSize: '0.85rem',
-        color: fontColor
+        marginBottom: '2rem',
+        borderRadius: '4px'
       }}>
-        Last updated by client on {lastUpdatedDate}
+        <h1 style={{
+          fontFamily: headerFontFamily,
+          fontSize: '2.5rem',
+          color: primaryColor,
+          margin: '0 0 1rem 0'
+        }}>
+          {coupleName}
+        </h1>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1rem' }}>
+          <div>
+            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', color: fontColor }}>
+              <strong>Wedding Date:</strong> {weddingDate}
+            </p>
+          </div>
+          <div>
+            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', color: fontColor }}>
+              <strong>Venue:</strong> {venue}
+            </p>
+          </div>
+        </div>
+        <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: fontColor + '80' }}>
+          Last updated by client on {lastUpdatedDate}
+        </p>
       </div>
 
       {/* Story Section */}
-      <div style={{ marginBottom: '2rem' }}>
-        <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem', fontFamily: headerFontFamily }}>
-          Your Story
-        </h2>
-
-        {/* How We Met */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.95rem' }}>
-            How We Met
-          </label>
-          <p style={{
-            padding: '0.75rem',
-            backgroundColor: primaryColor + '05',
-            borderRadius: '4px',
-            lineHeight: '1.6',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word'
+      {(website.howWeMet || website.engagementStory) && (
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{
+            fontFamily: headerFontFamily,
+            fontSize: '1.8rem',
+            color: primaryColor,
+            marginBottom: '1.5rem',
+            borderBottom: `2px solid ${primaryColor}`,
+            paddingBottom: '0.5rem'
           }}>
-            {website.howWeMet || 'Not provided'}
-          </p>
-        </div>
-
-        {/* Engagement Story */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.95rem' }}>
-            Engagement Story
-          </label>
-          <p style={{
-            padding: '0.75rem',
-            backgroundColor: primaryColor + '05',
-            borderRadius: '4px',
-            lineHeight: '1.6',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word'
-          }}>
-            {website.engagementStory || 'Not provided'}
-          </p>
-        </div>
-      </div>
-
-      {/* Design Section */}
-      <div style={{ marginBottom: '2rem' }}>
-        <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem', fontFamily: headerFontFamily }}>
-          Design Choices
-        </h2>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
-              Header Font
-            </label>
-            <p style={{
-              padding: '0.75rem',
-              backgroundColor: primaryColor + '05',
-              borderRadius: '4px',
-              fontFamily: headerFontFamily,
-              fontSize: '1.2rem'
-            }}>
-              {website.headerFont}
-            </p>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
-              Body Font
-            </label>
-            <p style={{
-              padding: '0.75rem',
-              backgroundColor: primaryColor + '05',
-              borderRadius: '4px',
-              fontFamily: bodyFontFamily,
-              fontSize: '0.95rem'
-            }}>
-              {website.bodyFont}
-            </p>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
-              Font Color
-            </label>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  backgroundColor: website.fontColor,
-                  borderRadius: '4px',
-                  border: '1px solid #ddd'
-                }}
-              />
-              <span style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                {website.fontColor}
-              </span>
-            </div>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
-              Primary Color
-            </label>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  backgroundColor: website.colorPrimary,
-                  borderRadius: '4px',
-                  border: '1px solid #ddd'
-                }}
-              />
-              <span style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                {website.colorPrimary}
-              </span>
-            </div>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
-              Secondary Color
-            </label>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  backgroundColor: website.colorSecondary,
-                  borderRadius: '4px',
-                  border: '1px solid #ddd'
-                }}
-              />
-              <span style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                {website.colorSecondary}
-              </span>
-            </div>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
-              Accent Color
-            </label>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  backgroundColor: website.colorAccent,
-                  borderRadius: '4px',
-                  border: '1px solid #ddd'
-                }}
-              />
-              <span style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                {website.colorAccent}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Images Section */}
-      {images.length > 0 && (
-        <div style={{ marginBottom: '2rem' }}>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem', fontFamily: headerFontFamily }}>
-            Photos ({images.length})
+            Our Story
           </h2>
 
+          {website.howWeMet && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{
+                fontSize: '1.2rem',
+                fontWeight: '600',
+                color: primaryColor,
+                marginBottom: '0.75rem'
+              }}>
+                How We Met
+              </h3>
+              <p style={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                backgroundColor: primaryColor + '05',
+                padding: '1rem',
+                borderRadius: '4px',
+                lineHeight: '1.8'
+              }}>
+                {website.howWeMet}
+              </p>
+            </div>
+          )}
+
+          {website.engagementStory && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{
+                fontSize: '1.2rem',
+                fontWeight: '600',
+                color: primaryColor,
+                marginBottom: '0.75rem'
+              }}>
+                Engagement Story
+              </h3>
+              <p style={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                backgroundColor: primaryColor + '05',
+                padding: '1rem',
+                borderRadius: '4px',
+                lineHeight: '1.8'
+              }}>
+                {website.engagementStory}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Images Section */}
+      {images && images.length > 0 && (
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{
+            fontFamily: headerFontFamily,
+            fontSize: '1.8rem',
+            color: primaryColor,
+            marginBottom: '1.5rem',
+            borderBottom: `2px solid ${primaryColor}`,
+            paddingBottom: '0.5rem'
+          }}>
+            Photos
+          </h2>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-            gap: '1rem'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+            gap: '1.5rem'
           }}>
-            {images.map(image => (
-              <div key={image.id} style={{ position: 'relative' }}>
+            {images.map((image) => (
+              <div key={image.id} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem'
+              }}>
                 <img
                   src={image.url}
                   alt={image.category}
                   style={{
                     width: '100%',
-                    aspectRatio: '1',
+                    height: '200px',
                     objectFit: 'cover',
                     borderRadius: '4px',
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s ease'
+                    border: `1px solid ${primaryColor}40`
                   }}
-                  onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-                  onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-                  onClick={() => {
-                    const link = document.createElement('a');
-                    link.href = image.url;
-                    link.download = `photo-${image.id}.jpg`;
-                    link.click();
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.backgroundColor = primaryColor + '20';
                   }}
                 />
-                <p style={{
-                  position: 'absolute',
-                  bottom: '0.5rem',
-                  left: '0.5rem',
-                  right: '0.5rem',
-                  backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                  color: '#ffffff',
-                  margin: 0,
-                  padding: '0.25rem 0.5rem',
-                  borderRadius: '2px',
-                  fontSize: '0.75rem',
-                  textAlign: 'center'
-                }}>
-                  {image.category}
-                </p>
+                <a
+                  href={image.url}
+                  download
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backgroundColor: primaryColor,
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Download
+                </a>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* URLs Section */}
-      <div style={{ marginBottom: '2rem' }}>
-        <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem', fontFamily: headerFontFamily }}>
-          Website URLs
+      {/* Design Choices Section */}
+      <div style={{ marginBottom: '3rem' }}>
+        <h2 style={{
+          fontFamily: headerFontFamily,
+          fontSize: '1.8rem',
+          color: primaryColor,
+          marginBottom: '1.5rem',
+          borderBottom: `2px solid ${primaryColor}`,
+          paddingBottom: '0.5rem'
+        }}>
+          Design Choices
         </h2>
 
-        <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1rem', fontSize: '0.9rem' }}>
-          Your website will be hosted at: <strong>https://www.missingpieceplanning.com/events/[your-choice]</strong>
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+          {/* Fonts */}
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
-              Option 1
-            </label>
-            <p style={{
-              padding: '0.75rem',
-              backgroundColor: primaryColor + '05',
-              borderRadius: '4px',
-              fontFamily: 'monospace',
-              fontSize: '0.85rem',
-              wordBreak: 'break-all'
+            <h3 style={{
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              color: primaryColor,
+              marginBottom: '1rem'
             }}>
-              {website.urlEnding1 ? `https://www.missingpieceplanning.com/events/${website.urlEnding1}` : 'Not provided'}
-            </p>
+              Fonts
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <p style={{ fontSize: '0.85rem', color: fontColor + '80', margin: '0 0 0.5rem 0' }}>Header Font</p>
+                <p style={{
+                  fontFamily: headerFontFamily,
+                  fontSize: '1.5rem',
+                  margin: '0',
+                  padding: '0.75rem',
+                  backgroundColor: primaryColor + '05',
+                  borderRadius: '4px'
+                }}>
+                  {website.headerFont}
+                </p>
+              </div>
+              <div>
+                <p style={{ fontSize: '0.85rem', color: fontColor + '80', margin: '0 0 0.5rem 0' }}>Body Font</p>
+                <p style={{
+                  fontFamily: bodyFontFamily,
+                  fontSize: '1rem',
+                  margin: '0',
+                  padding: '0.75rem',
+                  backgroundColor: primaryColor + '05',
+                  borderRadius: '4px'
+                }}>
+                  {website.bodyFont}
+                </p>
+              </div>
+            </div>
           </div>
 
+          {/* Colors */}
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
-              Option 2
-            </label>
-            <p style={{
-              padding: '0.75rem',
-              backgroundColor: primaryColor + '05',
-              borderRadius: '4px',
-              fontFamily: 'monospace',
-              fontSize: '0.85rem',
-              wordBreak: 'break-all'
+            <h3 style={{
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              color: primaryColor,
+              marginBottom: '1rem'
             }}>
-              {website.urlEnding2 ? `https://www.missingpieceplanning.com/events/${website.urlEnding2}` : 'Not provided'}
-            </p>
+              Colors
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  backgroundColor: website.colorPrimary || '#274E13',
+                  borderRadius: '4px',
+                  border: `1px solid ${fontColor}40`
+                }} />
+                <div>
+                  <p style={{ margin: '0', fontSize: '0.9rem', fontWeight: '600' }}>Primary</p>
+                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.85rem', color: fontColor + '80' }}>
+                    {website.colorPrimary}
+                  </p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  backgroundColor: website.colorSecondary || '#e1e0d0',
+                  borderRadius: '4px',
+                  border: `1px solid ${fontColor}40`
+                }} />
+                <div>
+                  <p style={{ margin: '0', fontSize: '0.9rem', fontWeight: '600' }}>Secondary</p>
+                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.85rem', color: fontColor + '80' }}>
+                    {website.colorSecondary}
+                  </p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  backgroundColor: website.colorAccent || '#FF69B4',
+                  borderRadius: '4px',
+                  border: `1px solid ${fontColor}40`
+                }} />
+                <div>
+                  <p style={{ margin: '0', fontSize: '0.9rem', fontWeight: '600' }}>Accent</p>
+                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.85rem', color: fontColor + '80' }}>
+                    {website.colorAccent}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Registries Section */}
-      {website?.registries && website.registries.length > 0 && (
-        <div style={{ marginBottom: '2rem' }}>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem', fontFamily: headerFontFamily }}>
-            Registries
+      {/* URLs Section */}
+      {(website.urlEnding1 || website.urlEnding2) && (
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{
+            fontFamily: headerFontFamily,
+            fontSize: '1.8rem',
+            color: primaryColor,
+            marginBottom: '1.5rem',
+            borderBottom: `2px solid ${primaryColor}`,
+            paddingBottom: '0.5rem'
+          }}>
+            Website URLs
           </h2>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            {website.registries.map((registry) => (
-              <div
-                key={registry.id}
-                style={{
-                  padding: '1rem',
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {website.urlEnding1 && (
+              <div>
+                <p style={{ fontSize: '0.9rem', fontWeight: '600', color: fontColor, margin: '0 0 0.5rem 0' }}>
+                  URL Option 1
+                </p>
+                <p style={{
+                  padding: '0.75rem',
                   backgroundColor: primaryColor + '05',
                   borderRadius: '4px',
-                  border: `1px solid ${primaryColor}20`
-                }}
-              >
-                <h4 style={{ margin: '0 0 0.5rem 0', color: primaryColor, fontSize: '0.95rem' }}>
+                  margin: '0'
+                }}>
+                  {website.urlEnding1}
+                </p>
+              </div>
+            )}
+            {website.urlEnding2 && (
+              <div>
+                <p style={{ fontSize: '0.9rem', fontWeight: '600', color: fontColor, margin: '0 0 0.5rem 0' }}>
+                  URL Option 2
+                </p>
+                <p style={{
+                  padding: '0.75rem',
+                  backgroundColor: primaryColor + '05',
+                  borderRadius: '4px',
+                  margin: '0'
+                }}>
+                  {website.urlEnding2}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Registries Section */}
+      {website.registries && website.registries.length > 0 && (
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{
+            fontFamily: headerFontFamily,
+            fontSize: '1.8rem',
+            color: primaryColor,
+            marginBottom: '1.5rem',
+            borderBottom: `2px solid ${primaryColor}`,
+            paddingBottom: '0.5rem'
+          }}>
+            Registries
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {website.registries.map((registry) => (
+              <div key={registry.id} style={{
+                padding: '1rem',
+                backgroundColor: primaryColor + '05',
+                borderLeft: `3px solid ${primaryColor}`,
+                borderRadius: '4px'
+              }}>
+                <p style={{
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  margin: '0 0 0.5rem 0',
+                  color: primaryColor
+                }}>
                   {registry.registryName}
                   {registry.isOptional && (
-                    <span style={{ fontSize: '0.75rem', color: fontColor, opacity: 0.6, marginLeft: '0.5rem' }}>
-                      (Optional)
+                    <span style={{ fontSize: '0.85rem', fontWeight: '400', color: fontColor + '80' }}>
+                      {' '}(Optional)
                     </span>
                   )}
-                </h4>
+                </p>
                 <a
                   href={registry.registryUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
                     color: primaryColor,
-                    textDecoration: 'none',
-                    fontSize: '0.85rem',
-                    wordBreak: 'break-all',
-                    display: 'inline-block',
-                    transition: 'text-decoration 0.2s ease'
+                    textDecoration: 'underline',
+                    fontSize: '0.95rem'
                   }}
-                  onMouseOver={(e) => (e.currentTarget.style.textDecoration = 'underline')}
-                  onMouseOut={(e) => (e.currentTarget.style.textDecoration = 'none')}
                 >
                   {registry.registryUrl}
                 </a>
