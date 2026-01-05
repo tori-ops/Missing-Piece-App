@@ -8,7 +8,7 @@ import ClientDetailContent from '@/components/ClientDetailContent';
 export default function ClientDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { data: session } = useSession();
+  const session = useSession();
   const clientId = params?.clientId as string;
 
   const [client, setClient] = useState<any>(null);
@@ -17,7 +17,12 @@ export default function ClientDetailPage() {
   const [branding, setBranding] = useState<any>(null);
 
   useEffect(() => {
-    if (!session) {
+    // Wait for session to load
+    if (session.status === 'loading') {
+      return;
+    }
+
+    if (session.status === 'unauthenticated') {
       router.push('/');
       return;
     }
@@ -56,9 +61,17 @@ export default function ClientDetailPage() {
     };
 
     fetchClientData();
-  }, [session, clientId, router]);
+  }, [session.status, clientId, router]);
 
-  if (!session) {
+  if (session.status === 'loading') {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
+  if (session.status === 'unauthenticated') {
     return null;
   }
 
