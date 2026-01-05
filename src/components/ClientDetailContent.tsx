@@ -157,88 +157,88 @@ export default function ClientDetailContent({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#f5f5f5' }}>
       {/* Header with client info */}
-      <div style={{ backgroundColor: primaryColor, color: '#ffffff', padding: '2rem' }}>
-        <button
-          onClick={onBack}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            backgroundColor: 'transparent',
-            border: 'none',
-            color: '#ffffff',
-            cursor: 'pointer',
-            marginBottom: '1rem',
-            fontSize: '0.95rem',
-            fontFamily: bodyFontFamily,
-          }}
-        >
-          <ArrowLeft size={20} />
-          Back to Dashboard
-        </button>
+      <div style={{ backgroundColor: primaryColor, color: '#ffffff', padding: '1.25rem 2rem', position: 'relative' }}>
+        {/* Top row with back button and toggle */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+          <button
+            onClick={onBack}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: '#ffffff',
+              cursor: 'pointer',
+              fontSize: '0.95rem',
+              fontFamily: bodyFontFamily,
+            }}
+          >
+            <ArrowLeft size={20} />
+            Back to Dashboard
+          </button>
+
+          {/* Website Builder Toggle - Top Right */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.4rem' }}>
+            <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.9, textAlign: 'right' }}>
+              Building Client Wedding Site?
+            </p>
+            <button
+              onClick={() => handleWebsiteBuilderToggle(!websiteBuilderEnabled)}
+              disabled={togglingWebsite}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '50px',
+                height: '28px',
+                borderRadius: '14px',
+                border: 'none',
+                backgroundColor: websiteBuilderEnabled ? '#4CAF50' : '#ccc',
+                cursor: togglingWebsite ? 'not-allowed' : 'pointer',
+                transition: 'background-color 0.3s ease',
+                opacity: togglingWebsite ? 0.6 : 1,
+              }}
+              title={websiteBuilderEnabled ? 'Disable Website Builder' : 'Enable Website Builder'}
+            >
+              <div
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '50%',
+                  backgroundColor: '#ffffff',
+                  transform: websiteBuilderEnabled ? 'translateX(12px)' : 'translateX(-12px)',
+                  transition: 'transform 0.3s ease',
+                }}
+              />
+            </button>
+          </div>
+        </div>
 
         <div style={{ fontFamily: headerFontFamily }}>
-          <h1 style={{ margin: '0 0 1rem 0', fontSize: '1.75rem', fontWeight: '600' }}>
+          <h1 style={{ margin: '0 0 0.5rem 0', fontSize: '1.75rem', fontWeight: '600' }}>
             {clientName}
           </h1>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
             <div>
               {client.couple2FirstName && client.couple2LastName && (
-                <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
-                  <div>
-                    <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.9 }}>
-                      Partner
-                    </p>
-                    <p style={{ margin: 0, fontSize: '0.95rem', fontWeight: '500' }}>
-                      {client.couple2FirstName} {client.couple2LastName}
-                    </p>
-                  </div>
-                  
-                  {/* Website Builder Toggle */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
-                    <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.9 }}>
-                      Toggle on if building client website
-                    </p>
-                    <button
-                      onClick={() => handleWebsiteBuilderToggle(!websiteBuilderEnabled)}
-                      disabled={togglingWebsite}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '50px',
-                        height: '28px',
-                        borderRadius: '14px',
-                        border: 'none',
-                        backgroundColor: websiteBuilderEnabled ? '#4CAF50' : '#ccc',
-                        cursor: togglingWebsite ? 'not-allowed' : 'pointer',
-                        transition: 'background-color 0.3s ease',
-                        opacity: togglingWebsite ? 0.6 : 1,
-                      }}
-                      title={websiteBuilderEnabled ? 'Disable Website Builder' : 'Enable Website Builder'}
-                    >
-                      <div
-                        style={{
-                          width: '24px',
-                          height: '24px',
-                          borderRadius: '50%',
-                          backgroundColor: '#ffffff',
-                          transform: websiteBuilderEnabled ? 'translateX(12px)' : 'translateX(-12px)',
-                          transition: 'transform 0.3s ease',
-                        }}
-                      />
-                    </button>
-                  </div>
+                <div style={{ marginBottom: '0.5rem' }}>
+                  <p style={{ margin: '0 0 0.15rem 0', fontSize: '0.85rem', opacity: 0.9, lineHeight: '1.2' }}>
+                    Partner
+                  </p>
+                  <p style={{ margin: 0, fontSize: '0.95rem', fontWeight: '500', lineHeight: '1.2' }}>
+                    {client.couple2FirstName} {client.couple2LastName}
+                  </p>
                 </div>
               )}
 
               {client.weddingDate && (
-                <div style={{ marginBottom: '1rem' }}>
-                  <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.9 }}>
+                <div style={{ marginBottom: '0.5rem' }}>
+                  <p style={{ margin: '0 0 0.15rem 0', fontSize: '0.85rem', opacity: 0.9, lineHeight: '1.2' }}>
                     Wedding Date
                   </p>
-                  <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: '500' }}>
+                  <p style={{ margin: 0, fontSize: '0.95rem', fontWeight: '500', lineHeight: '1.2' }}>
                     {new Date(client.weddingDate).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -251,11 +251,11 @@ export default function ClientDetailContent({
 
             <div>
               {client.weddingVenue && (
-                <div style={{ marginBottom: '1rem' }}>
-                  <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.9 }}>
+                <div style={{ marginBottom: '0.5rem' }}>
+                  <p style={{ margin: '0 0 0.15rem 0', fontSize: '0.85rem', opacity: 0.9, lineHeight: '1.2' }}>
                     Venue
                   </p>
-                  <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: '500' }}>
+                  <p style={{ margin: 0, fontSize: '0.95rem', fontWeight: '500', lineHeight: '1.2' }}>
                     {client.weddingVenue}
                   </p>
                 </div>
@@ -263,10 +263,10 @@ export default function ClientDetailContent({
 
               {(client.city || client.state) && (
                 <div>
-                  <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.9 }}>
+                  <p style={{ margin: '0 0 0.15rem 0', fontSize: '0.85rem', opacity: 0.9, lineHeight: '1.2' }}>
                     Location
                   </p>
-                  <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: '500' }}>
+                  <p style={{ margin: 0, fontSize: '0.95rem', fontWeight: '500', lineHeight: '1.2' }}>
                     {client.city}
                     {client.city && client.state ? ', ' : ''}
                     {client.state}
@@ -277,11 +277,11 @@ export default function ClientDetailContent({
           </div>
 
           {client.notes && (
-            <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: 'rgba(255,255,255,0.2) 1px solid' }}>
-              <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', opacity: 0.9 }}>
+            <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: 'rgba(255,255,255,0.2) 1px solid' }}>
+              <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', opacity: 0.9, lineHeight: '1.2' }}>
                 Tenant Notes
               </p>
-              <p style={{ margin: 0, fontSize: '1rem' }}>
+              <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: '1.3' }}>
                 {client.notes}
               </p>
             </div>
