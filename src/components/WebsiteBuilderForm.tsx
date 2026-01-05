@@ -277,6 +277,11 @@ export default function WebsiteBuilderForm({
     }
   };
 
+  // Ensure we have at least 5 registries
+  const registriesWithDefaults = formData.registries && formData.registries.length >= 5 
+    ? formData.registries 
+    : Array.from({ length: 5 }, (_, i) => formData.registries?.[i] || { registryName: '', registryUrl: '', isOptional: false });
+
   const handleRegistryChange = (index: number, field: string, value: any) => {
     const newRegistries = [...formData.registries];
     (newRegistries[index] as any)[field] = value;
@@ -825,7 +830,7 @@ export default function WebsiteBuilderForm({
             Add up to 5 registry links
           </p>
 
-          {formData.registries.map((registry, index) => (
+          {registriesWithDefaults.map((registry, index) => (
             <div key={index} style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: primaryColor + '05', borderRadius: '4px' }}>
               <h4 style={{ margin: '0 0 1rem 0', color: primaryColor }}>Registry {index + 1}</h4>
               
