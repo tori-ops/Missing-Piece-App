@@ -397,6 +397,7 @@ model Tenant {
   auditLogs             AuditLog[]
   meetingNotes          MeetingNote[]
   tasks                 Task[]
+  websites              ClientWebsite[]
   
   @@index([status])
   @@index([subscriptionTier])
@@ -465,6 +466,7 @@ model ClientProfile {
   tenantAccessList      TenantAccess[]
   meetingNotes          MeetingNote[]
   tasks                 Task[]
+  website               ClientWebsite?
   
   @@index([tenantId])
   @@index([contactEmail])
@@ -887,3 +889,89 @@ model NotificationPreference {
 // CLIENT WEATHER & GOLDEN HOUR
 // ============================================================================
 
+// ============================================================================
+// WEBSITE BUILDER (Information Gathering for Tenant-Built Websites)
+// ============================================================================
+
+model ClientWebsite {
+  id                    String                @id @default(cuid())
+  clientProfileId       String                @unique
+  tenantId              String
+  
+  // Story Content
+  howWeMet              String?               @map("how_we_met")
+  engagementStory       String?               @map("engagement_story")
+  
+  // Design Preferences
+  fontFamily            String?               @map("font_family")
+  colorPrimary          String?               @db.VarChar(7) @map("color_primary")
+  colorSecondary        String?               @db.VarChar(7) @map("color_secondary")
+  colorAccent           String?               @db.VarChar(7) @map("color_accent")
+  
+  // Website URL Suggestions (client suggests 2 options for tenant to choose from)
+  suggestedUrlSlug1     String?               @map("suggested_url_slug_1")
+  suggestedUrlSlug2     String?               @map("suggested_url_slug_2")
+  
+  // Metadata
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+  
+  // Relations
+  clientProfile         ClientProfile         @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  tenant                Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  images                WebsiteImage[]
+  registries            WebsiteRegistry[]
+  
+  @@index([clientProfileId])
+  @@index([tenantId])
+  @@map("client_websites")
+}
+
+model WebsiteImage {
+  id                    String                @id @default(cuid())
+  clientWebsiteId       String                @map("client_website_id")
+  
+  // Image category: 'ring_photo', 'background_image', 'couple_photo'
+  category              String                @db.VarChar(50)
+  
+  // Storage reference (path in Supabase storage)
+  storageBucket         String                @map("storage_bucket")
+  storagePath           String                @map("storage_path")
+  
+  // Metadata
+  fileName              String?               @map("file_name")
+  fileSize              Int?                  @map("file_size")
+  mimeType              String?               @map("mime_type")
+  displayOrder          Int?                  @map("display_order")
+  
+  createdAt             DateTime              @default(now()) @map("created_at")
+  
+  // Relations
+  clientWebsite         ClientWebsite         @relation(fields: [clientWebsiteId], references: [id], onDelete: Cascade)
+  
+  @@index([clientWebsiteId])
+  @@index([category])
+  @@map("website_images")
+}
+
+model WebsiteRegistry {
+  id                    String                @id @default(cuid())
+  clientWebsiteId       String                @map("client_website_id")
+  
+  // Registry details
+  registryName          String                @map("registry_name")
+  registryUrl           String                @map("registry_url")
+  registryOrder         Int                   @default(0) @map("registry_order")
+  
+  // Tenant configuration
+  isOptional            Boolean               @default(false) @map("is_optional")
+  
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+  
+  // Relations
+  clientWebsite         ClientWebsite         @relation(fields: [clientWebsiteId], references: [id], onDelete: Cascade)
+  
+  @@index([clientWebsiteId])
+  @@map("website_registries")
+}
