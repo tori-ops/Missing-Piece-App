@@ -252,67 +252,6 @@ export default function TenantWebsiteInfoView({
         </div>
       )}
 
-      {/* Images Section */}
-      {images && images.length > 0 && (
-        <div style={{ marginBottom: '3rem' }}>
-          <h2 style={{
-            fontFamily: headerFontFamily,
-            fontSize: '1.8rem',
-            color: primaryColor,
-            marginBottom: '1.5rem',
-            borderBottom: `2px solid ${primaryColor}`,
-            paddingBottom: '0.5rem'
-          }}>
-            Photos
-          </h2>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-            gap: '1.5rem'
-          }}>
-            {images.map((image) => (
-              <div key={image.id} style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem'
-              }}>
-                <img
-                  src={image.url}
-                  alt={image.category}
-                  style={{
-                    width: '100%',
-                    height: '200px',
-                    objectFit: 'cover',
-                    borderRadius: '4px',
-                    border: `1px solid ${primaryColor}40`
-                  }}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.backgroundColor = primaryColor + '20';
-                  }}
-                />
-                <a
-                  href={image.url}
-                  download
-                  style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: primaryColor,
-                    color: '#ffffff',
-                    textDecoration: 'none',
-                    borderRadius: '4px',
-                    textAlign: 'center',
-                    fontSize: '0.9rem',
-                    fontWeight: '600',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Download
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Design Choices Section */}
       <div style={{ marginBottom: '3rem' }}>
         <h2 style={{
@@ -521,6 +460,67 @@ export default function TenantWebsiteInfoView({
                   }}
                 >
                   {registry.registryUrl}
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Images Section - At Bottom */}
+      {images && images.length > 0 && (
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{
+            fontFamily: headerFontFamily,
+            fontSize: '1.8rem',
+            color: primaryColor,
+            marginBottom: '1.5rem',
+            borderBottom: `2px solid ${primaryColor}`,
+            paddingBottom: '0.5rem'
+          }}>
+            Photos
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+            gap: '1.5rem'
+          }}>
+            {images.map((image) => (
+              <div key={image.id} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem'
+              }}>
+                <img
+                  src={image.url}
+                  alt={image.category}
+                  style={{
+                    width: '100%',
+                    height: '200px',
+                    objectFit: 'cover',
+                    borderRadius: '4px',
+                    border: `1px solid ${primaryColor}40`
+                  }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.backgroundColor = primaryColor + '20';
+                  }}
+                />
+                <a
+                  href={image.url}
+                  download
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backgroundColor: primaryColor,
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Download
                 </a>
               </div>
             ))}
