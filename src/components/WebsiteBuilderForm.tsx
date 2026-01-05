@@ -117,40 +117,51 @@ export default function WebsiteBuilderForm({
         try {
           const draft = JSON.parse(savedDraft);
           setFormData(draft);
-          return; // Use draft instead of fetching from server
+          // Don't return here - still need to fetch images from database
         } catch (error) {
           console.log('Could not parse saved draft');
         }
+      } else {
+        // If no draft, load form data from server
+        try {
+          const response = await fetch(`/api/client-websites?clientId=${clientId}`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.website) {
+              setFormData(prev => ({
+                ...prev,
+                howWeMet: data.website.howWeMet || '',
+                engagementStory: data.website.engagementStory || '',
+                headerFont: data.website.headerFont || 'Great Vibes',
+                bodyFont: data.website.bodyFont || 'Poppins',
+                fontColor: data.website.fontColor || '#1a1a1a',
+                colorPrimary: data.website.colorPrimary || '#274E13',
+                colorSecondary: data.website.colorSecondary || '#e1e0d0',
+                colorAccent: data.website.colorAccent || '#FF69B4',
+                urlEnding1: data.website.urlEnding1 || '',
+                urlEnding2: data.website.urlEnding2 || '',
+                registries: data.website.registries || formData.registries,
+                allowTenantEdits: data.website.allowTenantEdits || false
+              }));
+            }
+          }
+        } catch (error) {
+          console.log('No existing website data found');
+        }
       }
 
-      // If no draft, load from server
+      // Always fetch images from database (separate from draft logic)
       try {
         const response = await fetch(`/api/client-websites?clientId=${clientId}`);
         if (response.ok) {
           const data = await response.json();
-          if (data.website) {
-            setFormData(prev => ({
-              ...prev,
-              howWeMet: data.website.howWeMet || '',
-              engagementStory: data.website.engagementStory || '',
-              headerFont: data.website.headerFont || 'Great Vibes',
-              bodyFont: data.website.bodyFont || 'Poppins',
-              fontColor: data.website.fontColor || '#1a1a1a',
-              colorPrimary: data.website.colorPrimary || '#274E13',
-              colorSecondary: data.website.colorSecondary || '#e1e0d0',
-              colorAccent: data.website.colorAccent || '#FF69B4',
-              urlEnding1: data.website.urlEnding1 || '',
-              urlEnding2: data.website.urlEnding2 || '',
-              registries: data.website.registries || formData.registries,
-              allowTenantEdits: data.website.allowTenantEdits || false
-            }));
-          }
           if (data.images) {
             setExistingImages(data.images);
+            console.log('Loaded images from database:', data.images.length);
           }
         }
       } catch (error) {
-        console.log('No existing website data found');
+        console.log('Failed to fetch images:', error);
       }
     };
     loadExistingData();
