@@ -48,8 +48,20 @@ export async function GET(request: Request) {
     // Check authorization
     if (user.role === 'CLIENT' && user.clientId !== clientId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-    } else if (user.role === 'TENANT' && client.tenantId !== user.tenantId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    } else if (user.role === 'TENANT') {
+      // Tenant can only view clients they have explicit access to
+      const hasAccess = await prisma.tenantAccess.findUnique({
+        where: {
+          clientProfileId_tenantId: {
+            clientProfileId: clientId,
+            tenantId: user.tenantId!
+          }
+        }
+      });
+      
+      if (!hasAccess) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      }
     }
 
     // Get website images
