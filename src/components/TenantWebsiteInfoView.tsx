@@ -157,39 +157,6 @@ export default function TenantWebsiteInfoView({
 
   return (
     <div style={{ fontFamily: bodyFontFamily, color: fontColor, lineHeight: '1.6' }}>
-      {/* Header Section */}
-      <div style={{
-        padding: '2rem',
-        backgroundColor: primaryColor + '10',
-        borderLeft: `4px solid ${primaryColor}`,
-        marginBottom: '2rem',
-        borderRadius: '4px'
-      }}>
-        <h1 style={{
-          fontFamily: headerFontFamily,
-          fontSize: '2.5rem',
-          color: primaryColor,
-          margin: '0 0 1rem 0'
-        }}>
-          {coupleName}
-        </h1>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1rem' }}>
-          <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', color: fontColor }}>
-              <strong>Wedding Date:</strong> {weddingDate}
-            </p>
-          </div>
-          <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', color: fontColor }}>
-              <strong>Venue:</strong> {venue}
-            </p>
-          </div>
-        </div>
-        <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: fontColor + '80' }}>
-          Last updated by client on {lastUpdatedDate}
-        </p>
-      </div>
-
       {/* Story Section */}
       {(website.howWeMet || website.engagementStory) && (
         <div style={{ marginBottom: '3rem' }}>
