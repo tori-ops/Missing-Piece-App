@@ -204,9 +204,17 @@ export default function WebsiteBuilderForm({
 
   const handleRemoveExistingImage = async (imageId: string) => {
     try {
-      await fetch(`/api/client-websites/images/${imageId}`, { method: 'DELETE' });
-      setExistingImages(prev => prev.filter(img => img.id !== imageId));
+      const response = await fetch(`/api/client-websites/images?id=${imageId}`, { method: 'DELETE' });
+      if (response.ok) {
+        setExistingImages(prev => prev.filter(img => img.id !== imageId));
+        setMessage({ type: 'success', text: 'Image deleted successfully' });
+        setTimeout(() => setMessage(null), 2000);
+      } else {
+        const error = await response.json();
+        setMessage({ type: 'error', text: error.error || 'Failed to delete image' });
+      }
     } catch (error) {
+      console.error('Delete error:', error);
       setMessage({ type: 'error', text: 'Failed to delete image' });
     }
   };

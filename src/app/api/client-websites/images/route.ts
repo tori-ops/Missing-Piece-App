@@ -157,7 +157,7 @@ export async function DELETE(request: NextRequest) {
     // Delete from Supabase storage
     await supabase.storage
       .from('client-website-images')
-      .remove([image.imagePath]);
+      .remove([image.storagePath]);
 
     // Delete from database
     await db.websiteImage.delete({
