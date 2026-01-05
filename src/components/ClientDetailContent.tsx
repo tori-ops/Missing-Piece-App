@@ -178,7 +178,7 @@ export default function ClientDetailContent({
         </button>
 
         <div style={{ fontFamily: headerFontFamily }}>
-          <h1 style={{ margin: '0 0 1rem 0', fontSize: '2.5rem', fontWeight: '600' }}>
+          <h1 style={{ margin: '0 0 1rem 0', fontSize: '1.75rem', fontWeight: '600' }}>
             {clientName}
           </h1>
 
@@ -190,7 +190,7 @@ export default function ClientDetailContent({
                     <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.9 }}>
                       Partner
                     </p>
-                    <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: '500' }}>
+                    <p style={{ margin: 0, fontSize: '0.95rem', fontWeight: '500' }}>
                       {client.couple2FirstName} {client.couple2LastName}
                     </p>
                   </div>
