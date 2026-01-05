@@ -379,13 +379,13 @@ export default function MeetingNotesDetailView({
 
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Attachments (Documents, Images)</label>
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
               <input
                 type="file"
                 multiple
                 onChange={(e) => setAttachmentFiles(Array.from(e.target.files || []))}
                 style={{
-                  flex: 1,
+                  minWidth: '0',
                   padding: '0.75rem',
                   border: 'none',
                   borderRadius: '4px',
@@ -405,6 +405,7 @@ export default function MeetingNotesDetailView({
                   cursor: 'pointer',
                   fontFamily: bodyFontFamily,
                   whiteSpace: 'nowrap',
+                  flexShrink: 0,
                 }}
               >
                 {isRecording && recordingType === 'voice' ? '⏹ Stop Voice' : '🎤 Voice'}
@@ -422,6 +423,7 @@ export default function MeetingNotesDetailView({
                   cursor: 'pointer',
                   fontFamily: bodyFontFamily,
                   whiteSpace: 'nowrap',
+                  flexShrink: 0,
                 }}
               >
                 {isRecording && recordingType === 'camera' ? '⏹ Stop Camera' : '📹 Camera'}
