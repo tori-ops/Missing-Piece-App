@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
     const imageRecord = await db.websiteImage.create({
       data: {
         clientWebsiteId: clientId,
-        imagePath: fileName,
+        storageBucket: 'client-website-images',
+        storagePath: fileName,
         category: 'uploaded',
         fileName: file.name,
         fileSize: file.size,

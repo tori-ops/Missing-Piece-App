@@ -942,8 +942,9 @@ model WebsiteImage {
   // Image category: 'rings', 'together', 'proposal', 'portraits', 'detail', 'other'
   category              String                @db.VarChar(50)
   
-  // Storage reference (path in Supabase storage)
-  imagePath             String                @map("image_path")
+  // Storage reference (bucket and path in Supabase storage)
+  storageBucket         String                @map("storage_bucket")
+  storagePath           String                @map("storage_path")
   
   // Metadata
   fileName              String?               @map("file_name")

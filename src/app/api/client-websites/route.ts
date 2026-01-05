@@ -48,7 +48,8 @@ export async function GET(request: Request) {
       where: { clientWebsiteId: clientId },
       select: {
         id: true,
-        imagePath: true,
+        storageBucket: true,
+        storagePath: true,
         category: true,
         createdAt: true
       }
@@ -64,7 +65,7 @@ export async function GET(request: Request) {
     const imagesWithUrls = images.map((img: any) => ({
       id: img.id,
       category: img.category,
-      url: supabase.storage.from('client-website-images').getPublicUrl(img.imagePath).data.publicUrl,
+      url: supabase.storage.from(img.storageBucket).getPublicUrl(img.storagePath).data.publicUrl,
       createdAt: img.createdAt
     }));
 
