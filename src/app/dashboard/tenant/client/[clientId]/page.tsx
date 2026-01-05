@@ -39,8 +39,6 @@ export default function ClientDetailPage() {
           }
         );
 
-        console.log('Client API response:', { status: response.status, ok: response.ok });
-
         if (!response.ok) {
           const errorData = await response.json();
           console.error('API error:', errorData);
@@ -48,7 +46,6 @@ export default function ClientDetailPage() {
         }
 
         const data = await response.json();
-        console.log('Client data received:', data);
         setClient(data);
 
         // Fetch branding
