@@ -366,10 +366,10 @@ export default function WebsiteBuilderForm({
       </button>
 
       <h1 style={{ color: primaryColor, fontFamily: headerFontFamily, fontSize: '2rem', marginBottom: '0.5rem' }}>
-        Build Your Event Website
+        Web Design Suite
       </h1>
       <p style={{ color: fontColor, opacity: 0.7, marginBottom: '2rem' }}>
-        Share your story and preferences with us
+        Your love story, told your way.
       </p>
 
       {/* Message Display */}
@@ -419,48 +419,72 @@ export default function WebsiteBuilderForm({
       {/* Tab Content */}
       {activeTab === 'story' && (
         <div>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem' }}>Your Story</h2>
+          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '2rem' }}>Your Story</h2>
           
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
-              How We Met
-            </label>
-            <textarea
-              value={formData.howWeMet}
-              onChange={(e) => handleInputChange('howWeMet', e.target.value)}
-              placeholder="Share how you two met..."
-              style={{
-                width: '100%',
-                minHeight: '120px',
-                padding: '0.75rem',
-                border: `1px solid ${primaryColor}40`,
-                borderRadius: '4px',
-                fontFamily: bodyFontFamily,
-                fontSize: '1rem',
-                boxSizing: 'border-box'
-              }}
-            />
-          </div>
+          {/* Lined Paper Journal Container */}
+          <div style={{
+            position: 'relative',
+            backgroundColor: '#faf8f3',
+            borderRadius: '8px',
+            padding: '2rem',
+            marginBottom: '2rem',
+            backgroundImage: `repeating-linear-gradient(
+              to bottom,
+              transparent 0px,
+              transparent 32px,
+              ${primaryColor}15 32px,
+              ${primaryColor}15 33px
+            )`,
+            backgroundPosition: '0 0',
+            backgroundSize: '100% 33px'
+          }}>
+            <div style={{ marginBottom: '3rem', position: 'relative', zIndex: 1 }}>
+              <textarea
+                value={formData.howWeMet}
+                onChange={(e) => handleInputChange('howWeMet', e.target.value)}
+                placeholder="How We Met"
+                style={{
+                  width: '100%',
+                  minHeight: '120px',
+                  padding: '0 0 0 0',
+                  border: 'none',
+                  borderRadius: '0px',
+                  fontFamily: bodyFontFamily,
+                  fontSize: '1rem',
+                  backgroundColor: 'transparent',
+                  boxSizing: 'border-box',
+                  lineHeight: '33px',
+                  color: formData.howWeMet ? fontColor : primaryColor + '60',
+                  outline: 'none',
+                  resize: 'vertical',
+                  fontStyle: formData.howWeMet ? 'normal' : 'italic'
+                }}
+              />
+            </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
-              Engagement Story
-            </label>
-            <textarea
-              value={formData.engagementStory}
-              onChange={(e) => handleInputChange('engagementStory', e.target.value)}
-              placeholder="Tell us about the proposal..."
-              style={{
-                width: '100%',
-                minHeight: '120px',
-                padding: '0.75rem',
-                border: `1px solid ${primaryColor}40`,
-                borderRadius: '4px',
-                fontFamily: bodyFontFamily,
-                fontSize: '1rem',
-                boxSizing: 'border-box'
-              }}
-            />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <textarea
+                value={formData.engagementStory}
+                onChange={(e) => handleInputChange('engagementStory', e.target.value)}
+                placeholder="Engagement Story"
+                style={{
+                  width: '100%',
+                  minHeight: '120px',
+                  padding: '0 0 0 0',
+                  border: 'none',
+                  borderRadius: '0px',
+                  fontFamily: bodyFontFamily,
+                  fontSize: '1rem',
+                  backgroundColor: 'transparent',
+                  boxSizing: 'border-box',
+                  lineHeight: '33px',
+                  color: formData.engagementStory ? fontColor : primaryColor + '60',
+                  outline: 'none',
+                  resize: 'vertical',
+                  fontStyle: formData.engagementStory ? 'normal' : 'italic'
+                }}
+              />
+            </div>
           </div>
         </div>
       )}
