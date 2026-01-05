@@ -175,14 +175,22 @@ export default function WebsiteBuilderForm({
         formDataImage.append('file', file);
         formDataImage.append('clientId', clientId);
         
+        console.log(`Uploading image: ${file.name}`);
+        
         const response = await fetch('/api/client-websites/images', {
           method: 'POST',
           body: formDataImage,
         });
+
+        console.log(`Upload response status: ${response.status}`);
         
         if (response.ok) {
           const data = await response.json();
+          console.log('Uploaded image:', data.image);
           uploadedImages.push(data.image);
+        } else {
+          const error = await response.json();
+          console.error('Upload error:', error);
         }
       }
       
@@ -191,7 +199,8 @@ export default function WebsiteBuilderForm({
       setMessage({ type: 'success', text: `${uploadedImages.length} images uploaded successfully!` });
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to upload images' });
+      console.error('Upload error:', error);
+      setMessage({ type: 'error', text: `Failed to upload images: ${error instanceof Error ? error.message : 'Unknown error'}` });
     } finally {
       setUploading(false);
     }
@@ -209,24 +218,31 @@ export default function WebsiteBuilderForm({
   const handleSave = async () => {
     setSaving(true);
     try {
+      const payload = {
+        clientId,
+        ...formData
+      };
+      
+      console.log('Saving website data:', payload);
+      
       const response = await fetch('/api/client-websites', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          clientId,
-          ...formData
-        })
+        body: JSON.stringify(payload)
       });
+
+      const data = await response.json();
+      console.log('Response status:', response.status, 'Data:', data);
 
       if (response.ok) {
         setMessage({ type: 'success', text: 'Website information saved successfully!' });
         setTimeout(() => setMessage(null), 3000);
       } else {
-        const error = await response.json();
-        setMessage({ type: 'error', text: error.error || 'Failed to save' });
+        setMessage({ type: 'error', text: data.error || `Failed to save (${response.status})` });
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'Error saving data' });
+      console.error('Save error:', error);
+      setMessage({ type: 'error', text: `Error saving data: ${error instanceof Error ? error.message : 'Unknown error'}` });
     } finally {
       setSaving(false);
     }

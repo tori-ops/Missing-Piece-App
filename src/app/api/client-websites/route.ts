@@ -120,6 +120,16 @@ export async function POST(request: Request) {
       }
     });
 
+    // Get tenant info
+    const clientProfile = await prisma.clientProfile.findUnique({
+      where: { id: clientId },
+      select: { tenantId: true }
+    });
+
+    if (!clientProfile) {
+      return NextResponse.json({ error: 'Client profile not found' }, { status: 404 });
+    }
+
     // Create or update website
     const website = await prisma.clientWebsite.upsert({
       where: { clientProfileId: clientId },
@@ -146,7 +156,7 @@ export async function POST(request: Request) {
       },
       create: {
         clientProfileId: clientId,
-        tenantId: (await prisma.clientProfile.findUnique({ where: { id: clientId }, select: { tenantId: true } }))?.tenantId!,
+        tenantId: clientProfile.tenantId,
         howWeMet: howWeMet || null,
         engagementStory: engagementStory || null,
         headerFont: headerFont || null,
@@ -175,7 +185,8 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('Error creating website data:', error);
-    return NextResponse.json({ error: 'Failed to create website data' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create website data';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
