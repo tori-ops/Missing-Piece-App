@@ -76,9 +76,24 @@ export async function POST(request: NextRequest) {
     const db = new PrismaClient();
 
     try {
+      // Find or create ClientWebsite for this clientProfile
+      let clientWebsite = await db.clientWebsite.findUnique({
+        where: { clientProfileId: clientId },
+      });
+
+      if (!clientWebsite) {
+        clientWebsite = await db.clientWebsite.create({
+          data: {
+            clientProfileId: clientId,
+            story: '',
+            designNotes: '',
+          },
+        });
+      }
+
       const imageRecord = await db.websiteImage.create({
         data: {
-          clientWebsiteId: clientId,
+          clientWebsiteId: clientWebsite.id,
           storageBucket: 'client-website-images',
           storagePath: fileName,
           category: 'couple_photo', // Valid category from constraint
