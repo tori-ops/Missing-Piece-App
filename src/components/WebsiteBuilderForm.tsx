@@ -290,6 +290,21 @@ export default function WebsiteBuilderForm({
         // Clear localStorage draft on successful save
         const draftKey = `website-form-draft-${clientId}`;
         localStorage.removeItem(draftKey);
+        
+        // Re-fetch images from database to confirm persistence
+        try {
+          const imagesResponse = await fetch(`/api/client-websites?clientId=${clientId}`);
+          if (imagesResponse.ok) {
+            const imagesData = await imagesResponse.json();
+            if (imagesData.images) {
+              setExistingImages(imagesData.images);
+              console.log('Images refreshed after save:', imagesData.images.length);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to refresh images after save:', error);
+        }
+        
         setMessage({ type: 'success', text: 'Website information saved successfully!' });
         setTimeout(() => setMessage(null), 3000);
       } else {
