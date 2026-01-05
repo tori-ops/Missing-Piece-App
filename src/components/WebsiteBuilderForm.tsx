@@ -488,6 +488,21 @@ export default function WebsiteBuilderForm({
               />
             </div>
           </div>
+          
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', marginTop: '1.5rem' }}>
+            <input
+              type="checkbox"
+              checked={formData.letPlannerDecideHero}
+              onChange={(e) => handleInputChange('letPlannerDecideHero', e.target.checked)}
+              style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+            />
+            <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>
+              Let my planner decide
+            </span>
+          </label>
+          <p style={{ margin: '0.5rem 0 0 2rem', color: fontColor, opacity: 0.6, fontSize: '0.85rem' }}>
+            If checked, your planner will write your story for you
+          </p>
         </div>
       )}
 
@@ -856,21 +871,6 @@ export default function WebsiteBuilderForm({
               }}
             />
           </div>
-
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              checked={formData.letPlannerDecideHero}
-              onChange={(e) => handleInputChange('letPlannerDecideHero', e.target.checked)}
-              style={{ cursor: 'pointer', width: '18px', height: '18px' }}
-            />
-            <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>
-              Let my planner decide
-            </span>
-          </label>
-          <p style={{ margin: '0.5rem 0 0 2rem', color: fontColor, opacity: 0.6, fontSize: '0.85rem' }}>
-            If checked, your planner will select the best images for your site
-          </p>
         </div>
       )}
 
@@ -1002,24 +1002,6 @@ export default function WebsiteBuilderForm({
           ))}
         </div>
       )}
-
-      {/* Tenant Editing Permission - ALWAYS SHOW */}
-      <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: primaryColor + '05', borderRadius: '4px', marginBottom: '1.5rem' }}>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
-          <input
-            type="checkbox"
-            checked={formData.allowTenantEdits}
-            onChange={(e) => handleInputChange('allowTenantEdits', e.target.checked)}
-            style={{ cursor: 'pointer', width: '18px', height: '18px' }}
-          />
-          <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>
-            Allow tenant to edit wording for flow and consistency
-          </span>
-        </label>
-        <p style={{ margin: '0.5rem 0 0 2rem', color: fontColor, opacity: 0.6, fontSize: '0.85rem' }}>
-          If checked, the tenant will be able to edit your story and registry sections
-        </p>
-      </div>
 
       {/* Save Button */}
       <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
