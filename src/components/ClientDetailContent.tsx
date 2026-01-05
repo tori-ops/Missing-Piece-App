@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import TenantWebsiteInfoView from './TenantWebsiteInfoView';
 
 interface ClientDetailContentProps {
   client: {
@@ -53,7 +54,7 @@ export default function ClientDetailContent({
   onBack,
   onWebsiteBuilderToggle,
 }: ClientDetailContentProps) {
-  const [activeTab, setActiveTab] = useState<'notes' | 'tasks'>('notes');
+  const [activeTab, setActiveTab] = useState<'notes' | 'tasks' | 'website-info'>('notes');
   const [notes, setNotes] = useState<Note[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loadingNotes, setLoadingNotes] = useState(false);
@@ -334,6 +335,25 @@ export default function ClientDetailContent({
             >
               ✓ Tasks
             </button>
+
+            <button
+              onClick={() => setActiveTab('website-info')}
+              style={{
+                padding: '1rem 1.5rem',
+                backgroundColor: activeTab === 'website-info' ? `${primaryColor}15` : 'transparent',
+                borderLeft: activeTab === 'website-info' ? `4px solid ${primaryColor}` : '4px solid transparent',
+                border: 'none',
+                textAlign: 'left',
+                cursor: 'pointer',
+                fontFamily: bodyFontFamily,
+                fontSize: '1rem',
+                fontWeight: activeTab === 'website-info' ? '600' : '500',
+                color: activeTab === 'website-info' ? primaryColor : fontColor,
+                transition: 'all 0.2s ease',
+              }}
+            >
+              🌐 Website Info
+            </button>
           </nav>
         </div>
 
@@ -476,6 +496,19 @@ export default function ClientDetailContent({
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === 'website-info' && (
+            <div>
+              <h2 style={{ fontFamily: headerFontFamily, color: primaryColor, marginTop: 0 }}>
+                Website Information
+              </h2>
+              <TenantWebsiteInfoView
+                clientId={client.id}
+                primaryColor={primaryColor}
+                fontColor={fontColor}
+              />
             </div>
           )}
         </div>

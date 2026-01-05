@@ -97,6 +97,7 @@ export default function WebsiteBuilderForm({
     colorAccent: '#FF69B4',
     urlEnding1: '',
     urlEnding2: '',
+    allowTenantEdits: false,
     registries: [
       { registryName: '', registryUrl: '', isOptional: false },
       { registryName: '', registryUrl: '', isOptional: false },
@@ -106,22 +107,39 @@ export default function WebsiteBuilderForm({
     ]
   });
 
-  // Load existing images on mount
+  // Load existing data on mount
   useEffect(() => {
-    const loadExistingImages = async () => {
+    const loadExistingData = async () => {
       try {
         const response = await fetch(`/api/client-websites?clientId=${clientId}`);
         if (response.ok) {
           const data = await response.json();
+          if (data.website) {
+            setFormData(prev => ({
+              ...prev,
+              howWeMet: data.website.howWeMet || '',
+              engagementStory: data.website.engagementStory || '',
+              headerFont: data.website.headerFont || 'Great Vibes',
+              bodyFont: data.website.bodyFont || 'Poppins',
+              fontColor: data.website.fontColor || '#1a1a1a',
+              colorPrimary: data.website.colorPrimary || '#274E13',
+              colorSecondary: data.website.colorSecondary || '#e1e0d0',
+              colorAccent: data.website.colorAccent || '#FF69B4',
+              urlEnding1: data.website.urlEnding1 || '',
+              urlEnding2: data.website.urlEnding2 || '',
+              registries: data.website.registries || formData.registries,
+              allowTenantEdits: data.website.allowTenantEdits || false
+            }));
+          }
           if (data.images) {
             setExistingImages(data.images);
           }
         }
       } catch (error) {
-        console.log('No existing images found');
+        console.log('No existing website data found');
       }
     };
-    loadExistingImages();
+    loadExistingData();
   }, [clientId]);
 
   const handleInputChange = (field: string, value: any) => {
@@ -792,6 +810,24 @@ export default function WebsiteBuilderForm({
           ))}
         </div>
       )}
+
+      {/* Tenant Editing Permission */}
+      <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: primaryColor + '05', borderRadius: '4px', marginBottom: '1.5rem' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={formData.allowTenantEdits}
+            onChange={(e) => handleInputChange('allowTenantEdits', e.target.checked)}
+            style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+          />
+          <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>
+            Allow tenant to edit wording for flow and consistency
+          </span>
+        </label>
+        <p style={{ margin: '0.5rem 0 0 2rem', color: fontColor, opacity: 0.6, fontSize: '0.85rem' }}>
+          If checked, the tenant will be able to edit your story and registry sections
+        </p>
+      </div>
 
       {/* Save Button */}
       <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>

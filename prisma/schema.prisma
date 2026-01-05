@@ -917,6 +917,9 @@ model ClientWebsite {
   urlEnding1            String?               @map("url_ending_1")
   urlEnding2            String?               @map("url_ending_2")
   
+  // Permissions
+  allowTenantEdits      Boolean               @default(false) @map("allow_tenant_edits")
+  
   // Metadata
   createdAt             DateTime              @default(now()) @map("created_at")
   updatedAt             DateTime              @updatedAt @map("updated_at")
