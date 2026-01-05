@@ -312,39 +312,76 @@ export default function MeetingNotesDetailView({
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Meeting Date</label>
-              <input
-                type="date"
-                value={newNoteMeetingDate}
-                onChange={(e) => setNewNoteMeetingDate(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: 'none',
-                  borderRadius: '4px',
-                  fontFamily: bodyFontFamily,
-                }}
-              />
-            </div>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Tags (comma-separated)</label>
+            <input
+              type="text"
+              value={newNoteTags}
+              onChange={(e) => setNewNoteTags(e.target.value)}
+              placeholder="e.g. venue, catering, flowers"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: 'none',
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+              }}
+            />
+          </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Tags (comma-separated)</label>
-              <input
-                type="text"
-                value={newNoteTags}
-                onChange={(e) => setNewNoteTags(e.target.value)}
-                placeholder="e.g. venue, catering, flowers"
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: 'none',
-                  borderRadius: '4px',
-                  fontFamily: bodyFontFamily,
-                }}
-              />
-            </div>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Meeting Date</label>
+            <input
+              type="date"
+              value={newNoteMeetingDate}
+              onChange={(e) => setNewNoteMeetingDate(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: 'none',
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+            <button
+              type="button"
+              onClick={isRecording && recordingType === 'voice' ? stopRecording : startVoiceRecording}
+              style={{
+                flex: 1,
+                padding: '0.75rem 1rem',
+                background: isRecording && recordingType === 'voice' ? '#d32f2f' : '#ffffff',
+                color: isRecording && recordingType === 'voice' ? '#ffffff' : primaryColor,
+                border: 'none',
+                borderRadius: '4px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                fontFamily: bodyFontFamily,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {isRecording && recordingType === 'voice' ? '⏹ Stop Voice' : '🎤 Voice'}
+            </button>
+            <button
+              type="button"
+              onClick={isRecording && recordingType === 'camera' ? stopRecording : startCameraRecording}
+              style={{
+                flex: 1,
+                padding: '0.75rem 1rem',
+                background: isRecording && recordingType === 'camera' ? '#d32f2f' : '#ffffff',
+                color: isRecording && recordingType === 'camera' ? '#ffffff' : primaryColor,
+                border: 'none',
+                borderRadius: '4px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                fontFamily: bodyFontFamily,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {isRecording && recordingType === 'camera' ? '⏹ Stop Camera' : '📹 Camera'}
+            </button>
           </div>
 
           {!clientId && clients.length > 0 && (
@@ -379,56 +416,18 @@ export default function MeetingNotesDetailView({
 
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Attachments (Documents, Images)</label>
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-              <input
-                type="file"
-                multiple
-                onChange={(e) => setAttachmentFiles(Array.from(e.target.files || []))}
-                style={{
-                  minWidth: '0',
-                  padding: '0.75rem',
-                  border: 'none',
-                  borderRadius: '4px',
-                  fontFamily: bodyFontFamily,
-                }}
-              />
-              <button
-                type="button"
-                onClick={isRecording && recordingType === 'voice' ? stopRecording : startVoiceRecording}
-                style={{
-                  padding: '0.75rem 1rem',
-                  background: isRecording && recordingType === 'voice' ? '#d32f2f' : '#ffffff',
-                  color: isRecording && recordingType === 'voice' ? '#ffffff' : primaryColor,
-                  border: 'none',
-                  borderRadius: '4px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  fontFamily: bodyFontFamily,
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                }}
-              >
-                {isRecording && recordingType === 'voice' ? '⏹ Stop Voice' : '🎤 Voice'}
-              </button>
-              <button
-                type="button"
-                onClick={isRecording && recordingType === 'camera' ? stopRecording : startCameraRecording}
-                style={{
-                  padding: '0.75rem 1rem',
-                  background: isRecording && recordingType === 'camera' ? '#d32f2f' : '#ffffff',
-                  color: isRecording && recordingType === 'camera' ? '#ffffff' : primaryColor,
-                  border: 'none',
-                  borderRadius: '4px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  fontFamily: bodyFontFamily,
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                }}
-              >
-                {isRecording && recordingType === 'camera' ? '⏹ Stop Camera' : '📹 Camera'}
-              </button>
-            </div>
+            <input
+              type="file"
+              multiple
+              onChange={(e) => setAttachmentFiles(Array.from(e.target.files || []))}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: 'none',
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+              }}
+            />
             {attachmentFiles.length > 0 && (
               <div style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
                 {attachmentFiles.length} file(s) selected: {attachmentFiles.map(f => f.name).join(', ')}
