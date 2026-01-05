@@ -283,6 +283,7 @@ export default function ClientDashboardContent({
           gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '1.5rem',
           boxSizing: 'border-box',
+          justifyItems: 'center',
         }}>
           {/* Row 1 */}
           <MeetingNotesWidget

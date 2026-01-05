@@ -26,6 +26,12 @@ export default function AstrologyCard({
         textAlign: 'center',
         fontFamily: 'inherit',
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        maxWidth: '120px',
+        margin: '0 auto',
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${primaryColor}30`;

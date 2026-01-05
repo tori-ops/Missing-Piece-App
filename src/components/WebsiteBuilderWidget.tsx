@@ -30,7 +30,8 @@ export default function WebsiteBuilderWidget({
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.75rem',
-        minHeight: '140px',
+        maxWidth: '120px',
+        margin: '0 auto',
         fontFamily: bodyFontFamily,
       }}
       onMouseEnter={(e) => {

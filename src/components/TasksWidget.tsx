@@ -56,6 +56,8 @@ export default function TasksWidget({
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
+          maxWidth: '120px',
+          margin: '0 auto',
         }}
         onMouseEnter={(e) => {
           (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${primaryColor}30`;
