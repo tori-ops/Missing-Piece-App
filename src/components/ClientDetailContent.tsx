@@ -196,7 +196,10 @@ export default function ClientDetailContent({
                   </div>
                   
                   {/* Website Builder Toggle */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.9 }}>
+                      Toggle on if building client website
+                    </p>
                     <button
                       onClick={() => handleWebsiteBuilderToggle(!websiteBuilderEnabled)}
                       disabled={togglingWebsite}
@@ -350,6 +353,7 @@ export default function ClientDetailContent({
                 fontWeight: activeTab === 'website-info' ? '600' : '500',
                 color: activeTab === 'website-info' ? primaryColor : fontColor,
                 transition: 'all 0.2s ease',
+                display: websiteBuilderEnabled ? 'block' : 'none'
               }}
             >
               🌐 Website Info

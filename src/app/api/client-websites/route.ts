@@ -110,7 +110,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No client profile linked' }, { status: 400 });
     }
 
-    const { howWeMet, engagementStory, headerFont, bodyFont, fontColor, colorPrimary, colorSecondary, colorAccent, urlEnding1, urlEnding2, registries } = await request.json();
+    const { howWeMet, engagementStory, headerFont, bodyFont, fontColor, colorPrimary, colorSecondary, colorAccent, urlEnding1, urlEnding2, registries, allowTenantEdits } = await request.json();
 
     // Validate colors are hex
     const hexRegex = /^#[0-9A-Fa-f]{6}$/;
@@ -144,6 +144,7 @@ export async function POST(request: Request) {
         colorAccent,
         urlEnding1: urlEnding1 || null,
         urlEnding2: urlEnding2 || null,
+        allowTenantEdits: allowTenantEdits || false,
         registries: registries ? {
           deleteMany: {},
           create: registries
@@ -169,6 +170,7 @@ export async function POST(request: Request) {
         colorAccent,
         urlEnding1: urlEnding1 || null,
         urlEnding2: urlEnding2 || null,
+        allowTenantEdits: allowTenantEdits || false,
         registries: registries ? {
           create: registries
             .filter((reg: any) => reg.registryUrl && reg.registryUrl.trim())
