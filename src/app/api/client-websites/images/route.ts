@@ -11,8 +11,8 @@ export async function POST(request: NextRequest) {
 
     // Check request size before parsing
     const contentLength = request.headers.get('content-length');
-    if (contentLength && parseInt(contentLength) > 100 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File too large. Maximum 100MB per request.' }, { status: 413 });
+    if (contentLength && parseInt(contentLength) > 6 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File too large. Maximum 6MB per image.' }, { status: 413 });
     }
 
     let formData;
@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No clientId provided' }, { status: 400 });
     }
 
-    if (file.size > 50 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File too large. Maximum 50MB per image.' }, { status: 413 });
+    if (file.size > 6 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File too large. Maximum 6MB per image.' }, { status: 413 });
     }
 
     // Import at runtime to avoid build-time issues
