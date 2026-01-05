@@ -381,13 +381,13 @@ export default function WebsiteBuilderForm({
             key={tab}
             onClick={() => setActiveTab(tab)}
             style={{
-              padding: '0.75rem 1.5rem',
+              padding: '0.5rem 1rem',
               backgroundColor: activeTab === tab ? primaryColor : 'transparent',
               color: activeTab === tab ? '#ffffff' : primaryColor,
               border: 'none',
               cursor: 'pointer',
               fontFamily: bodyFontFamily,
-              fontSize: '0.95rem',
+              fontSize: '0.85rem',
               fontWeight: activeTab === tab ? '600' : '400',
               whiteSpace: 'nowrap',
               transition: 'all 0.2s ease'
