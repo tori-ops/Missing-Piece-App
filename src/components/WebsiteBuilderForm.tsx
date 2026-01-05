@@ -213,7 +213,7 @@ export default function WebsiteBuilderForm({
         formDataImage.append('file', file);
         formDataImage.append('clientId', clientId);
         
-        console.log(`Uploading image: ${file.name}`);
+        console.log(`Uploading image: ${file.name} (${file.size} bytes)`);
         
         const response = await fetch('/api/client-websites/images', {
           method: 'POST',
@@ -224,17 +224,31 @@ export default function WebsiteBuilderForm({
         
         if (response.ok) {
           const data = await response.json();
-          console.log('Uploaded image:', data.image);
-          uploadedImages.push(data.image);
+          console.log('Full response:', data);
+          console.log('Image object:', data.image);
+          
+          if (data.image) {
+            uploadedImages.push(data.image);
+            console.log(`Successfully added image. Total uploaded: ${uploadedImages.length}`);
+          } else {
+            console.warn('Response ok but no image object in response:', data);
+          }
         } else {
           const error = await response.json();
-          console.error('Upload error:', error);
+          console.error('Upload error response:', error);
+          setMessage({ type: 'error', text: `Upload failed: ${error.error || 'Unknown error'}` });
         }
       }
       
+      console.log(`Final uploadedImages count: ${uploadedImages.length}`);
       setExistingImages(prev => [...prev, ...uploadedImages]);
       setNewImages([]);
-      setMessage({ type: 'success', text: `${uploadedImages.length} images uploaded successfully!` });
+      
+      if (uploadedImages.length > 0) {
+        setMessage({ type: 'success', text: `${uploadedImages.length} image(s) uploaded successfully!` });
+      } else {
+        setMessage({ type: 'error', text: 'No images were uploaded. Check browser console for details.' });
+      }
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
       console.error('Upload error:', error);
@@ -419,6 +433,52 @@ export default function WebsiteBuilderForm({
             Upload up to 20 photos. You currently have {existingImages.length + newImages.length} images.
           </p>
 
+          {/* Existing Images - Show FIRST as reference */}
+          {existingImages.length > 0 && (
+            <div style={{ marginBottom: '2.5rem' }}>
+              <h3 style={{ color: primaryColor, marginBottom: '1rem' }}>Already Uploaded ({existingImages.length})</h3>
+              <p style={{ color: fontColor, opacity: 0.6, fontSize: '0.9rem', marginBottom: '1rem' }}>These are the photos you've already sent:</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+                {existingImages.map((image) => (
+                  <div key={image.id} style={{ position: 'relative' }}>
+                    <img
+                      src={image.url}
+                      alt={image.category}
+                      style={{
+                        width: '100%',
+                        height: '120px',
+                        objectFit: 'cover',
+                        borderRadius: '4px',
+                        border: `2px solid ${primaryColor}`
+                      }}
+                    />
+                    <button
+                      onClick={() => handleRemoveExistingImage(image.id)}
+                      style={{
+                        position: 'absolute',
+                        top: '-10px',
+                        right: '-10px',
+                        backgroundColor: '#FF4444',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '30px',
+                        height: '30px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '18px'
+                      }}
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Upload Button */}
           <div style={{ marginBottom: '2rem' }}>
             <input
@@ -459,13 +519,13 @@ export default function WebsiteBuilderForm({
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
               {IMAGE_CATEGORIES.map(category => (
                 <div key={category.id} style={{
-                  padding: '1rem',
+                  padding: '0.75rem',
                   backgroundColor: primaryColor + '10',
                   borderRadius: '4px',
                   border: `1px solid ${primaryColor}30`
                 }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', color: primaryColor }}>{category.label}</h4>
-                  <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.7 }}>{category.description}</p>
+                  <h4 style={{ margin: '0 0 0.25rem 0', color: primaryColor, fontSize: '0.95rem' }}>{category.label}</h4>
+                  <p style={{ margin: 0, fontSize: '0.35rem', opacity: 0.7 }}>{category.description}</p>
                 </div>
               ))}
             </div>
@@ -530,49 +590,6 @@ export default function WebsiteBuilderForm({
               >
                 {uploading ? 'Uploading...' : 'Upload Selected Photos'}
               </button>
-            </div>
-          )}
-
-          {/* Existing Images */}
-          {existingImages.length > 0 && (
-            <div>
-              <h3 style={{ color: primaryColor, marginBottom: '1rem' }}>Your Uploaded Images ({existingImages.length})</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem' }}>
-                {existingImages.map((image) => (
-                  <div key={image.id} style={{ position: 'relative' }}>
-                    <img
-                      src={image.url}
-                      alt={image.category}
-                      style={{
-                        width: '100%',
-                        height: '100px',
-                        objectFit: 'cover',
-                        borderRadius: '4px'
-                      }}
-                    />
-                    <button
-                      onClick={() => handleRemoveExistingImage(image.id)}
-                      style={{
-                        position: 'absolute',
-                        top: '-10px',
-                        right: '-10px',
-                        backgroundColor: '#FF4444',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '30px',
-                        height: '30px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
             </div>
           )}
         </div>
@@ -834,7 +851,7 @@ export default function WebsiteBuilderForm({
         </div>
       )}
 
-      {/* Tenant Editing Permission */}
+      {/* Tenant Editing Permission - ALWAYS SHOW */}
       <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: primaryColor + '05', borderRadius: '4px', marginBottom: '1.5rem' }}>
         <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
           <input
