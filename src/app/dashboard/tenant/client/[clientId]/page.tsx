@@ -39,11 +39,16 @@ export default function ClientDetailPage() {
           }
         );
 
+        console.log('Client API response:', { status: response.status, ok: response.ok });
+
         if (!response.ok) {
-          throw new Error('Failed to fetch client details');
+          const errorData = await response.json();
+          console.error('API error:', errorData);
+          throw new Error(`Failed to fetch client details: ${response.status}`);
         }
 
         const data = await response.json();
+        console.log('Client data received:', data);
         setClient(data);
 
         // Fetch branding
