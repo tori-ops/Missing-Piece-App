@@ -83,11 +83,11 @@ export async function GET(request: Request) {
       }
     });
 
-    // Get public URLs from Supabase
+    // Get public URLs from Supabase (using anon key - we only need public URLs)
     const { createClient } = require('@supabase/supabase-js');
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
     const imagesWithUrls = images.map((img: any) => ({
