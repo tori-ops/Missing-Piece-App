@@ -3,6 +3,15 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { authOptions } from '@/lib/auth';
 
+// Increase max payload size for form submissions
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '100mb',
+    },
+  },
+};
+
 export async function GET(request: Request) {
   try {
     const session = await getServerSession(authOptions);
