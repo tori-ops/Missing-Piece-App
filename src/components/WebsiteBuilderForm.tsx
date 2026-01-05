@@ -525,7 +525,7 @@ export default function WebsiteBuilderForm({
                   border: `1px solid ${primaryColor}30`
                 }}>
                   <h4 style={{ margin: '0 0 0.25rem 0', color: primaryColor, fontSize: '0.95rem' }}>{category.label}</h4>
-                  <p style={{ margin: 0, fontSize: '0.5rem', opacity: 0.7 }}>{category.description}</p>
+                  <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>{category.description}</p>
                 </div>
               ))}
             </div>
