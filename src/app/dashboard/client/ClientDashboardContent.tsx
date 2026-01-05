@@ -72,7 +72,7 @@ export default function ClientDashboardContent({
   if (activeView === 'weather') {
     return (
       <div style={{ 
-        padding: 'clamp(1rem, 5vw, 2rem)', 
+        padding: '1.5rem', 
         minHeight: '100vh', 
         background: backgroundColor, 
         fontFamily, 
@@ -99,7 +99,7 @@ export default function ClientDashboardContent({
   if (activeView === 'astrology') {
     return (
       <div style={{ 
-        padding: 'clamp(1rem, 5vw, 2rem)', 
+        padding: '1.5rem', 
         minHeight: '100vh', 
         background: backgroundColor, 
         fontFamily, 
@@ -128,7 +128,7 @@ export default function ClientDashboardContent({
   if (activeView === 'tasks') {
     return (
       <div style={{ 
-        padding: 'clamp(1rem, 5vw, 2rem)', 
+        padding: '1.5rem', 
         minHeight: '100vh', 
         background: backgroundColor, 
         fontFamily, 
@@ -152,7 +152,7 @@ export default function ClientDashboardContent({
   if (activeView === 'notes') {
     return (
       <div style={{ 
-        padding: 'clamp(1rem, 5vw, 2rem)', 
+        padding: '1.5rem', 
         minHeight: '100vh', 
         background: backgroundColor, 
         fontFamily, 
@@ -176,7 +176,7 @@ export default function ClientDashboardContent({
   if (activeView === 'website') {
     return (
       <div style={{ 
-        padding: 'clamp(1rem, 5vw, 2rem)', 
+        padding: '1.5rem', 
         minHeight: '100vh', 
         background: backgroundColor, 
         fontFamily, 
@@ -201,7 +201,7 @@ export default function ClientDashboardContent({
   return (
     <>
     <div style={{ 
-      padding: 'clamp(1rem, 5vw, 2rem)', 
+      padding: '1.5rem', 
       minHeight: '100vh', 
       background: backgroundColor, 
       fontFamily, 
@@ -210,12 +210,12 @@ export default function ClientDashboardContent({
       boxSizing: 'border-box'
     }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'clamp(1rem, 5vw, 2rem)', marginBottom: 'clamp(1.5rem, 5vw, 3rem)', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
         <div style={{ flex: 1, minWidth: '200px' }}>
-          <h1 style={{ color: primaryColor, margin: 0, fontSize: 'clamp(1.5rem, 6vw, 2.95rem)', fontFamily: headerFontFamily }}>
+          <h1 style={{ color: primaryColor, margin: 0, fontSize: '2.5rem', fontFamily: headerFontFamily }}>
             Welcome, {clientProfile.couple1FirstName}!
           </h1>
-          <p style={{ color: primaryColor, fontSize: 'clamp(0.9rem, 4vw, 1.25rem)', margin: '0.5rem 0 0 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
+          <p style={{ color: primaryColor, fontSize: '1rem', margin: '0.5rem 0 0 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
             Coordinated by {companyName}
           </p>
         </div>
@@ -225,13 +225,13 @@ export default function ClientDashboardContent({
               src={logoUrl} 
               alt={companyName} 
               style={{ 
-                height: 'clamp(60px, 15vw, 100px)', 
+                height: '80px', 
                 maxWidth: '100%',
                 backgroundColor: 'transparent'
               }} 
             />
           ) : (
-            <span style={{ fontSize: 'clamp(1.5rem, 8vw, 2.5rem)' }}>💍</span>
+            <span style={{ fontSize: '2rem' }}>💍</span>
           )}
         </div>
       </div>
@@ -241,29 +241,29 @@ export default function ClientDashboardContent({
         background: primaryColor, 
         border: `2px solid ${primaryColor}`, 
         borderRadius: '8px', 
-        padding: 'clamp(1.25rem, 4vw, 2rem)',
-        marginBottom: 'clamp(1rem, 5vw, 2rem)',
+        padding: '1.5rem',
+        marginBottom: '1.5rem',
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
         fontFamily: bodyFontFamily
       }}>
-        <h2 style={{ color: lightenColor(primaryColor, 100), marginTop: 0, marginBottom: 'clamp(0.75rem, 3vw, 1.5rem)', fontFamily: headerFontFamily, fontSize: 'clamp(1.3rem, 5vw, 2.05rem)' }}>Your Wedding Details</h2>
+        <h2 style={{ color: lightenColor(primaryColor, 100), marginTop: 0, marginBottom: '1rem', fontFamily: headerFontFamily, fontSize: '1.5rem' }}>Your Wedding Details</h2>
         {clientProfile.weddingDate && (
-          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: 'clamp(0.75rem, 3vw, 1.2rem)', fontSize: 'clamp(0.9rem, 3vw, 1rem)' }}>
+          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '0.75rem', fontSize: '0.95rem' }}>
             Your Big Day: <strong>{new Date(clientProfile.weddingDate).toLocaleDateString()}</strong>
           </p>
         )}
         {clientProfile.budgetCents && (
-          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: 'clamp(0.75rem, 3vw, 1.2rem)', fontSize: 'clamp(0.9rem, 3vw, 1rem)' }}>
+          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '0.75rem', fontSize: '0.95rem' }}>
             Budget: <strong>${(clientProfile.budgetCents / 100).toLocaleString()}</strong>
           </p>
         )}
         {clientProfile.estimatedGuestCount && (
-          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: 'clamp(0.75rem, 3vw, 1.2rem)', fontSize: 'clamp(0.9rem, 3vw, 1rem)' }}>
+          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '0.75rem', fontSize: '0.95rem' }}>
             Guest Count: <strong>{clientProfile.estimatedGuestCount}</strong>
           </p>
         )}
         {clientProfile.weddingLocation && (
-          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: 'clamp(0.75rem, 3vw, 1.2rem)', fontSize: 'clamp(0.9rem, 3vw, 1rem)' }}>
+          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '0.75rem', fontSize: '0.95rem' }}>
             Venue: <strong>{clientProfile.weddingLocation}</strong>
           </p>
         )}
@@ -277,10 +277,10 @@ export default function ClientDashboardContent({
       {/* Meeting Notes, Tasks, Weather & Astrology Cards */}
       {clientProfile.weddingDate && clientProfile.venueLat && clientProfile.venueLng && (
         <div style={{ 
-          marginBottom: 'clamp(1rem, 5vw, 2rem)',
+          marginBottom: '2rem',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(250px, 100%, 350px), 1fr))',
-          gap: 'clamp(1rem, 3vw, 1.5rem)',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '1.5rem',
         }}>
           {/* Row 1 */}
           <MeetingNotesWidget
