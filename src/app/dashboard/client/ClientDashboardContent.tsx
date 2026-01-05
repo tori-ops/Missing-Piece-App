@@ -10,6 +10,8 @@ import MeetingNotesDetailView from '@/components/MeetingNotesDetailView';
 import LogoutButton from '@/components/LogoutButton';
 import TasksWidget from '@/components/TasksWidget';
 import MeetingNotesWidget from '@/components/MeetingNotesWidget';
+import WebsiteBuilderWidget from '@/components/WebsiteBuilderWidget';
+import WebsiteBuilderForm from '@/components/WebsiteBuilderForm';
 
 import { lightenColor } from '@/lib/branding';
 import type { ClientProfile } from '@prisma/client';
@@ -42,7 +44,7 @@ export default function ClientDashboardContent({
   currentUserId,
 }: ClientDashboardContentProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [activeView, setActiveView] = useState<'dashboard' | 'weather' | 'astrology' | 'tasks' | 'notes'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'weather' | 'astrology' | 'tasks' | 'notes' | 'website'>('dashboard');
 
   useEffect(() => {
     setIsLoading(false);
@@ -171,6 +173,30 @@ export default function ClientDashboardContent({
     );
   }
 
+  if (activeView === 'website') {
+    return (
+      <div style={{ 
+        padding: '2rem', 
+        minHeight: '100vh', 
+        background: backgroundColor, 
+        fontFamily, 
+        color: fontColor,
+        maxWidth: '700px',
+        margin: '0 auto'
+      }}>
+        <WebsiteBuilderForm
+          clientId={clientProfile.id}
+          tenantId={clientProfile.tenantId}
+          primaryColor={primaryColor}
+          fontColor={fontColor}
+          bodyFontFamily={bodyFontFamily}
+          headerFontFamily={headerFontFamily}
+          onBack={() => setActiveView('dashboard')}
+        />
+      </div>
+    );
+  }
+
   // Main dashboard view
   return (
     <>
@@ -252,7 +278,7 @@ export default function ClientDashboardContent({
         <div style={{ 
           marginBottom: '2rem',
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateColumns: clientProfile.websiteBuilderEnabled ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
           gap: '1.5rem',
         }}>
           {/* Row 1 */}
@@ -275,7 +301,14 @@ export default function ClientDashboardContent({
             userRole="CLIENT"
             onClick={() => setActiveView('tasks')}
           />
-          {/* Empty col for Row 1 */}
+          {clientProfile.websiteBuilderEnabled ? (
+            <WebsiteBuilderWidget
+              primaryColor={primaryColor}
+              bodyFontFamily={bodyFontFamily}
+              textColor={lightenColor(primaryColor, 120)}
+              onClick={() => setActiveView('website')}
+            />
+          ) : null}
           
           {/* Row 2 */}
           <WeatherCard
