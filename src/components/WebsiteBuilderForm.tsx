@@ -364,7 +364,6 @@ export default function WebsiteBuilderForm({
         }}
       >
         <ArrowLeft size={20} />
-        Back to Dashboard
       </button>
 
       <h1 style={{ color: primaryColor, fontFamily: headerFontFamily, fontSize: '2rem', marginBottom: '0.5rem' }}>
@@ -488,21 +487,6 @@ export default function WebsiteBuilderForm({
               />
             </div>
           </div>
-          
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', marginTop: '1.5rem' }}>
-            <input
-              type="checkbox"
-              checked={formData.letPlannerDecideHero}
-              onChange={(e) => handleInputChange('letPlannerDecideHero', e.target.checked)}
-              style={{ cursor: 'pointer', width: '18px', height: '18px' }}
-            />
-            <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>
-              Let my planner decide
-            </span>
-          </label>
-          <p style={{ margin: '0.5rem 0 0 2rem', color: fontColor, opacity: 0.6, fontSize: '0.85rem' }}>
-            If checked, your planner will write your story for you
-          </p>
         </div>
       )}
 
