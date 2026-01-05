@@ -210,7 +210,7 @@ export default function ClientDashboardContent({
       boxSizing: 'border-box'
     }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1.5rem', marginBottom: '2rem', flexWrap: 'wrap', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ flex: 1, minWidth: '200px' }}>
           <h1 style={{ color: primaryColor, margin: 0, fontSize: '2.5rem', fontFamily: headerFontFamily }}>
             Welcome, {clientProfile.couple1FirstName}!
@@ -244,7 +244,9 @@ export default function ClientDashboardContent({
         padding: '1.5rem',
         marginBottom: '1.5rem',
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-        fontFamily: bodyFontFamily
+        fontFamily: bodyFontFamily,
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <h2 style={{ color: lightenColor(primaryColor, 100), marginTop: 0, marginBottom: '1rem', fontFamily: headerFontFamily, fontSize: '1.5rem' }}>Your Wedding Details</h2>
         {clientProfile.weddingDate && (
@@ -284,6 +286,7 @@ export default function ClientDashboardContent({
           gap: '1.5rem',
           boxSizing: 'border-box',
           justifyItems: 'center',
+          clearfix: 'both',
         }}>
           {/* Row 1 */}
           <MeetingNotesWidget
