@@ -146,12 +146,14 @@ export async function POST(request: Request) {
         urlEnding2: urlEnding2 || null,
         registries: registries ? {
           deleteMany: {},
-          create: registries.map((reg: any, idx: number) => ({
-            registryName: reg.registryName,
-            registryUrl: reg.registryUrl,
-            isOptional: reg.isOptional,
-            registryOrder: idx
-          }))
+          create: registries
+            .filter((reg: any) => reg.registryUrl && reg.registryUrl.trim())
+            .map((reg: any, idx: number) => ({
+              registryName: reg.registryName || '',
+              registryUrl: reg.registryUrl,
+              isOptional: reg.isOptional,
+              registryOrder: idx
+            }))
         } : undefined
       },
       create: {
@@ -168,12 +170,14 @@ export async function POST(request: Request) {
         urlEnding1: urlEnding1 || null,
         urlEnding2: urlEnding2 || null,
         registries: registries ? {
-          create: registries.map((reg: any, idx: number) => ({
-            registryName: reg.registryName,
-            registryUrl: reg.registryUrl,
-            isOptional: reg.isOptional,
-            registryOrder: idx
-          }))
+          create: registries
+            .filter((reg: any) => reg.registryUrl && reg.registryUrl.trim())
+            .map((reg: any, idx: number) => ({
+              registryName: reg.registryName || '',
+              registryUrl: reg.registryUrl,
+              isOptional: reg.isOptional,
+              registryOrder: idx
+            }))
         } : undefined
       },
       include: {
