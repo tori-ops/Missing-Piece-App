@@ -77,7 +77,7 @@ export default function WebsiteBuilderForm({
   headerFontFamily,
   onBack,
 }: WebsiteBuilderFormProps) {
-  const [activeTab, setActiveTab] = useState<'story' | 'images' | 'design' | 'url' | 'registries'>('story');
+  const [activeTab, setActiveTab] = useState<'story' | 'images' | 'design' | 'hero' | 'url' | 'registries'>('story');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -97,6 +97,8 @@ export default function WebsiteBuilderForm({
     colorAccent: '#FF69B4',
     urlEnding1: '',
     urlEnding2: '',
+    heroImageDescription: '',
+    letPlannerDecideHero: false,
     allowTenantEdits: false,
     registries: [
       { registryName: '', registryUrl: '', isOptional: false },
@@ -394,7 +396,7 @@ export default function WebsiteBuilderForm({
         borderBottom: `2px solid ${primaryColor}15`,
         overflowX: 'auto'
       }}>
-        {(['story', 'images', 'design', 'url', 'registries'] as const).map(tab => (
+        {(['story', 'images', 'design', 'hero', 'url', 'registries'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -782,6 +784,93 @@ export default function WebsiteBuilderForm({
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {activeTab === 'hero' && (
+        <div>
+          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem' }}>Hero Images</h2>
+          <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
+            Select or upload header and background images for your website, or let your planner choose for you.
+          </p>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <h3 style={{ color: primaryColor, fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>Header Image</h3>
+            <div style={{
+              padding: '2rem',
+              border: `2px dashed ${primaryColor}40`,
+              borderRadius: '8px',
+              textAlign: 'center',
+              backgroundColor: primaryColor + '05',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              marginBottom: '1rem'
+            }}>
+              <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1rem' }}>
+                Click to upload or drag and drop a header image
+              </p>
+              <p style={{ fontSize: '0.85rem', color: fontColor, opacity: 0.6 }}>
+                Recommended: 1200x400px or wider
+              </p>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <h3 style={{ color: primaryColor, fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>Background Image</h3>
+            <div style={{
+              padding: '2rem',
+              border: `2px dashed ${primaryColor}40`,
+              borderRadius: '8px',
+              textAlign: 'center',
+              backgroundColor: primaryColor + '05',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              marginBottom: '1rem'
+            }}>
+              <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1rem' }}>
+                Click to upload or drag and drop a background image
+              </p>
+              <p style={{ fontSize: '0.85rem', color: fontColor, opacity: 0.6 }}>
+                Recommended: 1920x1080px
+              </p>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+              Describe Your Ideal Images (Optional)
+            </label>
+            <textarea
+              value={formData.heroImageDescription}
+              onChange={(e) => handleInputChange('heroImageDescription', e.target.value)}
+              placeholder="e.g., outdoor garden setting, romantic sunset, minimalist aesthetic, etc."
+              style={{
+                width: '100%',
+                minHeight: '100px',
+                padding: '0.75rem',
+                border: `1px solid ${primaryColor}40`,
+                borderRadius: '4px',
+                fontFamily: bodyFontFamily,
+                fontSize: '0.95rem',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={formData.letPlannerDecideHero}
+              onChange={(e) => handleInputChange('letPlannerDecideHero', e.target.checked)}
+              style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+            />
+            <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>
+              Let my planner decide
+            </span>
+          </label>
+          <p style={{ margin: '0.5rem 0 0 2rem', color: fontColor, opacity: 0.6, fontSize: '0.85rem' }}>
+            If checked, your planner will select the best images for your site
+          </p>
         </div>
       )}
 
