@@ -453,6 +453,9 @@ model ClientProfile {
   // Status (INVITED = temp password sent, hasn't logged in; ACTIVE = logged in; GRADUATED = wedding happened)
   status                ClientInviteStatus    @default(INVITED)
   
+  // Website Builder
+  websiteBuilderEnabled Boolean               @default(false) @map("website_builder_enabled")
+  
   // Audit
   createdByUserId       String?
   createdAt             DateTime              @default(now())

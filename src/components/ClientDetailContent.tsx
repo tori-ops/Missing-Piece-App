@@ -15,6 +15,7 @@ interface ClientDetailContentProps {
     city?: string;
     state?: string;
     notes?: string;
+    websiteBuilderEnabled?: boolean;
   };
   branding?: {
     primaryColor?: string;
@@ -23,6 +24,7 @@ interface ClientDetailContentProps {
     headerFontFamily?: string;
   };
   onBack: () => void;
+  onWebsiteBuilderToggle?: (enabled: boolean) => void;
 }
 
 interface Note {
@@ -49,12 +51,15 @@ export default function ClientDetailContent({
   client,
   branding = {},
   onBack,
+  onWebsiteBuilderToggle,
 }: ClientDetailContentProps) {
   const [activeTab, setActiveTab] = useState<'notes' | 'tasks'>('notes');
   const [notes, setNotes] = useState<Note[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loadingNotes, setLoadingNotes] = useState(false);
   const [loadingTasks, setLoadingTasks] = useState(false);
+  const [websiteBuilderEnabled, setWebsiteBuilderEnabled] = useState(client.websiteBuilderEnabled || false);
+  const [togglingWebsite, setTogglingWebsite] = useState(false);
 
   const primaryColor = branding?.primaryColor || '#274E13';
   const fontColor = branding?.fontColor || '#000000';
@@ -123,6 +128,31 @@ export default function ClientDetailContent({
     }
   }, [client.id, activeTab]);
 
+  const handleWebsiteBuilderToggle = async (enabled: boolean) => {
+    setTogglingWebsite(true);
+    try {
+      const response = await fetch(
+        `/api/tenant/clients/${client.id}/website-builder`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled })
+        }
+      );
+
+      if (response.ok) {
+        setWebsiteBuilderEnabled(enabled);
+        onWebsiteBuilderToggle?.(enabled);
+      } else {
+        console.error('Failed to toggle website builder');
+      }
+    } catch (error) {
+      console.error('Error toggling website builder:', error);
+    } finally {
+      setTogglingWebsite(false);
+    }
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#f5f5f5' }}>
       {/* Header with client info */}
@@ -154,13 +184,48 @@ export default function ClientDetailContent({
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             <div>
               {client.couple2FirstName && client.couple2LastName && (
-                <div style={{ marginBottom: '1rem' }}>
-                  <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.9 }}>
-                    Partner
-                  </p>
-                  <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: '500' }}>
-                    {client.couple2FirstName} {client.couple2LastName}
-                  </p>
+                <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div>
+                    <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', opacity: 0.9 }}>
+                      Partner
+                    </p>
+                    <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: '500' }}>
+                      {client.couple2FirstName} {client.couple2LastName}
+                    </p>
+                  </div>
+                  
+                  {/* Website Builder Toggle */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <button
+                      onClick={() => handleWebsiteBuilderToggle(!websiteBuilderEnabled)}
+                      disabled={togglingWebsite}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '50px',
+                        height: '28px',
+                        borderRadius: '14px',
+                        border: 'none',
+                        backgroundColor: websiteBuilderEnabled ? '#4CAF50' : '#ccc',
+                        cursor: togglingWebsite ? 'not-allowed' : 'pointer',
+                        transition: 'background-color 0.3s ease',
+                        opacity: togglingWebsite ? 0.6 : 1,
+                      }}
+                      title={websiteBuilderEnabled ? 'Disable Website Builder' : 'Enable Website Builder'}
+                    >
+                      <div
+                        style={{
+                          width: '24px',
+                          height: '24px',
+                          borderRadius: '50%',
+                          backgroundColor: '#ffffff',
+                          transform: websiteBuilderEnabled ? 'translateX(12px)' : 'translateX(-12px)',
+                          transition: 'transform 0.3s ease',
+                        }}
+                      />
+                    </button>
+                  </div>
                 </div>
               )}
 

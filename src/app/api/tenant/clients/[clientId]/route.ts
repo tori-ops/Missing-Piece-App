@@ -50,6 +50,7 @@ export async function GET(
         venuePhone: true,
         venueWebsite: true,
         estimatedGuestCount: true,
+        websiteBuilderEnabled: true,
       }
     });
 
