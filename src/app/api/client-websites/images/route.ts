@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
           clientWebsiteId: clientId,
           storageBucket: 'client-website-images',
           storagePath: fileName,
-          category: 'uploaded',
+          category: 'couple_photo', // Valid category from constraint
           fileName: file.name,
           fileSize: file.size,
           mimeType: file.type
