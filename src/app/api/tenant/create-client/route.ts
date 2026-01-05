@@ -188,6 +188,14 @@ export async function POST(req: NextRequest) {
         }
       });
 
+      // Create TenantAccess record - tenant automatically gets access to their own created client
+      await tx.tenantAccess.create({
+        data: {
+          clientProfileId: clientProfile.id,
+          tenantId: user.tenantId!
+        }
+      });
+
       // Log audit
       await tx.auditLog.create({
         data: {
