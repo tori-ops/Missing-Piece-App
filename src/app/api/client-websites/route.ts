@@ -50,17 +50,24 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     } else if (user.role === 'TENANT') {
       // Tenant can only view clients they have explicit access to
+      if (!user.tenantId) {
+        console.error('Tenant user missing tenantId:', user.email);
+        return NextResponse.json({ error: 'Tenant user misconfigured (missing tenantId)' }, { status: 403 });
+      }
+
       const hasAccess = await prisma.tenantAccess.findUnique({
         where: {
           clientProfileId_tenantId: {
             clientProfileId: clientId,
-            tenantId: user.tenantId!
+            tenantId: user.tenantId
           }
         }
       });
       
+      console.log('Tenant access check:', { clientId, tenantId: user.tenantId, hasAccess: !!hasAccess });
+      
       if (!hasAccess) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+        return NextResponse.json({ error: 'No access to this client' }, { status: 403 });
       }
     }
 
