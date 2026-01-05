@@ -77,7 +77,7 @@ export default function WebsiteBuilderForm({
   headerFontFamily,
   onBack,
 }: WebsiteBuilderFormProps) {
-  const [activeTab, setActiveTab] = useState<'story' | 'images' | 'design' | 'hero' | 'url' | 'registries'>('story');
+  const [activeTab, setActiveTab] = useState<'story' | 'images' | 'design' | 'hero' | 'url' | 'registries' | 'misc'>('story');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -100,6 +100,7 @@ export default function WebsiteBuilderForm({
     heroImageDescription: '',
     letPlannerDecideHero: false,
     allowTenantEdits: false,
+    miscNotes: '',
     registries: [
       { registryName: '', registryUrl: '', isOptional: false },
       { registryName: '', registryUrl: '', isOptional: false },
@@ -346,26 +347,6 @@ export default function WebsiteBuilderForm({
 
   return (
     <div style={{ fontFamily: bodyFontFamily, color: fontColor }}>
-      {/* Header */}
-      <button
-        onClick={onBack}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          backgroundColor: 'transparent',
-          border: 'none',
-          color: primaryColor,
-          cursor: 'pointer',
-          marginBottom: '2rem',
-          fontSize: '0.95rem',
-          fontFamily: bodyFontFamily,
-          fontWeight: '600'
-        }}
-      >
-        <ArrowLeft size={20} />
-      </button>
-
       <h1 style={{ color: primaryColor, fontFamily: headerFontFamily, fontSize: '2rem', marginBottom: '0.5rem' }}>
         Web Design Suite
       </h1>
@@ -395,7 +376,7 @@ export default function WebsiteBuilderForm({
         borderBottom: `2px solid ${primaryColor}15`,
         overflowX: 'auto'
       }}>
-        {(['story', 'images', 'design', 'hero', 'url', 'registries'] as const).map(tab => (
+        {(['story', 'images', 'design', 'hero', 'url', 'registries', 'misc'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -984,6 +965,54 @@ export default function WebsiteBuilderForm({
               </label>
             </div>
           ))}
+        </div>
+      )}
+
+      {activeTab === 'misc' && (
+        <div>
+          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '2rem' }}>Miscellaneous</h2>
+          
+          {/* Lined Paper Journal Container */}
+          <div style={{
+            position: 'relative',
+            backgroundColor: '#faf8f3',
+            borderRadius: '8px',
+            padding: '2rem',
+            marginBottom: '2rem',
+            backgroundImage: `repeating-linear-gradient(
+              to bottom,
+              transparent 0px,
+              transparent 32px,
+              ${primaryColor}15 32px,
+              ${primaryColor}15 33px
+            )`,
+            backgroundPosition: '0 0',
+            backgroundSize: '100% 33px'
+          }}>
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <textarea
+                value={formData.miscNotes}
+                onChange={(e) => handleInputChange('miscNotes', e.target.value)}
+                placeholder="Odds and ends, special requests, or anything else you'd like us to know"
+                style={{
+                  width: '100%',
+                  minHeight: '200px',
+                  padding: '0 0 0 0',
+                  border: 'none',
+                  borderRadius: '0px',
+                  fontFamily: bodyFontFamily,
+                  fontSize: '1rem',
+                  backgroundColor: 'transparent',
+                  boxSizing: 'border-box',
+                  lineHeight: '33px',
+                  color: formData.miscNotes ? fontColor : primaryColor + '60',
+                  outline: 'none',
+                  resize: 'vertical',
+                  fontStyle: formData.miscNotes ? 'normal' : 'italic'
+                }}
+              />
+            </div>
+          </div>
         </div>
       )}
 
