@@ -906,14 +906,16 @@ model ClientWebsite {
   engagementStory       String?               @map("engagement_story")
   
   // Design Preferences
-  fontFamily            String?               @map("font_family")
+  headerFont            String?               @map("header_font")
+  bodyFont              String?               @map("body_font")
+  fontColor             String?               @db.VarChar(7) @map("font_color")
   colorPrimary          String?               @db.VarChar(7) @map("color_primary")
   colorSecondary        String?               @db.VarChar(7) @map("color_secondary")
   colorAccent           String?               @db.VarChar(7) @map("color_accent")
   
-  // Website URL Suggestions (client suggests 2 options for tenant to choose from)
-  suggestedUrlSlug1     String?               @map("suggested_url_slug_1")
-  suggestedUrlSlug2     String?               @map("suggested_url_slug_2")
+  // Website URL Endings (client suggests 2 options for tenant to choose from)
+  urlEnding1            String?               @map("url_ending_1")
+  urlEnding2            String?               @map("url_ending_2")
   
   // Metadata
   createdAt             DateTime              @default(now()) @map("created_at")
@@ -934,12 +936,11 @@ model WebsiteImage {
   id                    String                @id @default(cuid())
   clientWebsiteId       String                @map("client_website_id")
   
-  // Image category: 'ring_photo', 'background_image', 'couple_photo'
+  // Image category: 'rings', 'together', 'proposal', 'portraits', 'detail', 'other'
   category              String                @db.VarChar(50)
   
   // Storage reference (path in Supabase storage)
-  storageBucket         String                @map("storage_bucket")
-  storagePath           String                @map("storage_path")
+  imagePath             String                @map("image_path")
   
   // Metadata
   fileName              String?               @map("file_name")

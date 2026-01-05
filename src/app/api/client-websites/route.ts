@@ -43,20 +43,45 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
+    // Get website images
+    const images = await prisma.websiteImage.findMany({
+      where: { clientWebsiteId: clientId },
+      select: {
+        id: true,
+        imagePath: true,
+        category: true,
+        createdAt: true
+      }
+    });
+
+    // Get public URLs from Supabase
+    const { createClient } = require('@supabase/supabase-js');
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!
+    );
+
+    const imagesWithUrls = images.map((img: any) => ({
+      id: img.id,
+      category: img.category,
+      url: supabase.storage.from('client-website-images').getPublicUrl(img.imagePath).data.publicUrl,
+      createdAt: img.createdAt
+    }));
+
     // Get website data
     const website = await prisma.clientWebsite.findUnique({
       where: { clientProfileId: clientId },
       include: {
-        images: {
-          orderBy: { displayOrder: 'asc' }
-        },
         registries: {
           orderBy: { registryOrder: 'asc' }
         }
       }
     });
 
-    return NextResponse.json(website || null, { status: 200 });
+    return NextResponse.json({ 
+      website: website || null,
+      images: imagesWithUrls
+    }, { status: 200 });
 
   } catch (error) {
     console.error('Error fetching website data:', error);
@@ -85,13 +110,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No client profile linked' }, { status: 400 });
     }
 
-    const { howWeMet, engagementStory, fontFamily, colorPrimary, colorSecondary, colorAccent, suggestedUrlSlug1, suggestedUrlSlug2 } = await request.json();
+    const { howWeMet, engagementStory, headerFont, bodyFont, fontColor, colorPrimary, colorSecondary, colorAccent, urlEnding1, urlEnding2, registries } = await request.json();
 
     // Validate colors are hex
     const hexRegex = /^#[0-9A-Fa-f]{6}$/;
-    if (!hexRegex.test(colorPrimary) || !hexRegex.test(colorSecondary) || !hexRegex.test(colorAccent)) {
-      return NextResponse.json({ error: 'Invalid color format. Use hex colors.' }, { status: 400 });
-    }
+    [colorPrimary, colorSecondary, colorAccent, fontColor].forEach(color => {
+      if (color && !hexRegex.test(color)) {
+        throw new Error('Invalid color format. Use hex colors.');
+      }
+    });
 
     // Create or update website
     const website = await prisma.clientWebsite.upsert({
@@ -99,27 +126,47 @@ export async function POST(request: Request) {
       update: {
         howWeMet: howWeMet || null,
         engagementStory: engagementStory || null,
-        fontFamily: fontFamily || null,
+        headerFont: headerFont || null,
+        bodyFont: bodyFont || null,
+        fontColor: fontColor || null,
         colorPrimary,
         colorSecondary,
         colorAccent,
-        suggestedUrlSlug1: suggestedUrlSlug1 || null,
-        suggestedUrlSlug2: suggestedUrlSlug2 || null,
+        urlEnding1: urlEnding1 || null,
+        urlEnding2: urlEnding2 || null,
+        registries: registries ? {
+          deleteMany: {},
+          create: registries.map((reg: any, idx: number) => ({
+            registryName: reg.registryName,
+            registryUrl: reg.registryUrl,
+            isOptional: reg.isOptional,
+            registryOrder: idx
+          }))
+        } : undefined
       },
       create: {
         clientProfileId: clientId,
-        tenantId: user.clientId ? (await prisma.clientProfile.findUnique({ where: { id: clientId }, select: { tenantId: true } }))?.tenantId! : '',
+        tenantId: (await prisma.clientProfile.findUnique({ where: { id: clientId }, select: { tenantId: true } }))?.tenantId!,
         howWeMet: howWeMet || null,
         engagementStory: engagementStory || null,
-        fontFamily: fontFamily || null,
+        headerFont: headerFont || null,
+        bodyFont: bodyFont || null,
+        fontColor: fontColor || null,
         colorPrimary,
         colorSecondary,
         colorAccent,
-        suggestedUrlSlug1: suggestedUrlSlug1 || null,
-        suggestedUrlSlug2: suggestedUrlSlug2 || null,
+        urlEnding1: urlEnding1 || null,
+        urlEnding2: urlEnding2 || null,
+        registries: registries ? {
+          create: registries.map((reg: any, idx: number) => ({
+            registryName: reg.registryName,
+            registryUrl: reg.registryUrl,
+            isOptional: reg.isOptional,
+            registryOrder: idx
+          }))
+        } : undefined
       },
       include: {
-        images: true,
         registries: true
       }
     });
