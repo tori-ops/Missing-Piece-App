@@ -123,8 +123,15 @@ export async function GET(request: Request) {
     }, { status: 200 });
 
   } catch (error) {
-    console.error('Error fetching website data:', error);
-    return NextResponse.json({ error: 'Failed to fetch website data' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Error fetching website data:', {
+      message: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined,
+      clientId: new URL(request.url).searchParams.get('clientId')
+    });
+    return NextResponse.json({ 
+      error: `Failed to fetch website data: ${errorMessage}` 
+    }, { status: 500 });
   }
 }
 
