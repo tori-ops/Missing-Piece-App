@@ -71,9 +71,13 @@ export async function GET(request: Request) {
       }
     }
 
-    // Get website images
+    // Get website images - find by clientProfileId, not clientWebsiteId
     const images = await prisma.websiteImage.findMany({
-      where: { clientWebsiteId: clientId },
+      where: {
+        clientWebsite: {
+          clientProfileId: clientId
+        }
+      },
       select: {
         id: true,
         storageBucket: true,
