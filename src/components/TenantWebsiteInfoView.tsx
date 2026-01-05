@@ -139,8 +139,30 @@ export default function TenantWebsiteInfoView({
     );
   }
 
+  // Format the last updated date
+  const lastUpdatedDate = new Date(website.updatedAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
   return (
     <div style={{ fontFamily: bodyFontFamily, color: fontColor }}>
+      {/* Last Updated Info */}
+      <div style={{
+        padding: '0.75rem 1rem',
+        marginBottom: '1.5rem',
+        backgroundColor: primaryColor + '10',
+        borderLeft: `4px solid ${primaryColor}`,
+        borderRadius: '4px',
+        fontSize: '0.85rem',
+        color: fontColor
+      }}>
+        Last updated by client on {lastUpdatedDate}
+      </div>
+
       {/* Message Display */}
       {message && (
         <div

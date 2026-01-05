@@ -107,9 +107,23 @@ export default function WebsiteBuilderForm({
     ]
   });
 
-  // Load existing data on mount
+  // Load existing data on mount and restore from localStorage
   useEffect(() => {
     const loadExistingData = async () => {
+      // First check localStorage for unsaved draft data
+      const draftKey = `website-form-draft-${clientId}`;
+      const savedDraft = localStorage.getItem(draftKey);
+      if (savedDraft) {
+        try {
+          const draft = JSON.parse(savedDraft);
+          setFormData(draft);
+          return; // Use draft instead of fetching from server
+        } catch (error) {
+          console.log('Could not parse saved draft');
+        }
+      }
+
+      // If no draft, load from server
       try {
         const response = await fetch(`/api/client-websites?clientId=${clientId}`);
         if (response.ok) {
@@ -145,6 +159,12 @@ export default function WebsiteBuilderForm({
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
       ...prev,
+      [field]: value
+    }));
+    // Save draft to localStorage on every change
+    const draftKey = `website-form-draft-${clientId}`;
+    localStorage.setItem(draftKey, JSON.stringify({
+      ...formData,
       [field]: value
     }));
   };
@@ -253,6 +273,9 @@ export default function WebsiteBuilderForm({
       console.log('Response status:', response.status, 'Data:', data);
 
       if (response.ok) {
+        // Clear localStorage draft on successful save
+        const draftKey = `website-form-draft-${clientId}`;
+        localStorage.removeItem(draftKey);
         setMessage({ type: 'success', text: 'Website information saved successfully!' });
         setTimeout(() => setMessage(null), 3000);
       } else {

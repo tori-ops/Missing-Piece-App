@@ -9,7 +9,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const formData = await request.formData();
+    let formData;
+    try {
+      formData = await request.formData();
+    } catch (parseError) {
+      console.error('Form data parse error:', parseError);
+      return NextResponse.json({ error: 'Invalid request format' }, { status: 400 });
+    }
+
     const file = formData.get('file') as File;
     const clientId = formData.get('clientId') as string;
 
@@ -41,7 +48,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Supabase upload error:', error);
-      return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+      return NextResponse.json({ error: error.message || 'Upload failed' }, { status: 500 });
     }
 
     // Get public URL
@@ -50,35 +57,38 @@ export async function POST(request: NextRequest) {
       .getPublicUrl(fileName);
 
     // Save to database
-    const prisma = require('@prisma/client').PrismaClient;
-    const db = new prisma();
+    const { PrismaClient } = await import('@prisma/client');
+    const db = new PrismaClient();
 
-    const imageRecord = await db.websiteImage.create({
-      data: {
-        clientWebsiteId: clientId,
-        storageBucket: 'client-website-images',
-        storagePath: fileName,
-        category: 'uploaded',
-        fileName: file.name,
-        fileSize: file.size,
-        mimeType: file.type
-      }
-    });
+    try {
+      const imageRecord = await db.websiteImage.create({
+        data: {
+          clientWebsiteId: clientId,
+          storageBucket: 'client-website-images',
+          storagePath: fileName,
+          category: 'uploaded',
+          fileName: file.name,
+          fileSize: file.size,
+          mimeType: file.type
+        }
+      });
 
-    await db.$disconnect();
-
-    return NextResponse.json({
-      success: true,
-      image: {
-        id: imageRecord.id,
-        url: publicUrl,
-        category: 'uploaded',
-        createdAt: new Date().toISOString()
-      }
-    });
+      return NextResponse.json({
+        success: true,
+        image: {
+          id: imageRecord.id,
+          url: publicUrl,
+          category: 'uploaded',
+          createdAt: imageRecord.createdAt.toISOString()
+        }
+      });
+    } finally {
+      await db.$disconnect();
+    }
   } catch (error) {
     console.error('Image upload error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 

@@ -188,7 +188,7 @@ export async function POST(request: Request) {
       }
     });
 
-    return NextResponse.json(website, { status: 201 });
+    return NextResponse.json({ website, images: [] }, { status: 201 });
 
   } catch (error) {
     console.error('Error creating website data:', error);
