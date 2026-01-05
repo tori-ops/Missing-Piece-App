@@ -898,8 +898,8 @@ model NotificationPreference {
 
 model ClientWebsite {
   id                    String                @id @default(cuid())
-  clientProfileId       String                @unique
-  tenantId              String
+  clientProfileId       String                @unique @map("client_profile_id")
+  tenantId              String                @map("tenant_id")
   
   // Story Content
   howWeMet              String?               @map("how_we_met")
