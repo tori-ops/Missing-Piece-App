@@ -26,7 +26,7 @@ export default function ClientDetailPage() {
       try {
         setLoading(true);
         const response = await fetch(
-          `/api/tenant/clients?clientId=${clientId}`,
+          `/api/tenant/clients/${clientId}`,
           {
             headers: {
               'Content-Type': 'application/json',
