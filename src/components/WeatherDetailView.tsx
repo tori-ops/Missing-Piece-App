@@ -29,39 +29,18 @@ export default function WeatherDetailView({
 }: WeatherDetailViewProps) {
   return (
     <div style={{ animation: 'slideIn 0.3s ease' }}>
-      {/* Back Button */}
-      <button
-        onClick={onBack}
-        style={{
-          background: 'none',
-          border: 'none',
-          color: primaryColor,
-          cursor: 'pointer',
-          fontSize: '1rem',
-          marginBottom: '1.5rem',
-          padding: 0,
-          fontFamily: bodyFontFamily,
-          fontWeight: '600',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-        }}
-      >
-        ← Back to Dashboard
-      </button>
-
       {/* Title */}
-      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0, fontSize: '2.25em' }}>
+      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0, fontSize: '2.5rem' }}>
         Weather & Golden Hour
       </h2>
 
       {/* Venue Info */}
       {venueName && (
-        <div style={{ marginBottom: '2rem' }}>
+        <div style={{ marginBottom: '1.5rem' }}>
           <p style={{ color: fontColor, fontSize: '0.9rem', margin: '0 0 0.25rem 0', opacity: 0.7 }}>
             Venue:
           </p>
-          <p style={{ color: fontColor, fontSize: '1.2rem', fontWeight: '600', margin: '0 0 0.25rem 0' }}>
+          <p style={{ color: fontColor, fontSize: '1rem', fontWeight: '600', margin: '0 0 0.25rem 0' }}>
             {venueName}
           </p>
           {venueAddress && (
@@ -73,7 +52,7 @@ export default function WeatherDetailView({
       )}
 
       {/* Wedding Date */}
-      <p style={{ color: fontColor, marginBottom: '2rem', fontSize: '0.95rem', opacity: 0.8 }}>
+      <p style={{ color: fontColor, marginBottom: '1.5rem', fontSize: '1rem', opacity: 0.8 }}>
         Wedding Date: <strong>{new Date(weddingDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong>
       </p>
 

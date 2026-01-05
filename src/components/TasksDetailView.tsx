@@ -178,29 +178,8 @@ export default function TasksDetailView({
 
   return (
     <div style={{ animation: 'slideIn 0.3s ease' }}>
-      {/* Back Button */}
-      <button
-        onClick={onBack}
-        style={{
-          background: 'none',
-          border: 'none',
-          color: primaryColor,
-          cursor: 'pointer',
-          fontSize: '1rem',
-          marginBottom: '1.5rem',
-          padding: 0,
-          fontFamily: bodyFontFamily,
-          fontWeight: '600',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-        }}
-      >
-        ← Back to Dashboard
-      </button>
-
       {/* Title */}
-      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0, fontSize: '2.25em' }}>
+      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0, fontSize: '2.5rem' }}>
         Tasks
       </h2>
 
@@ -224,10 +203,10 @@ export default function TasksDetailView({
         color: '#ffffff',
         padding: '1.5rem',
         borderRadius: '8px',
-        marginBottom: '2rem',
+        marginBottom: '1.5rem',
         fontFamily: bodyFontFamily,
       }}>
-        <h3 style={{ marginTop: 0, fontFamily: headerFontFamily, fontSize: '1.9em' }}>Create New Task</h3>
+        <h3 style={{ marginTop: 0, fontFamily: headerFontFamily, fontSize: '1.75rem' }}>Create New Task</h3>
         <form onSubmit={handleCreateTask}>
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Title *</label>
