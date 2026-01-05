@@ -277,10 +277,12 @@ export default function ClientDashboardContent({
       {/* Meeting Notes, Tasks, Weather & Astrology Cards */}
       {clientProfile.weddingDate && clientProfile.venueLat && clientProfile.venueLng && (
         <div style={{ 
+          width: '100%',
           marginBottom: '2rem',
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '1.5rem',
+          boxSizing: 'border-box',
         }}>
           {/* Row 1 */}
           <MeetingNotesWidget
