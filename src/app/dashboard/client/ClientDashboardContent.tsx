@@ -241,7 +241,7 @@ export default function ClientDashboardContent({
         }} />
       )}
       <div style={{ 
-        padding: '1.5rem', 
+        padding: '1.5rem 1.5rem 6rem 1.5rem', 
         minHeight: '100vh', 
         fontFamily, 
         color: fontColor,

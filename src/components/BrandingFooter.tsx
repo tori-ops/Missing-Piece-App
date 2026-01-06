@@ -8,14 +8,18 @@ export default function BrandingFooter({ primaryColor = '#274E13' }: BrandingFoo
   return (
     <div
       style={{
+        position: 'fixed',
+        bottom: 0,
+        right: 0,
+        left: 0,
+        zIndex: 100,
         textAlign: 'right',
-        padding: '2rem 2rem 1rem 1rem',
+        padding: '1rem 2rem',
         fontSize: '0.75rem',
         color: primaryColor,
         fontStyle: 'italic',
         opacity: 0.7,
         borderTop: `1px solid ${primaryColor}20`,
-        marginTop: '2rem',
       }}
     >
       Engineered by The Missing Piece Planning
