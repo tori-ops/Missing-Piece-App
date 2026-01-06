@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, CheckCircle } from 'lucide-react';
 import DemographicsTab from '@/components/branding/DemographicsTab';
-import ColorBrandingTab from '@/components/branding/ColorBrandingTab';
-import LogoTab from '@/components/branding/LogoTab';
-import BackgroundTab from '@/components/branding/BackgroundTab';
+import ColorsFontsTab from '@/components/branding/ColorsFontsTab';
+import ImagesTab from '@/components/branding/ImagesTab';
 import ExtrasTab from '@/components/branding/ExtrasTab';
 
 interface BrandingData {
@@ -34,7 +33,7 @@ interface BrandingData {
   brandingOverlayUrl: string | null;
 }
 
-type TabType = 'demographics' | 'colors' | 'logo' | 'background' | 'extras';
+type TabType = 'demographics' | 'colors' | 'images' | 'extras';
 
 export default function TenantBrandingSuitePage() {
   const params = useParams();
@@ -211,10 +210,10 @@ export default function TenantBrandingSuitePage() {
         }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(5, 1fr)',
+            gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '0.75rem',
           }}>
-            {(['demographics', 'colors', 'logo', 'background', 'extras'] as const).map(tab => (
+            {(['demographics', 'colors', 'images', 'extras'] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -243,7 +242,7 @@ export default function TenantBrandingSuitePage() {
                   }
                 }}
               >
-                {tab === 'colors' ? 'Color Branding' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === 'colors' ? 'Colors & Fonts' : tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
             ))}
           </div>
@@ -265,22 +264,14 @@ export default function TenantBrandingSuitePage() {
           )}
 
           {activeTab === 'colors' && (
-            <ColorBrandingTab
+            <ColorsFontsTab
               data={brandingData}
               onChange={setBrandingData}
             />
           )}
 
-          {activeTab === 'logo' && (
-            <LogoTab
-              data={brandingData}
-              onChange={setBrandingData}
-              tenantId={tenantId}
-            />
-          )}
-
-          {activeTab === 'background' && (
-            <BackgroundTab
+          {activeTab === 'images' && (
+            <ImagesTab
               data={brandingData}
               onChange={setBrandingData}
               tenantId={tenantId}
