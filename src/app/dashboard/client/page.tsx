@@ -82,38 +82,38 @@ export default async function ClientDashboard() {
       tenant = null;
     }
 
-  // Use tenant branding with fallbacks
-  const primaryColor = tenant?.brandingPrimaryColor || '#274E13';
-  const secondaryColor = tenant?.brandingSecondaryColor || '#e1e0d0';
-  const secondaryColorOpacity = tenant?.brandingSecondaryColorOpacity || 55;
-  const backgroundColor = secondaryColor; // Main container uses secondary color
-  const fontColor = tenant?.brandingFontColor || '#1B5E20';
-  const companyName = tenant?.brandingCompanyName || tenant?.businessName || 'The Missing Piece';
-  const fontFamily = tenant?.brandingFontFamily || "'Poppins', sans-serif";
-  const headerFontFamily = tenant?.brandingHeaderFontFamily || "'Playfair Display', serif";
-  const bodyFontFamily = tenant?.brandingBodyFontFamily || "'Poppins', sans-serif";
-  const logoUrl = tenant?.brandingLogoUrl;
-  const overlayUrl = tenant?.brandingOverlayUrl;
+    // Use tenant branding with fallbacks
+    const primaryColor = tenant?.brandingPrimaryColor || '#274E13';
+    const secondaryColor = tenant?.brandingSecondaryColor || '#e1e0d0';
+    const secondaryColorOpacity = tenant?.brandingSecondaryColorOpacity || 55;
+    const backgroundColor = secondaryColor; // Main container uses secondary color
+    const fontColor = tenant?.brandingFontColor || '#1B5E20';
+    const companyName = tenant?.brandingCompanyName || tenant?.businessName || 'The Missing Piece';
+    const fontFamily = tenant?.brandingFontFamily || "'Poppins', sans-serif";
+    const headerFontFamily = tenant?.brandingHeaderFontFamily || "'Playfair Display', serif";
+    const bodyFontFamily = tenant?.brandingBodyFontFamily || "'Poppins', sans-serif";
+    const logoUrl = tenant?.brandingLogoUrl;
+    const overlayUrl = tenant?.brandingOverlayUrl;
 
-  return (
-    <>
-      <ClientDashboardContent 
-        clientProfile={clientProfile}
-        companyName={companyName}
-        primaryColor={primaryColor}
-        backgroundColor={backgroundColor}
-        secondaryColorOpacity={secondaryColorOpacity}
-        fontColor={fontColor}
-        fontFamily={fontFamily}
-        headerFontFamily={headerFontFamily}
-        bodyFontFamily={bodyFontFamily}
-        logoUrl={logoUrl}
-        overlayUrl={overlayUrl}
-        currentUserId={user.id}
-      />
-      <BrandingFooter primaryColor={primaryColor} />
-    </>
-  );
+    return (
+      <>
+        <ClientDashboardContent 
+          clientProfile={clientProfile}
+          companyName={companyName}
+          primaryColor={primaryColor}
+          backgroundColor={backgroundColor}
+          secondaryColorOpacity={secondaryColorOpacity}
+          fontColor={fontColor}
+          fontFamily={fontFamily}
+          headerFontFamily={headerFontFamily}
+          bodyFontFamily={bodyFontFamily}
+          logoUrl={logoUrl}
+          overlayUrl={overlayUrl}
+          currentUserId={user.id}
+        />
+        <BrandingFooter primaryColor={primaryColor} />
+      </>
+    );
   } catch (error) {
     console.error('ClientDashboard error:', error);
     return (
