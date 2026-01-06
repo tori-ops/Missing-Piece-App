@@ -368,6 +368,10 @@ export default function ClientDashboardContent({
           </p>
         )}
         <p style={{ color: fontColor, marginTop: '1rem', marginBottom: '0', fontSize: '0.9rem', paddingTop: '1rem' }}>
+          Coordinated by <strong style={{ fontWeight: '600' }}>{companyName}</strong>
+        </p>
+      </div>
+
       {/* Your Tools Header */}
       <h2 style={{ 
         color: primaryColor, 
