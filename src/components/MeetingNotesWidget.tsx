@@ -5,6 +5,7 @@ import MeetingNotesList from './MeetingNotesList';
 
 interface MeetingNotesWidgetProps {
   primaryColor: string;
+  secondaryColor?: string;
   bodyFontFamily: string;
   textColor?: string;
   clientId?: string;
@@ -16,6 +17,7 @@ interface MeetingNotesWidgetProps {
 
 export default function MeetingNotesWidget({
   primaryColor,
+  secondaryColor = '#e1e0d0',
   bodyFontFamily,
   textColor = '#FFFFFF',
   clientId,
@@ -43,7 +45,7 @@ export default function MeetingNotesWidget({
         onClick={handleClick}
         style={{
           background: primaryColor,
-          border: `2px solid ${primaryColor}`,
+          border: `2px solid ${secondaryColor}`,
           borderRadius: '6px',
           padding: '1.5rem',
           cursor: 'pointer',

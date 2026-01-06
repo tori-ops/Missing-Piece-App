@@ -2,6 +2,7 @@
 
 interface WeatherCardProps {
   primaryColor?: string;
+  secondaryColor?: string;
   bodyFontFamily?: string;
   textColor?: string;
   onClick: () => void;
@@ -9,6 +10,7 @@ interface WeatherCardProps {
 
 export default function WeatherCard({
   primaryColor = '#274E13',
+  secondaryColor = '#e1e0d0',
   bodyFontFamily = "'Poppins', sans-serif",
   textColor = '#FFFFFF',
   onClick,
@@ -18,7 +20,7 @@ export default function WeatherCard({
       onClick={onClick}
       style={{
         background: primaryColor,
-        border: `2px solid ${primaryColor}`,
+        border: `2px solid ${secondaryColor}`,
         borderRadius: '6px',
         padding: '1rem',
         cursor: 'pointer',

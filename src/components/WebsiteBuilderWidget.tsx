@@ -19,7 +19,7 @@ export default function WebsiteBuilderWidget({
       onClick={onClick}
       style={{
         background: primaryColor,
-        border: `2px solid ${primaryColor}`,
+        border: `2px solid ${secondaryColor}`,
         borderRadius: '6px',
         padding: '1.5rem',
         cursor: 'pointer',
