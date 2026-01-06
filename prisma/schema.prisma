@@ -378,6 +378,7 @@ model Tenant {
   brandingLogoUrl           String?                                     // Logo image URL
   brandingLogoBackgroundRemoval Boolean?      @default(false)          // Remove white background from logos
   brandingOverlayUrl        String?                                     // Overlay/background image URL
+  brandingFloraUrl          String?                                     // Custom flora/decoration image for welcome card
   brandingCompanyName       String?                                     // Override for company display name
   brandingTagline           String?                                     // Company tagline
   brandingFaviconUrl        String?                                     // Favicon URL

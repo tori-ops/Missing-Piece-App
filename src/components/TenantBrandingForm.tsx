@@ -16,6 +16,7 @@ interface TenantBrandingFormProps {
     brandingLogoUrl?: string | null;
     brandingLogoBackgroundRemoval?: boolean | null;
     brandingOverlayUrl?: string | null;
+    brandingFloraUrl?: string | null;
     brandingCompanyName?: string | null;
     brandingTagline?: string | null;
     brandingFaviconUrl?: string | null;
@@ -47,6 +48,8 @@ export default function TenantBrandingForm({
     logoBackgroundRemoval: initialBranding.brandingLogoBackgroundRemoval || false,
     overlayFile: null as File | null,
     overlayUrl: initialBranding.brandingOverlayUrl || '',
+    floraFile: null as File | null,
+    floraUrl: initialBranding.brandingFloraUrl || '',
     companyName: initialBranding.brandingCompanyName || initialBranding.businessName || '',
     tagline: initialBranding.brandingTagline || '',
     faviconFile: null as File | null,
@@ -65,9 +68,10 @@ export default function TenantBrandingForm({
   const [logoPreview, setLogoPreview] = useState<string | null>(initialBranding.brandingLogoUrl || null);
   const [overlayPreview, setOverlayPreview] = useState<string | null>(initialBranding.brandingOverlayUrl || null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(initialBranding.brandingFaviconUrl || null);
+  const [floraPreview, setFloraPreview] = useState<string | null>(initialBranding.brandingFloraUrl || null);
   const [uploading, setUploading] = useState(false);
 
-  const uploadFile = async (file: File, fileType: 'logo' | 'favicon' | 'overlay') => {
+  const uploadFile = async (file: File, fileType: 'logo' | 'favicon' | 'overlay' | 'flora') => {
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('file', file);
@@ -91,12 +95,12 @@ export default function TenantBrandingForm({
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: 'logo' | 'favicon' | 'overlay') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: 'logo' | 'favicon' | 'overlay' | 'flora') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const fieldName = fileType === 'logo' ? 'logoFile' : fileType === 'favicon' ? 'faviconFile' : 'overlayFile';
-    const previewSetter = fileType === 'logo' ? setLogoPreview : fileType === 'favicon' ? setFaviconPreview : setOverlayPreview;
+    const fieldName = fileType === 'logo' ? 'logoFile' : fileType === 'favicon' ? 'faviconFile' : fileType === 'overlay' ? 'overlayFile' : 'floraFile';
+    const previewSetter = fileType === 'logo' ? setLogoPreview : fileType === 'favicon' ? setFaviconPreview : fileType === 'overlay' ? setOverlayPreview : setFloraPreview;
 
     setFormData((prev) => ({ ...prev, [fieldName]: file }));
 
@@ -162,6 +166,12 @@ export default function TenantBrandingForm({
         overlayUrl = await uploadFile(formData.overlayFile, 'overlay');
       }
 
+      // Upload flora if a new file was selected
+      let floraUrl = formData.floraUrl;
+      if (formData.floraFile) {
+        floraUrl = await uploadFile(formData.floraFile, 'flora');
+      }
+
       setUploading(false);
 
       const response = await fetch('/api/admin/update-tenant-branding', {
@@ -177,6 +187,7 @@ export default function TenantBrandingForm({
           logoUrl,
           logoBackgroundRemoval: formData.logoBackgroundRemoval,
           overlayUrl,
+          floraUrl,
           companyName: formData.companyName,
           tagline: formData.tagline,
           faviconUrl,
@@ -204,6 +215,7 @@ export default function TenantBrandingForm({
         logoUrl: logoUrl || null,
         logoBackgroundRemoval: formData.logoBackgroundRemoval,
         overlayUrl: overlayUrl || null,
+        floraUrl: floraUrl || null,
         companyName: formData.companyName,
         tagline: formData.tagline || null,
         headerFontFamily: formData.headerFontFamily,

@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const fileType = formData.get('fileType') as string; // 'logo', 'favicon', or 'overlay'
+    const fileType = formData.get('fileType') as string; // 'logo', 'favicon', 'overlay', or 'flora'
     const tenantId = formData.get('tenantId') as string;
 
     if (!file) {
@@ -36,9 +36,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!fileType || !['logo', 'favicon', 'overlay'].includes(fileType)) {
+    if (!fileType || !['logo', 'favicon', 'overlay', 'flora'].includes(fileType)) {
       return NextResponse.json(
-        { error: 'Invalid file type. Must be logo, favicon, or overlay' },
+        { error: 'Invalid file type. Must be logo, favicon, overlay, or flora' },
         { status: 400 }
       );
     }

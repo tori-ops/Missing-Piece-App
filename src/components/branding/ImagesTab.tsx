@@ -8,6 +8,7 @@ interface BrandingData {
   brandingFaviconUrl: string | null;
   brandingOverlayUrl: string | null;
   brandingOverlayOpacity: number | null;
+  brandingFloraUrl: string | null;
   [key: string]: any;
 }
 
@@ -24,6 +25,7 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
   const [logoPreview, setLogoPreview] = useState<string | null>(data.brandingLogoUrl);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(data.brandingFaviconUrl);
   const [overlayPreview, setOverlayPreview] = useState<string | null>(data.brandingOverlayUrl);
+  const [floraPreview, setFloraPreview] = useState<string | null>(data.brandingFloraUrl);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
@@ -55,7 +57,7 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
     }
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, fileType: 'logo' | 'favicon' | 'overlay') => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, fileType: 'logo' | 'favicon' | 'overlay' | 'flora') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -71,8 +73,10 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
           setLogoPreview(preview);
         } else if (fileType === 'favicon') {
           setFaviconPreview(preview);
-        } else {
+        } else if (fileType === 'overlay') {
           setOverlayPreview(preview);
+        } else {
+          setFloraPreview(preview);
         }
       };
       reader.readAsDataURL(file);
@@ -83,8 +87,10 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
         handleChange('brandingLogoUrl', url);
       } else if (fileType === 'favicon') {
         handleChange('brandingFaviconUrl', url);
-      } else {
+      } else if (fileType === 'overlay') {
         handleChange('brandingOverlayUrl', url);
+      } else {
+        handleChange('brandingFloraUrl', url);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
@@ -92,8 +98,10 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
         setLogoPreview(data.brandingLogoUrl);
       } else if (fileType === 'favicon') {
         setFaviconPreview(data.brandingFaviconUrl);
-      } else {
+      } else if (fileType === 'overlay') {
         setOverlayPreview(data.brandingOverlayUrl);
+      } else {
+        setFloraPreview(data.brandingFloraUrl);
       }
     } finally {
       setUploading(false);
@@ -311,6 +319,134 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
             <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: SUPERADMIN_FONT }}>
               {data.brandingOverlayOpacity || 60}% opacity
             </p>
+
+            {/* Remove Button */}
+            <button
+              onClick={() => {
+                handleChange('brandingOverlayUrl', null);
+                setOverlayPreview(null);
+              }}
+              style={{
+                marginTop: '1rem',
+                padding: '0.75rem 1.5rem',
+                background: '#ffebee',
+                color: '#c33',
+                border: `2px solid #c33`,
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '0.95rem',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#ffcdd2';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#ffebee';
+              }}
+            >
+              🗑️ Remove Background Image
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Flora Upload */}
+      <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: `1px solid #eee` }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
+          Welcome Card Flora/Decoration (PNG - Optional)
+        </label>
+        <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.85rem', color: '#999' }}>
+          🌿 Decorative image for welcome card (like botanical elements, florals, etc.). Appears in corners of the welcome card. Best as transparent PNG.
+        </p>
+        <input
+          type="file"
+          accept=".png,.jpg,.jpeg"
+          onChange={(e) => handleFileChange(e, 'flora')}
+          disabled={uploading}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            border: `2px solid ${SUPERADMIN_PRIMARY}`,
+            borderRadius: '4px',
+            fontSize: '1rem',
+            boxSizing: 'border-box',
+            color: SUPERADMIN_FONT,
+            cursor: uploading ? 'not-allowed' : 'pointer',
+            opacity: uploading ? 0.6 : 1,
+          }}
+        />
+
+        {(floraPreview || data.brandingFloraUrl) && (
+          <div style={{ marginTop: '1.5rem' }}>
+            <p style={{ fontSize: '0.85rem', color: '#999', marginBottom: '0.75rem', fontWeight: '600' }}>Preview (showing both corner placements):</p>
+            <div style={{
+              position: 'relative',
+              width: '100%',
+              height: '300px',
+              backgroundColor: '#f9f9f9',
+              border: `1px solid #ddd`,
+              borderRadius: '8px',
+              overflow: 'hidden',
+            }}>
+              {/* Top-left flora - full size */}
+              <img
+                src={floraPreview || data.brandingFloraUrl || ''}
+                alt="Flora top-left"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '200px',
+                  height: '200px',
+                  objectFit: 'contain',
+                  pointerEvents: 'none',
+                }}
+              />
+              {/* Bottom-right flora - 70% size rotated */}
+              <img
+                src={floraPreview || data.brandingFloraUrl || ''}
+                alt="Flora bottom-right"
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                  width: '140px',
+                  height: '140px',
+                  objectFit: 'contain',
+                  transform: 'rotate(180deg)',
+                  pointerEvents: 'none',
+                }}
+              />
+            </div>
+
+            {/* Remove Button */}
+            <button
+              onClick={() => {
+                handleChange('brandingFloraUrl', null);
+                setFloraPreview(null);
+              }}
+              style={{
+                marginTop: '1rem',
+                padding: '0.75rem 1.5rem',
+                background: '#ffebee',
+                color: '#c33',
+                border: `2px solid #c33`,
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '0.95rem',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#ffcdd2';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#ffebee';
+              }}
+            >
+              🗑️ Remove Flora
+            </button>
           </div>
         )}
       </div>

@@ -30,6 +30,7 @@ interface ClientDashboardContentProps {
   bodyFontFamily: string;
   logoUrl?: string | null;
   overlayUrl?: string | null;
+  floraUrl?: string | null;
   currentUserId: string;
   greeting: string;
 }
@@ -48,6 +49,7 @@ export default function ClientDashboardContent({
   bodyFontFamily,
   logoUrl,
   overlayUrl,
+  floraUrl,
   currentUserId,
   greeting,
 }: ClientDashboardContentProps) {
@@ -269,36 +271,40 @@ export default function ClientDashboardContent({
         justifyContent: 'flex-start',
         padding: '2rem'
       }}>
-        {/* Top Left Flora */}
-        <img 
-          src="/uploads/corner-flora.png" 
-          alt="floral decoration" 
-          style={{ 
-            position: 'absolute',
-            top: '-38px',
-            left: '-46px',
-            width: '200px',
-            height: 'auto',
-            zIndex: 1,
-            pointerEvents: 'none'
-          }} 
-        />
+        {/* Top Left Flora - Only show if floraUrl is provided */}
+        {floraUrl && (
+          <img 
+            src={floraUrl} 
+            alt="floral decoration" 
+            style={{ 
+              position: 'absolute',
+              top: '-38px',
+              left: '-46px',
+              width: '200px',
+              height: 'auto',
+              zIndex: 1,
+              pointerEvents: 'none'
+            }} 
+          />
+        )}
 
-        {/* Bottom Right Flora - 70% size, rotated 180 degrees */}
-        <img 
-          src="/uploads/corner-flora.png" 
-          alt="floral decoration" 
-          style={{ 
-            position: 'absolute',
-            bottom: '-22px',
-            right: '-28px',
-            width: '140px',
-            height: 'auto',
-            zIndex: 1,
-            pointerEvents: 'none',
-            transform: 'rotate(180deg)'
-          }} 
-        />
+        {/* Bottom Right Flora - 70% size, rotated 180 degrees - Only show if floraUrl is provided */}
+        {floraUrl && (
+          <img 
+            src={floraUrl} 
+            alt="floral decoration" 
+            style={{ 
+              position: 'absolute',
+              bottom: '-22px',
+              right: '-28px',
+              width: '140px',
+              height: 'auto',
+              zIndex: 1,
+              pointerEvents: 'none',
+              transform: 'rotate(180deg)'
+            }} 
+          />
+        )}
         
         {/* Welcome Message Overlay */}
         <h1 style={{ 

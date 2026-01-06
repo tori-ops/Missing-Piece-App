@@ -33,6 +33,7 @@ interface BrandingData {
   brandingLogoBackgroundRemoval: boolean | null;
   brandingFaviconUrl: string | null;
   brandingOverlayUrl: string | null;
+  brandingFloraUrl: string | null;
 }
 
 type TabType = 'demographics' | 'colors' | 'images' | 'extras';
@@ -74,6 +75,7 @@ export default function TenantBrandingSuitePage() {
     brandingLogoBackgroundRemoval: false,
     brandingFaviconUrl: '',
     brandingOverlayUrl: '',
+    brandingFloraUrl: '',
   });
 
   // Fetch tenant branding data on mount
@@ -118,6 +120,7 @@ export default function TenantBrandingSuitePage() {
             logoUrl: brandingData.brandingLogoUrl,
             logoBackgroundRemoval: brandingData.brandingLogoBackgroundRemoval,
             overlayUrl: brandingData.brandingOverlayUrl,
+            floraUrl: brandingData.brandingFloraUrl,
             companyName: brandingData.brandingCompanyName,
             tagline: brandingData.brandingTagline,
             faviconUrl: brandingData.brandingFaviconUrl,
