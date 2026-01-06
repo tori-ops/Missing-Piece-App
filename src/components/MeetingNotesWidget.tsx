@@ -56,7 +56,7 @@ export default function MeetingNotesWidget({
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
-          maxWidth: '120px',
+          maxWidth: '150px',
           margin: '0 auto',
         }}
         onMouseEnter={(e) => {

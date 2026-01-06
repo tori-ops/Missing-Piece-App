@@ -32,7 +32,7 @@ export default function WebsiteBuilderWidget({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        maxWidth: '120px',
+        maxWidth: '150px',
         margin: '0 auto',
         color: 'inherit',
       }}

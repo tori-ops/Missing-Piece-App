@@ -30,7 +30,7 @@ export default function WeatherCard({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        maxWidth: '120px',
+        maxWidth: '150px',
         margin: '0 auto',
       }}
       onMouseEnter={(e) => {
