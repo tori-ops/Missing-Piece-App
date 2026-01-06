@@ -87,7 +87,7 @@ export default async function ClientDashboard() {
     const primaryColor = tenant?.brandingPrimaryColor || '#274E13';
     const secondaryColor = tenant?.brandingSecondaryColor || '#e1e0d0';
     const secondaryColorOpacity = tenant?.brandingSecondaryColorOpacity || 55;
-    const backgroundColor = secondaryColor; // Main container uses secondary color
+    const backgroundColor = primaryColor; // Main container uses primary color
     const fontColor = tenant?.brandingFontColor || '#1B5E20';
     const companyName = tenant?.brandingCompanyName || tenant?.businessName || 'The Missing Piece';
     const fontFamily = tenant?.brandingFontFamily || "'Poppins', sans-serif";

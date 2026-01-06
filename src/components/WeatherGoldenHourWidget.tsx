@@ -147,12 +147,12 @@ export default function WeatherGoldenHourWidget({
       <div
         style={{
           background: `linear-gradient(135deg, ${primaryColor}20 0%, ${primaryColor}10 100%)`,
-          border: `1px solid ${primaryColor}30`,
+          border: `2px solid ${primaryColor}CC`,
           borderRadius: '12px',
           padding: '1.5rem',
         }}
       >
-        <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.9em' }}>
+        <h4 style={{ color: secondaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.9em' }}>
           Historical Weather Summary
         </h4>
         <p style={{ color: fontColor, fontSize: '0.9rem', margin: '0 0 1rem 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
