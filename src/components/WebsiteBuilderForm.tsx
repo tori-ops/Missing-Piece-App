@@ -408,16 +408,29 @@ export default function WebsiteBuilderForm({
               key={tab}
               onClick={() => setActiveTab(tab)}
               style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: activeTab === tab ? primaryColor : 'transparent',
+                padding: '0.75rem 1.5rem',
+                background: activeTab === tab ? primaryColor : `${primaryColor}20`,
                 color: activeTab === tab ? '#ffffff' : primaryColor,
-                border: 'none',
+                border: `1px solid ${primaryColor}`,
+                borderRadius: '6px',
                 cursor: 'pointer',
                 fontFamily: bodyFontFamily,
-                fontSize: '0.85rem',
-                fontWeight: activeTab === tab ? '600' : '400',
+                fontSize: '0.95rem',
+                fontWeight: '600',
                 whiteSpace: 'nowrap',
                 transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                if (activeTab !== tab) {
+                  (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
+                  (e.currentTarget as HTMLButtonElement).style.color = 'white';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeTab !== tab) {
+                  (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
+                  (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+                }
               }}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -436,16 +449,29 @@ export default function WebsiteBuilderForm({
               key={tab}
               onClick={() => setActiveTab(tab)}
               style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: activeTab === tab ? primaryColor : 'transparent',
+                padding: '0.75rem 1.5rem',
+                background: activeTab === tab ? primaryColor : `${primaryColor}20`,
                 color: activeTab === tab ? '#ffffff' : primaryColor,
-                border: 'none',
+                border: `1px solid ${primaryColor}`,
+                borderRadius: '6px',
                 cursor: 'pointer',
                 fontFamily: bodyFontFamily,
-                fontSize: '0.85rem',
-                fontWeight: activeTab === tab ? '600' : '400',
+                fontSize: '0.95rem',
+                fontWeight: '600',
                 whiteSpace: 'nowrap',
                 transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                if (activeTab !== tab) {
+                  (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
+                  (e.currentTarget as HTMLButtonElement).style.color = 'white';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeTab !== tab) {
+                  (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
+                  (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+                }
               }}
             >
               {tab === 'misc' ? 'Miscellaneous' : tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -595,18 +621,29 @@ export default function WebsiteBuilderForm({
               disabled={uploading || existingImages.length + newImages.length >= 20}
               style={{
                 padding: '0.75rem 1.5rem',
-                backgroundColor: primaryColor,
+                background: uploading || existingImages.length + newImages.length >= 20 ? `${primaryColor}40` : primaryColor,
                 color: '#ffffff',
-                border: 'none',
-                borderRadius: '4px',
+                border: `1px solid ${primaryColor}`,
+                borderRadius: '6px',
                 cursor: uploading || existingImages.length + newImages.length >= 20 ? 'not-allowed' : 'pointer',
                 fontFamily: bodyFontFamily,
-                fontSize: '1rem',
+                fontSize: '0.95rem',
                 fontWeight: '600',
                 opacity: uploading || existingImages.length + newImages.length >= 20 ? 0.6 : 1,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                if (!(uploading || existingImages.length + newImages.length >= 20)) {
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${primaryColor}30`;
+                  (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
+                (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
               }}
             >
               <Upload size={20} />
@@ -678,15 +715,26 @@ export default function WebsiteBuilderForm({
                 disabled={uploading}
                 style={{
                   padding: '0.75rem 1.5rem',
-                  backgroundColor: primaryColor,
+                  background: uploading ? `${primaryColor}40` : primaryColor,
                   color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '4px',
+                  border: `1px solid ${primaryColor}`,
+                  borderRadius: '6px',
                   cursor: uploading ? 'not-allowed' : 'pointer',
                   fontFamily: bodyFontFamily,
-                  fontSize: '1rem',
+                  fontSize: '0.95rem',
                   fontWeight: '600',
-                  opacity: uploading ? 0.6 : 1
+                  opacity: uploading ? 0.6 : 1,
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!uploading) {
+                    (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${primaryColor}30`;
+                    (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
+                  (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
                 }}
               >
                 {uploading ? 'Uploading...' : 'Upload Selected Photos'}
