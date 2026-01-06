@@ -252,7 +252,7 @@ export default function ClientDashboardContent({
         position: 'relative',
         zIndex: 1
       }}>
-      {/* Welcome Card with SVG Background */}
+      {/* Welcome Card with Floral Decorations */}
       <div style={{ 
         position: 'relative',
         width: '100%',
@@ -260,19 +260,43 @@ export default function ClientDashboardContent({
         borderRadius: '6px',
         overflow: 'hidden',
         minHeight: '200px',
-        backgroundImage: `url('/uploads/client-welcome-card.svg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        background: primaryColor,
+        border: `2px solid ${primaryColor}`,
+        boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
         padding: '2rem'
       }}>
-        {/* SVG Rectangle Color Override - inject primary color into SVG */}
-        <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }} viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid slice">
-          <rect width="1200" height="300" fill={primaryColor} opacity="0.85" />
-        </svg>
+        {/* Top Left Flora */}
+        <img 
+          src="/uploads/corner-flora.png" 
+          alt="floral decoration" 
+          style={{ 
+            position: 'absolute',
+            top: '0px',
+            left: '0px',
+            width: '200px',
+            height: 'auto',
+            zIndex: 1,
+            pointerEvents: 'none'
+          }} 
+        />
+
+        {/* Bottom Right Flora - 70% size */}
+        <img 
+          src="/uploads/corner-flora.png" 
+          alt="floral decoration" 
+          style={{ 
+            position: 'absolute',
+            bottom: '0px',
+            right: '0px',
+            width: '140px',
+            height: 'auto',
+            zIndex: 1,
+            pointerEvents: 'none'
+          }} 
+        />
         
         {/* Welcome Message Overlay */}
         <h1 style={{ 
@@ -281,7 +305,7 @@ export default function ClientDashboardContent({
           fontSize: '2.5rem', 
           fontFamily: headerFontFamily,
           position: 'relative',
-          zIndex: 1
+          zIndex: 2
         }}>
           {greeting}
         </h1>
