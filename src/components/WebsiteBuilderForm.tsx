@@ -361,24 +361,8 @@ export default function WebsiteBuilderForm({
         borderBottom: `2px solid ${primaryColor}20`,
         gap: '2rem',
       }}>
-        {/* Logo */}
-        {logoUrl && (
-          <img
-            src={logoUrl}
-            alt="Logo"
-            style={{
-              height: '2.5rem',
-              width: 'auto',
-              maxWidth: '150px',
-            }}
-          />
-        )}
-
-        {/* Title & Tagline */}
-        <div style={{ 
-          flex: logoUrl || companyName ? 1 : 'auto',
-          textAlign: 'center',
-        }}>
+        {/* Left: Title & Tagline */}
+        <div style={{ flex: 1, minWidth: 0 }}>
           <h1 style={{ 
             color: primaryColor,
             fontFamily: headerFontFamily,
@@ -398,16 +382,36 @@ export default function WebsiteBuilderForm({
           </p>
         </div>
 
-        {/* Company Name */}
-        {companyName && (
-          <div style={{
-            textAlign: 'right',
-            fontSize: '0.95rem',
-            color: fontColor,
-          }}>
-            <div style={{ fontWeight: '600' }}>{companyName}</div>
-          </div>
-        )}
+        {/* Right: Logo & Business Name */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: '0.5rem',
+          flexShrink: 0,
+        }}>
+          {logoUrl && (
+            <img
+              src={logoUrl}
+              alt="Logo"
+              style={{
+                height: '2.5rem',
+                width: 'auto',
+                maxWidth: '150px',
+              }}
+            />
+          )}
+          {companyName && (
+            <div style={{
+              fontSize: '0.95rem',
+              color: fontColor,
+              fontWeight: '600',
+              textAlign: 'right',
+            }}>
+              {companyName}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Message Display */}

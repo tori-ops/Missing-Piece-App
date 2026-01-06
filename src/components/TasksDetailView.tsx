@@ -186,46 +186,56 @@ export default function TasksDetailView({
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginBottom: '2rem',
         paddingBottom: '1rem',
         borderBottom: `2px solid ${primaryColor}20`,
+        gap: '2rem',
       }}>
-        {/* Logo */}
-        {logoUrl && (
-          <img
-            src={logoUrl}
-            alt="Logo"
-            style={{
-              height: '2.5rem',
-              width: 'auto',
-              maxWidth: '150px',
-            }}
-          />
-        )}
-
-        {/* Title */}
-        <h2 style={{ 
-          flex: logoUrl || companyName ? 1 : 'auto',
-          textAlign: 'center',
-          color: primaryColor,
-          fontFamily: headerFontFamily,
-          marginTop: 0,
-          fontSize: '2.5rem',
-        }}>
-          Tasks
-        </h2>
-
-        {/* Company Name */}
-        {companyName && (
-          <div style={{
-            textAlign: 'right',
-            fontSize: '0.95rem',
-            color: fontColor,
+        {/* Left: Title & Tagline */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h2 style={{ 
+            color: primaryColor,
+            fontFamily: headerFontFamily,
+            marginTop: 0,
+            marginBottom: '0.5rem',
+            fontSize: '2.5rem',
           }}>
-            <div style={{ fontWeight: '600' }}>{companyName}</div>
-          </div>
-        )}
+            Tasks
+          </h2>
+          {/* Tagline placeholder - to be added */}
+        </div>
+
+        {/* Right: Logo & Business Name */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: '0.5rem',
+          flexShrink: 0,
+        }}>
+          {logoUrl && (
+            <img
+              src={logoUrl}
+              alt="Logo"
+              style={{
+                height: '2.5rem',
+                width: 'auto',
+                maxWidth: '150px',
+              }}
+            />
+          )}
+          {companyName && (
+            <div style={{
+              fontSize: '0.95rem',
+              color: fontColor,
+              fontWeight: '600',
+              textAlign: 'right',
+            }}>
+              {companyName}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Success Message */}
