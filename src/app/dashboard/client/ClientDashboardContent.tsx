@@ -327,12 +327,14 @@ export default function ClientDashboardContent({
         border: `2px solid ${primaryColor}`, 
         borderRadius: '3px',
         padding: '1rem',
-        marginBottom: '0.5rem',
+        marginBottom: '2.5rem',
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
         fontFamily: bodyFontFamily,
-        width: '100%',
+        width: '85%',
+        maxWidth: '600px',
         boxSizing: 'border-box',
-        position: 'relative'
+        position: 'relative',
+        margin: '0 auto 2.5rem auto',
       }}>
         {/* Wedding Bands - positioned on the right, vertically centered */}
         <img 
@@ -384,7 +386,7 @@ export default function ClientDashboardContent({
       <div style={{ 
         position: 'relative',
         width: 'fit-content',
-        marginBottom: '2rem',
+        marginBottom: '1rem',
         borderRadius: '6px',
         minHeight: 'auto',
         background: primaryColor,
@@ -393,7 +395,7 @@ export default function ClientDashboardContent({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1.5rem 2rem',
+        padding: '1rem 1.5rem',
         marginLeft: 'auto',
         marginRight: 'auto'
       }}>
