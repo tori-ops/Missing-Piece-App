@@ -436,9 +436,9 @@ export default function TasksDetailView({
         </h3>
 
         {loading ? (
-          <p style={{ color: fontColor, fontFamily: bodyFontFamily }}>Loading tasks...</p>
+          <p style={{ color: primaryColor, fontFamily: bodyFontFamily }}>Loading tasks...</p>
         ) : filteredTasks.length === 0 ? (
-          <p style={{ color: fontColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No tasks found.</p>
+          <p style={{ color: primaryColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No tasks found.</p>
         ) : (
           <div style={{ display: 'grid', gap: '1rem' }}>
             {filteredTasks.map((task) => (

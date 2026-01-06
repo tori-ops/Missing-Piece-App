@@ -544,9 +544,9 @@ export default function MeetingNotesDetailView({
         </h3>
 
         {loading ? (
-          <p style={{ color: fontColor, fontFamily: bodyFontFamily }}>Loading notes...</p>
+          <p style={{ color: primaryColor, fontFamily: bodyFontFamily }}>Loading notes...</p>
         ) : sortedNotes.length === 0 ? (
-          <p style={{ color: fontColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No meeting notes found.</p>
+          <p style={{ color: primaryColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No meeting notes found.</p>
         ) : (
           <div style={{ display: 'grid', gap: '1.5rem' }}>
             {sortedNotes.map((note) => (
