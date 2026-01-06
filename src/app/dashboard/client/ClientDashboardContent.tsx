@@ -210,6 +210,21 @@ export default function ClientDashboardContent({
   // Main dashboard view
   return (
     <>
+    {/* Marble Overlay */}
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundImage: "url('/uploads/overlay.png')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      opacity: 0.45,
+      zIndex: 0,
+      pointerEvents: 'none'
+    }} />
     <div style={{ 
       padding: '1.5rem', 
       minHeight: '100vh', 
@@ -217,7 +232,9 @@ export default function ClientDashboardContent({
       fontFamily, 
       color: fontColor,
       width: '100%',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      position: 'relative',
+      zIndex: 1
     }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1.5rem', marginBottom: '2rem', flexWrap: 'wrap', width: '100%', boxSizing: 'border-box' }}>
