@@ -1,6 +1,8 @@
 'use client';
 
-// Google Fonts for headers (script/fancy)
+import React from 'react';
+
+// Google Fonts for headers (cursive/handwriting)
 const HEADER_FONTS = [
   'Great Vibes',
   'Playfair Display',
@@ -39,29 +41,12 @@ const BODY_FONTS = [
   'Work Sans',
 ];
 
-// General fonts
-const GENERAL_FONTS = [
-  'Poppins',
-  'Roboto',
-  'Open Sans',
-  'Inter',
-  'Montserrat',
-  'Raleway',
-  'Work Sans',
-  'Dosis',
-  'Quicksand',
-  'Nunito',
-  'Barlow',
-  'Merriweather',
-  'Lora',
-];
-
 interface BrandingData {
   brandingPrimaryColor: string | null;
   brandingSecondaryColor: string | null;
   brandingSecondaryColorOpacity: number | null;
+  brandingAccentColor: string | null;
   brandingFontColor: string | null;
-  brandingFontFamily: string | null;
   brandingHeaderFontFamily: string | null;
   brandingBodyFontFamily: string | null;
   [key: string]: any;
@@ -79,6 +64,21 @@ export default function ColorsFontsTab({ data, onChange }: ColorsFontsTabProps) 
   const handleChange = (field: string, value: any) => {
     onChange({ ...data, [field]: value });
   };
+
+  // Load Google Fonts dynamically
+  React.useEffect(() => {
+    const fontsToLoad = Array.from(new Set([
+      data.brandingHeaderFontFamily || 'Playfair Display',
+      data.brandingBodyFontFamily || 'Poppins',
+      ...HEADER_FONTS,
+      ...BODY_FONTS,
+    ]));
+
+    const link = document.createElement('link');
+    link.href = `https://fonts.googleapis.com/css2?${fontsToLoad.map(f => `family=${f.replace(/ /g, '+')}`).join('&')}:wght@400;600;700&display=swap`;
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }, [data.brandingHeaderFontFamily, data.brandingBodyFontFamily]);
 
   return (
     <div style={{ color: SUPERADMIN_FONT }}>
@@ -179,6 +179,44 @@ export default function ColorsFontsTab({ data, onChange }: ColorsFontsTabProps) 
         </div>
       </div>
 
+      {/* Accent Color */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
+          Accent Color (For Highlights & Cards)
+        </label>
+        <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.85rem', color: '#999' }}>
+          Used for highlights, buttons, and card accents
+        </p>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <input
+            type="color"
+            value={data.brandingAccentColor || '#FFB6C1'}
+            onChange={(e) => handleChange('brandingAccentColor', e.target.value)}
+            style={{
+              width: '60px',
+              height: '40px',
+              border: `2px solid ${SUPERADMIN_PRIMARY}`,
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          />
+          <input
+            type="text"
+            value={data.brandingAccentColor || '#FFB6C1'}
+            onChange={(e) => handleChange('brandingAccentColor', e.target.value)}
+            placeholder="#FFB6C1"
+            style={{
+              flex: 1,
+              padding: '0.75rem',
+              border: `2px solid ${SUPERADMIN_PRIMARY}`,
+              borderRadius: '4px',
+              fontSize: '0.9rem',
+              color: SUPERADMIN_FONT,
+            }}
+          />
+        </div>
+      </div>
+
       {/* Font Color */}
       <div style={{ marginBottom: '2rem' }}>
         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
@@ -217,82 +255,78 @@ export default function ColorsFontsTab({ data, onChange }: ColorsFontsTabProps) 
         </div>
       </div>
 
-      {/* Font Family - General */}
+      {/* Header Font */}
       <div style={{ marginBottom: '1.5rem' }}>
         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
-          Font Family (General)
+          Header Font (Cursive/Handwriting)
         </label>
         <select
-          value={data.brandingFontFamily || 'Poppins'}
-          onChange={(e) => handleChange('brandingFontFamily', e.target.value)}
+          value={data.brandingHeaderFontFamily || 'Playfair Display'}
+          onChange={(e) => handleChange('brandingHeaderFontFamily', e.target.value)}
           style={{
             width: '100%',
             padding: '0.75rem',
             border: `2px solid ${SUPERADMIN_PRIMARY}`,
             borderRadius: '4px',
-            fontSize: '1rem',
+            fontSize: '0.9rem',
             boxSizing: 'border-box',
             color: SUPERADMIN_FONT,
           }}
         >
-          {GENERAL_FONTS.map((font) => (
-            <option key={font} value={font}>
-              {font}
+          {HEADER_FONTS.map((font) => (
+            <option key={font} value={font} style={{ fontFamily: font }}>
+              {font.replace(/\+/g, ' ')}
             </option>
           ))}
         </select>
+        <div style={{
+          marginTop: '0.75rem',
+          padding: '1rem',
+          background: '#f9f9f9',
+          borderRadius: '4px',
+          fontFamily: data.brandingHeaderFontFamily || 'Playfair Display',
+          fontSize: '1.5rem',
+          color: SUPERADMIN_FONT,
+        }}>
+          This is how your header font looks
+        </div>
       </div>
 
-      {/* Header & Body Font Families */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
-            Header Font
-          </label>
-          <select
-            value={data.brandingHeaderFontFamily || 'Playfair Display'}
-            onChange={(e) => handleChange('brandingHeaderFontFamily', e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: `2px solid ${SUPERADMIN_PRIMARY}`,
-              borderRadius: '4px',
-              fontSize: '0.9rem',
-              boxSizing: 'border-box',
-              color: SUPERADMIN_FONT,
-            }}
-          >
-            {HEADER_FONTS.map((font) => (
-              <option key={font} value={font}>
-                {font}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
-            Body Font
-          </label>
-          <select
-            value={data.brandingBodyFontFamily || 'Poppins'}
-            onChange={(e) => handleChange('brandingBodyFontFamily', e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: `2px solid ${SUPERADMIN_PRIMARY}`,
-              borderRadius: '4px',
-              fontSize: '0.9rem',
-              boxSizing: 'border-box',
-              color: SUPERADMIN_FONT,
-            }}
-          >
-            {BODY_FONTS.map((font) => (
-              <option key={font} value={font}>
-                {font}
-              </option>
-            ))}
-          </select>
+      {/* Body Font */}
+      <div>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
+          Body Font (Serif/Sans-Serif)
+        </label>
+        <select
+          value={data.brandingBodyFontFamily || 'Poppins'}
+          onChange={(e) => handleChange('brandingBodyFontFamily', e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            border: `2px solid ${SUPERADMIN_PRIMARY}`,
+            borderRadius: '4px',
+            fontSize: '0.9rem',
+            boxSizing: 'border-box',
+            color: SUPERADMIN_FONT,
+          }}
+        >
+          {BODY_FONTS.map((font) => (
+            <option key={font} value={font} style={{ fontFamily: font }}>
+              {font.replace(/\+/g, ' ')}
+            </option>
+          ))}
+        </select>
+        <div style={{
+          marginTop: '0.75rem',
+          padding: '1rem',
+          background: '#f9f9f9',
+          borderRadius: '4px',
+          fontFamily: data.brandingBodyFontFamily || 'Poppins',
+          fontSize: '1rem',
+          color: SUPERADMIN_FONT,
+          lineHeight: '1.5',
+        }}>
+          This is how your body font looks. Use this for all body text, paragraphs, and general content.
         </div>
       </div>
     </div>

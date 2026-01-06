@@ -37,14 +37,11 @@ export default function DemographicsTab({ data, onChange }: DemographicsTabProps
         Update basic information about your business and how you present to clients.
       </p>
 
-      {/* Tenant Contact Information (Read-only) */}
+      {/* Tenant Contact Information (Editable) */}
       <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#f5f5f5', borderRadius: '4px', border: `1px solid ${SUPERADMIN_PRIMARY}20` }}>
         <h3 style={{ color: SUPERADMIN_PRIMARY, marginTop: 0, marginBottom: '1rem', fontSize: '1.1rem', fontWeight: '600' }}>
           Tenant Information
         </h3>
-        <p style={{ color: '#999', fontSize: '0.85rem', marginBottom: '1rem' }}>
-          Read-only. Edit in Basic Information to change these details.
-        </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1rem' }}>
           {/* First Name */}
@@ -55,17 +52,16 @@ export default function DemographicsTab({ data, onChange }: DemographicsTabProps
             <input
               type="text"
               value={data.firstName || ''}
-              disabled
+              onChange={(e) => handleChange('firstName', e.target.value)}
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `2px solid ${SUPERADMIN_PRIMARY}20`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 fontSize: '0.95rem',
                 boxSizing: 'border-box',
-                color: '#999',
+                color: SUPERADMIN_FONT,
                 background: 'white',
-                cursor: 'not-allowed',
               }}
             />
           </div>
@@ -78,17 +74,16 @@ export default function DemographicsTab({ data, onChange }: DemographicsTabProps
             <input
               type="text"
               value={data.lastName || ''}
-              disabled
+              onChange={(e) => handleChange('lastName', e.target.value)}
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `2px solid ${SUPERADMIN_PRIMARY}20`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 fontSize: '0.95rem',
                 boxSizing: 'border-box',
-                color: '#999',
+                color: SUPERADMIN_FONT,
                 background: 'white',
-                cursor: 'not-allowed',
               }}
             />
           </div>
@@ -103,17 +98,16 @@ export default function DemographicsTab({ data, onChange }: DemographicsTabProps
             <input
               type="email"
               value={data.email || ''}
-              disabled
+              onChange={(e) => handleChange('email', e.target.value)}
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `2px solid ${SUPERADMIN_PRIMARY}20`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 fontSize: '0.95rem',
                 boxSizing: 'border-box',
-                color: '#999',
+                color: SUPERADMIN_FONT,
                 background: 'white',
-                cursor: 'not-allowed',
               }}
             />
           </div>
@@ -126,17 +120,16 @@ export default function DemographicsTab({ data, onChange }: DemographicsTabProps
             <input
               type="tel"
               value={data.phone || ''}
-              disabled
+              onChange={(e) => handleChange('phone', e.target.value)}
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `2px solid ${SUPERADMIN_PRIMARY}20`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 fontSize: '0.95rem',
                 boxSizing: 'border-box',
-                color: '#999',
+                color: SUPERADMIN_FONT,
                 background: 'white',
-                cursor: 'not-allowed',
               }}
             />
           </div>
@@ -150,17 +143,16 @@ export default function DemographicsTab({ data, onChange }: DemographicsTabProps
           <input
             type="text"
             value={data.streetAddress || ''}
-            disabled
+            onChange={(e) => handleChange('streetAddress', e.target.value)}
             style={{
               width: '100%',
               padding: '0.75rem',
-              border: `2px solid ${SUPERADMIN_PRIMARY}20`,
+              border: `2px solid ${SUPERADMIN_PRIMARY}`,
               borderRadius: '4px',
               fontSize: '0.95rem',
               boxSizing: 'border-box',
-              color: '#999',
+              color: SUPERADMIN_FONT,
               background: 'white',
-              cursor: 'not-allowed',
               marginBottom: '0.5rem',
             }}
           />
@@ -168,65 +160,37 @@ export default function DemographicsTab({ data, onChange }: DemographicsTabProps
             <input
               type="text"
               value={data.city || ''}
-              disabled
+              onChange={(e) => handleChange('city', e.target.value)}
               placeholder="City"
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `2px solid ${SUPERADMIN_PRIMARY}20`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 fontSize: '0.95rem',
                 boxSizing: 'border-box',
-                color: '#999',
+                color: SUPERADMIN_FONT,
                 background: 'white',
-                cursor: 'not-allowed',
               }}
             />
             <input
               type="text"
               value={data.state || ''}
-              disabled
+              onChange={(e) => handleChange('state', e.target.value)}
               placeholder="State"
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `2px solid ${SUPERADMIN_PRIMARY}20`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 fontSize: '0.95rem',
                 boxSizing: 'border-box',
-                color: '#999',
+                color: SUPERADMIN_FONT,
                 background: 'white',
-                cursor: 'not-allowed',
               }}
             />
           </div>
         </div>
-      </div>
-
-      {/* Business Name (Read-only from tenant) */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
-          Business Name (From Account)
-        </label>
-        <input
-          type="text"
-          value={data.businessName}
-          disabled
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: `2px solid ${SUPERADMIN_PRIMARY}20`,
-            borderRadius: '4px',
-            fontSize: '1rem',
-            boxSizing: 'border-box',
-            color: '#999',
-            background: '#f5f5f5',
-            cursor: 'not-allowed',
-          }}
-        />
-        <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: '#999' }}>
-          Edit in Basic Information to change this.
-        </p>
       </div>
 
       {/* Company Name (For Branding) */}

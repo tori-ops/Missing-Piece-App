@@ -23,6 +23,7 @@ interface BrandingData {
   brandingPrimaryColor: string | null;
   brandingSecondaryColor: string | null;
   brandingSecondaryColorOpacity: number | null;
+  brandingAccentColor: string | null;
   brandingFontColor: string | null;
   brandingFontFamily: string | null;
   brandingHeaderFontFamily: string | null;
@@ -45,6 +46,7 @@ export default function TenantBrandingSuitePage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [tenantName, setTenantName] = useState('');
+  const [showPreview, setShowPreview] = useState(false);
   
   const [brandingData, setBrandingData] = useState<BrandingData>({
     businessName: '',
@@ -61,6 +63,7 @@ export default function TenantBrandingSuitePage() {
     brandingPrimaryColor: '#274E13',
     brandingSecondaryColor: '#D0CEB5',
     brandingSecondaryColorOpacity: 55,
+    brandingAccentColor: '#FFB6C1',
     brandingFontColor: '#000000',
     brandingFontFamily: 'Poppins',
     brandingHeaderFontFamily: 'Playfair Display',
@@ -107,6 +110,7 @@ export default function TenantBrandingSuitePage() {
             primaryColor: brandingData.brandingPrimaryColor,
             secondaryColor: brandingData.brandingSecondaryColor,
             secondaryColorOpacity: brandingData.brandingSecondaryColorOpacity,
+            accentColor: brandingData.brandingAccentColor,
             fontColor: brandingData.brandingFontColor,
             logoUrl: brandingData.brandingLogoUrl,
             logoBackgroundRemoval: brandingData.brandingLogoBackgroundRemoval,
@@ -155,31 +159,10 @@ export default function TenantBrandingSuitePage() {
   return (
     <div style={{ padding: '2rem', minHeight: '100vh', background: SUPERADMIN_SECONDARY }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        {/* Header with Back Button */}
-        <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button
-            onClick={() => router.back()}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.5rem 1rem',
-              background: 'white',
-              color: SUPERADMIN_PRIMARY,
-              border: `2px solid ${SUPERADMIN_PRIMARY}`,
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-            }}
-          >
-            <ArrowLeft size={18} />
-            Back
-          </button>
-          <div>
-            <h1 style={{ color: SUPERADMIN_PRIMARY, margin: '0', fontSize: '2rem' }}>🎨 Branding Suite</h1>
-            <p style={{ color: '#666', margin: '0.25rem 0 0 0', fontSize: '0.95rem' }}>{tenantName}</p>
-          </div>
+        {/* Header */}
+        <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{ color: SUPERADMIN_PRIMARY, margin: '0 0 0.5rem 0', fontSize: '2rem' }}>🎨 Branding Suite</h1>
+          <p style={{ color: '#666', margin: '0', fontSize: '0.95rem' }}>{tenantName}</p>
         </div>
 
         {/* Status Messages */}
@@ -285,6 +268,286 @@ export default function TenantBrandingSuitePage() {
             />
           )}
         </div>
+
+        {/* Footer with Back and Preview Buttons */}
+        <div style={{
+          marginTop: '2rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '1rem',
+        }}>
+          <button
+            onClick={() => router.push('/dashboard/superadmin')}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'white',
+              color: SUPERADMIN_PRIMARY,
+              border: `2px solid ${SUPERADMIN_PRIMARY}`,
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = SUPERADMIN_PRIMARY;
+              (e.currentTarget as HTMLButtonElement).style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'white';
+              (e.currentTarget as HTMLButtonElement).style.color = SUPERADMIN_PRIMARY;
+            }}
+          >
+            ← Back to Dashboard
+          </button>
+
+          <button
+            onClick={() => setShowPreview(true)}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: SUPERADMIN_PRIMARY,
+              color: 'white',
+              border: `2px solid ${SUPERADMIN_PRIMARY}`,
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.opacity = '0.9';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.opacity = '1';
+            }}
+          >
+            👁️ Preview Branding
+          </button>
+        </div>
+
+        {/* Preview Modal */}
+        {showPreview && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0, 0, 0, 0.7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 3000,
+            }}
+            onClick={() => setShowPreview(false)}
+          >
+            <div
+              style={{
+                background: 'white',
+                borderRadius: '8px',
+                padding: '2rem',
+                maxWidth: '900px',
+                maxHeight: '90vh',
+                overflowY: 'auto',
+                position: 'relative',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowPreview(false)}
+                style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  right: '1rem',
+                  background: SUPERADMIN_PRIMARY,
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '0.5rem 1rem',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                }}
+              >
+                Close
+              </button>
+
+              <h2 style={{ color: SUPERADMIN_PRIMARY, marginTop: 0, marginBottom: '2rem', fontSize: '1.8rem' }}>
+                Branding Preview
+              </h2>
+
+              {/* Preview Background */}
+              <div
+                style={{
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  marginBottom: '2rem',
+                  position: 'relative',
+                }}
+              >
+                <div
+                  style={{
+                    background: brandingData.brandingSecondaryColor || '#D0CEB5',
+                    padding: '3rem 2rem',
+                    position: 'relative',
+                  }}
+                >
+                  {brandingData.brandingOverlayUrl && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundImage: `url(${brandingData.brandingOverlayUrl})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        opacity: (brandingData.brandingSecondaryColorOpacity || 55) / 100 * 0.45,
+                        pointerEvents: 'none',
+                      }}
+                    />
+                  )}
+
+                  <div style={{ position: 'relative', zIndex: 1 }}>
+                    {/* Logo */}
+                    {brandingData.brandingLogoUrl && (
+                      <div style={{ marginBottom: '1.5rem' }}>
+                        <img
+                          src={brandingData.brandingLogoUrl}
+                          alt="Logo"
+                          style={{
+                            maxHeight: '80px',
+                            maxWidth: '100%',
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Title */}
+                    <h1
+                      style={{
+                        color: brandingData.brandingFontColor || '#000000',
+                        fontFamily: brandingData.brandingHeaderFontFamily || 'Playfair Display',
+                        fontSize: '2.5rem',
+                        margin: '0 0 0.5rem 0',
+                      }}
+                    >
+                      {brandingData.brandingCompanyName || brandingData.businessName}
+                    </h1>
+
+                    {/* Tagline */}
+                    {brandingData.brandingTagline && (
+                      <p
+                        style={{
+                          color: brandingData.brandingFontColor || '#000000',
+                          fontFamily: brandingData.brandingBodyFontFamily || 'Poppins',
+                          fontSize: '1.1rem',
+                          margin: 0,
+                        }}
+                      >
+                        {brandingData.brandingTagline}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Sample Card */}
+                <div
+                  style={{
+                    padding: '2rem',
+                    background: 'white',
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: '1.5rem',
+                      borderLeft: `4px solid ${brandingData.brandingAccentColor || '#FFB6C1'}`,
+                      background: (brandingData.brandingAccentColor || '#FFB6C1') + '20',
+                      borderRadius: '4px',
+                      marginBottom: '1.5rem',
+                    }}
+                  >
+                    <h3
+                      style={{
+                        color: brandingData.brandingPrimaryColor || '#274E13',
+                        fontFamily: brandingData.brandingHeaderFontFamily || 'Playfair Display',
+                        margin: '0 0 0.5rem 0',
+                      }}
+                    >
+                      Sample Card
+                    </h3>
+                    <p
+                      style={{
+                        color: brandingData.brandingFontColor || '#000000',
+                        fontFamily: brandingData.brandingBodyFontFamily || 'Poppins',
+                        margin: 0,
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      This is how your content will look with your selected colors, fonts, and accent color.
+                    </p>
+                  </div>
+
+                  {/* Color Swatches */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                      gap: '1rem',
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          height: '60px',
+                          background: brandingData.brandingPrimaryColor || '#274E13',
+                          borderRadius: '4px',
+                          marginBottom: '0.5rem',
+                        }}
+                      />
+                      <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: '600' }}>Primary</p>
+                      <p style={{ margin: 0, fontSize: '0.75rem', color: '#999' }}>
+                        {brandingData.brandingPrimaryColor || '#274E13'}
+                      </p>
+                    </div>
+                    <div>
+                      <div
+                        style={{
+                          height: '60px',
+                          background: brandingData.brandingSecondaryColor || '#D0CEB5',
+                          borderRadius: '4px',
+                          marginBottom: '0.5rem',
+                          border: '1px solid #ddd',
+                        }}
+                      />
+                      <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: '600' }}>Secondary</p>
+                      <p style={{ margin: 0, fontSize: '0.75rem', color: '#999' }}>
+                        {brandingData.brandingSecondaryColor || '#D0CEB5'}
+                      </p>
+                    </div>
+                    <div>
+                      <div
+                        style={{
+                          height: '60px',
+                          background: brandingData.brandingAccentColor || '#FFB6C1',
+                          borderRadius: '4px',
+                          marginBottom: '0.5rem',
+                        }}
+                      />
+                      <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: '600' }}>Accent</p>
+                      <p style={{ margin: 0, fontSize: '0.75rem', color: '#999' }}>
+                        {brandingData.brandingAccentColor || '#FFB6C1'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
