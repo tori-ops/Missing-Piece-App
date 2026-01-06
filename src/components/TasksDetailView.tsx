@@ -542,6 +542,34 @@ export default function TasksDetailView({
             ))}
           </div>
         )}
+
+        {/* Back Button (Bottom) */}
+        <button
+          onClick={onBack}
+          style={{
+            background: `${primaryColor}20`,
+            color: primaryColor,
+            border: `1px solid ${primaryColor}`,
+            padding: '0.75rem 1.5rem',
+            borderRadius: '6px',
+            fontSize: '0.95rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            fontFamily: bodyFontFamily,
+            transition: 'all 0.2s ease',
+            marginTop: '2rem',
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
+            (e.currentTarget as HTMLButtonElement).style.color = 'white';
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
+            (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+          }}
+        >
+          ← Back to Dashboard
+        </button>
       </div>
     </div>
   );
