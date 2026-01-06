@@ -351,69 +351,29 @@ export default function WebsiteBuilderForm({
 
   return (
     <div style={{ fontFamily: bodyFontFamily, color: fontColor }}>
-      {/* Branded Header with Tagline */}
+      {/* Header - Title & Tagline Only */}
       <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
         marginBottom: '2rem',
         paddingBottom: '1rem',
         borderBottom: `2px solid ${primaryColor}20`,
-        gap: '2rem',
       }}>
-        {/* Left: Title & Tagline */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h1 style={{ 
-            color: primaryColor,
-            fontFamily: headerFontFamily,
-            fontSize: '2.5rem',
-            margin: '0 0 0.5rem 0',
-          }}>
-            Web Design Suite
-          </h1>
-          <p style={{ 
-            color: fontColor,
-            opacity: 0.7,
-            margin: 0,
-            fontSize: '0.95rem',
-            fontStyle: 'italic',
-          }}>
-            Your love story, told your way.
-          </p>
-        </div>
-
-        {/* Right: Logo & Business Name */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-end',
-          gap: '0.5rem',
-          flexShrink: 0,
+        <h1 style={{ 
+          color: primaryColor,
+          fontFamily: headerFontFamily,
+          fontSize: '2.5rem',
+          margin: '0 0 0.5rem 0',
         }}>
-          {logoUrl && (
-            <img
-              src={logoUrl}
-              alt="Logo"
-              style={{
-                height: '4rem',
-                width: 'auto',
-                maxWidth: '200px',
-              }}
-            />
-          )}
-          {companyName && (
-            <div style={{
-              fontSize: '0.75rem',
-              color: fontColor,
-              fontWeight: '600',
-              textAlign: 'right',
-              lineHeight: 1.3,
-              maxWidth: '200px',
-            }}>
-              {companyName}
-            </div>
-          )}
-        </div>
+          Web Design Suite
+        </h1>
+        <p style={{ 
+          color: fontColor,
+          opacity: 0.7,
+          margin: 0,
+          fontSize: '0.95rem',
+          fontStyle: 'italic',
+        }}>
+          Your love story, told your way.
+        </p>
       </div>
 
       {/* Message Display */}
@@ -493,6 +453,41 @@ export default function WebsiteBuilderForm({
           ))}
         </div>
       </div>
+
+      {/* Business Name & Logo - Centered Below Tabs */}
+      {(logoUrl || companyName) && (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.5rem',
+          marginBottom: '2rem'
+        }}>
+          {companyName && (
+            <div style={{
+              fontSize: '0.75rem',
+              color: fontColor,
+              fontWeight: '600',
+              textAlign: 'center',
+              lineHeight: 1.3,
+              maxWidth: '200px',
+            }}>
+              {companyName}
+            </div>
+          )}
+          {logoUrl && (
+            <img
+              src={logoUrl}
+              alt="Logo"
+              style={{
+                height: '4rem',
+                width: 'auto',
+                maxWidth: '200px',
+              }}
+            />
+          )}
+        </div>
+      )}
 
       {/* Tab Content */}
       {activeTab === 'story' && (
