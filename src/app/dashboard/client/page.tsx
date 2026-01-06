@@ -9,13 +9,13 @@ import BrandingFooter from '@/components/BrandingFooter';
 export const dynamic = 'force-dynamic';
 
 export default async function ClientDashboard() {
+  const session = await getServerSession(authOptions);
+
+  if (!session || (session.user as any)?.role !== 'CLIENT') {
+    redirect('/');
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session || (session.user as any)?.role !== 'CLIENT') {
-      redirect('/');
-    }
-
     // Get client profile
     const userEmail = (session.user as any)?.email || '';
     
