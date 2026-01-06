@@ -30,6 +30,8 @@ interface MeetingNotesDetailViewProps {
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
+  logoUrl?: string | null;
+  companyName?: string;
   onBack: () => void;
 }
 
@@ -41,6 +43,8 @@ export default function MeetingNotesDetailView({
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
+  logoUrl,
+  companyName,
   onBack,
 }: MeetingNotesDetailViewProps) {
   const [notes, setNotes] = useState<MeetingNote[]>([]);
@@ -233,10 +237,51 @@ export default function MeetingNotesDetailView({
 
   return (
     <div style={{ animation: 'slideIn 0.3s ease' }}>
-      {/* Title */}
-      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0, fontSize: '2.5rem' }}>
-        Meeting Notes
-      </h2>
+      {/* Branded Header */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '2rem',
+        paddingBottom: '1rem',
+        borderBottom: `2px solid ${primaryColor}20`,
+      }}>
+        {/* Logo */}
+        {logoUrl && (
+          <img
+            src={logoUrl}
+            alt="Logo"
+            style={{
+              height: '2.5rem',
+              width: 'auto',
+              maxWidth: '150px',
+            }}
+          />
+        )}
+
+        {/* Title */}
+        <h2 style={{ 
+          flex: logoUrl || companyName ? 1 : 'auto',
+          textAlign: 'center',
+          color: primaryColor,
+          fontFamily: headerFontFamily,
+          marginTop: 0,
+          fontSize: '2.5rem',
+        }}>
+          Meeting Notes
+        </h2>
+
+        {/* Company Name */}
+        {companyName && (
+          <div style={{
+            textAlign: 'right',
+            fontSize: '0.95rem',
+            color: fontColor,
+          }}>
+            <div style={{ fontWeight: '600' }}>{companyName}</div>
+          </div>
+        )}
+      </div>
 
       {/* Success Message */}
       {successMessage && (

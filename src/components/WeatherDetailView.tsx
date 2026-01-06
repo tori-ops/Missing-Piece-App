@@ -12,6 +12,8 @@ interface WeatherDetailViewProps {
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
+  logoUrl?: string | null;
+  companyName?: string;
   onBack: () => void;
 }
 
@@ -25,14 +27,70 @@ export default function WeatherDetailView({
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
+  logoUrl,
+  companyName,
   onBack,
 }: WeatherDetailViewProps) {
   return (
     <div style={{ animation: 'slideIn 0.3s ease' }}>
-      {/* Title */}
-      <h2 style={{ color: primaryColor, fontFamily: headerFontFamily, marginTop: 0, fontSize: '2.5rem' }}>
-        Weather & Golden Hour
-      </h2>
+      {/* Branded Header */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '2rem',
+        paddingBottom: '1rem',
+        borderBottom: `2px solid ${primaryColor}20`,
+      }}>
+        {/* Logo */}
+        {logoUrl && (
+          <img
+            src={logoUrl}
+            alt="Logo"
+            style={{
+              height: '2.5rem',
+              width: 'auto',
+              maxWidth: '150px',
+            }}
+          />
+        )}
+
+        {/* Title (Multi-line) */}
+        <div style={{ 
+          flex: logoUrl || companyName ? 1 : 'auto',
+          textAlign: 'center',
+        }}>
+          <h2 style={{ 
+            color: primaryColor,
+            fontFamily: headerFontFamily,
+            margin: 0,
+            fontSize: '2.5rem',
+            lineHeight: 1.2,
+          }}>
+            Weather &
+          </h2>
+          <h2 style={{ 
+            color: primaryColor,
+            fontFamily: headerFontFamily,
+            margin: 0,
+            fontSize: '2.5rem',
+            lineHeight: 1.2,
+          }}>
+            Golden Hour
+          </h2>
+        </div>
+
+        {/* Company Name */}
+        {companyName && (
+          <div style={{
+            textAlign: 'right',
+            fontSize: '0.95rem',
+            color: fontColor,
+          }}>
+            <div style={{ fontWeight: '600' }}>{companyName}</div>
+          </div>
+        )}
+      </div>
 
       {/* Venue Info */}
       {venueName && (

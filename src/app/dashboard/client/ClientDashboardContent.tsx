@@ -90,6 +90,8 @@ export default function ClientDashboardContent({
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
+          logoUrl={logoUrl}
+          companyName={companyName}
           onBack={() => setActiveView('dashboard')}
         />
       </div>
@@ -119,6 +121,8 @@ export default function ClientDashboardContent({
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
+          logoUrl={logoUrl}
+          companyName={companyName}
           onBack={() => setActiveView('dashboard')}
         />
       </div>
@@ -143,6 +147,8 @@ export default function ClientDashboardContent({
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
+          logoUrl={logoUrl}
+          companyName={companyName}
           onBack={() => setActiveView('dashboard')}
         />
       </div>
@@ -167,6 +173,8 @@ export default function ClientDashboardContent({
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
+          logoUrl={logoUrl}
+          companyName={companyName}
           onBack={() => setActiveView('dashboard')}
         />
       </div>
@@ -191,6 +199,8 @@ export default function ClientDashboardContent({
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}
+          logoUrl={logoUrl}
+          companyName={companyName}
           onBack={() => setActiveView('dashboard')}
         />
       </div>

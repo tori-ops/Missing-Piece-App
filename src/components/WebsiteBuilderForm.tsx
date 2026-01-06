@@ -17,6 +17,8 @@ interface WebsiteBuilderFormProps {
   fontColor: string;
   bodyFontFamily: string;
   headerFontFamily: string;
+  logoUrl?: string | null;
+  companyName?: string;
   onBack: () => void;
 }
 
@@ -75,6 +77,8 @@ export default function WebsiteBuilderForm({
   fontColor,
   bodyFontFamily,
   headerFontFamily,
+  logoUrl,
+  companyName,
   onBack,
 }: WebsiteBuilderFormProps) {
   const [activeTab, setActiveTab] = useState<'story' | 'images' | 'design' | 'hero' | 'url' | 'registries' | 'misc'>('story');
@@ -347,12 +351,64 @@ export default function WebsiteBuilderForm({
 
   return (
     <div style={{ fontFamily: bodyFontFamily, color: fontColor }}>
-      <h1 style={{ color: primaryColor, fontFamily: headerFontFamily, fontSize: '2rem', marginBottom: '0.5rem' }}>
-        Web Design Suite
-      </h1>
-      <p style={{ color: fontColor, opacity: 0.7, marginBottom: '2rem' }}>
-        Your love story, told your way.
-      </p>
+      {/* Branded Header with Tagline */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: '2rem',
+        paddingBottom: '1rem',
+        borderBottom: `2px solid ${primaryColor}20`,
+        gap: '2rem',
+      }}>
+        {/* Logo */}
+        {logoUrl && (
+          <img
+            src={logoUrl}
+            alt="Logo"
+            style={{
+              height: '2.5rem',
+              width: 'auto',
+              maxWidth: '150px',
+            }}
+          />
+        )}
+
+        {/* Title & Tagline */}
+        <div style={{ 
+          flex: logoUrl || companyName ? 1 : 'auto',
+          textAlign: 'center',
+        }}>
+          <h1 style={{ 
+            color: primaryColor,
+            fontFamily: headerFontFamily,
+            fontSize: '2.5rem',
+            margin: '0 0 0.5rem 0',
+          }}>
+            Web Design Suite
+          </h1>
+          <p style={{ 
+            color: fontColor,
+            opacity: 0.7,
+            margin: 0,
+            fontSize: '0.95rem',
+            fontStyle: 'italic',
+          }}>
+            Your love story, told your way.
+          </p>
+        </div>
+
+        {/* Company Name */}
+        {companyName && (
+          <div style={{
+            textAlign: 'right',
+            fontSize: '0.95rem',
+            color: fontColor,
+          }}>
+            <div style={{ fontWeight: '600' }}>{companyName}</div>
+          </div>
+        )}
+      </div>
 
       {/* Message Display */}
       {message && (
