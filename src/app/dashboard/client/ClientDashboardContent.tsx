@@ -30,6 +30,7 @@ interface ClientDashboardContentProps {
   logoUrl?: string | null;
   overlayUrl?: string | null;
   currentUserId: string;
+  greeting: string;
 }
 
 export default function ClientDashboardContent({
@@ -46,6 +47,7 @@ export default function ClientDashboardContent({
   logoUrl,
   overlayUrl,
   currentUserId,
+  greeting,
 }: ClientDashboardContentProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [activeView, setActiveView] = useState<'dashboard' | 'weather' | 'astrology' | 'tasks' | 'notes' | 'website'>('dashboard');
@@ -254,7 +256,7 @@ export default function ClientDashboardContent({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1.5rem', marginBottom: '2rem', flexWrap: 'wrap', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ flex: 1, minWidth: '200px' }}>
           <h1 style={{ color: primaryColor, margin: 0, fontSize: '2.5rem', fontFamily: headerFontFamily }}>
-            Welcome, {clientProfile.couple1FirstName}!
+            {greeting}
           </h1>
           <div style={{ color: primaryColor, fontSize: '1rem', margin: '0.25rem 0 0 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
             <div>Coordinated by</div>

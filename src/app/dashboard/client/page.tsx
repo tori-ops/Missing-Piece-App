@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { getGreeting } from '@/lib/greetings';
 import ClientDashboardContent from './ClientDashboardContent';
 import BrandingFooter from '@/components/BrandingFooter';
 
@@ -95,6 +96,22 @@ export default async function ClientDashboard() {
     const logoUrl = tenant?.brandingLogoUrl;
     const overlayUrl = tenant?.brandingOverlayUrl;
 
+    // Track first login
+    const isFirstLogin = !clientProfile.firstLoginAt;
+    if (isFirstLogin) {
+      try {
+        await prisma.clientProfile.update({
+          where: { id: clientProfile.id },
+          data: { firstLoginAt: new Date() }
+        });
+      } catch (err) {
+        console.error('Error updating firstLoginAt:', err);
+      }
+    }
+
+    // Get greeting message
+    const greeting = getGreeting(clientProfile.couple1FirstName, isFirstLogin);
+
     return (
       <>
         <ClientDashboardContent 
@@ -110,6 +127,7 @@ export default async function ClientDashboard() {
           logoUrl={logoUrl}
           overlayUrl={overlayUrl}
           currentUserId={user.id}
+          greeting={greeting}
         />
         <BrandingFooter primaryColor={primaryColor} />
       </>
