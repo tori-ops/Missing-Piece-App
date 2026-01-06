@@ -259,24 +259,24 @@ export default function ClientDashboardContent({
         width: '100%',
         boxSizing: 'border-box'
       }}>
-        <h2 style={{ color: lightenColor(primaryColor, 100), marginTop: 0, marginBottom: '1rem', fontFamily: headerFontFamily, fontSize: '1.75rem' }}>Your Wedding Details</h2>
+        <h2 style={{ color: fontColor, marginTop: 0, marginBottom: '1rem', fontFamily: headerFontFamily, fontSize: '1.75rem' }}>Your Wedding Details</h2>
         {clientProfile.weddingDate && (
-          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+          <p style={{ color: fontColor, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
             Your Big Day: <strong>{new Date(clientProfile.weddingDate).toLocaleDateString()}</strong>
           </p>
         )}
         {clientProfile.budgetCents && (
-          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+          <p style={{ color: fontColor, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
             Budget: <strong>${(clientProfile.budgetCents / 100).toLocaleString()}</strong>
           </p>
         )}
         {clientProfile.estimatedGuestCount && (
-          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+          <p style={{ color: fontColor, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
             Guest Count: <strong>{clientProfile.estimatedGuestCount}</strong>
           </p>
         )}
         {clientProfile.weddingLocation && (
-          <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+          <p style={{ color: fontColor, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
             Venue: <strong>{clientProfile.weddingLocation}</strong>
           </p>
         )}
@@ -303,7 +303,7 @@ export default function ClientDashboardContent({
           <MeetingNotesWidget
             primaryColor={primaryColor}
             bodyFontFamily={bodyFontFamily}
-            textColor={lightenColor(primaryColor, 120)}
+            textColor={fontColor}
             clientId={clientProfile.id}
             tenantId={clientProfile.tenantId}
             currentUserId={currentUserId}
@@ -313,7 +313,7 @@ export default function ClientDashboardContent({
           <TasksWidget
             primaryColor={primaryColor}
             bodyFontFamily={bodyFontFamily}
-            textColor={lightenColor(primaryColor, 120)}
+            textColor={fontColor}
             clientId={clientProfile.id}
             tenantId={clientProfile.tenantId}
             userRole="CLIENT"
@@ -323,7 +323,7 @@ export default function ClientDashboardContent({
             <WebsiteBuilderWidget
               primaryColor={primaryColor}
               bodyFontFamily={bodyFontFamily}
-              textColor={lightenColor(primaryColor, 120)}
+              textColor={fontColor}
               onClick={() => setActiveView('website')}
             />
           ) : null}
@@ -332,13 +332,13 @@ export default function ClientDashboardContent({
           <WeatherCard
             primaryColor={primaryColor}
             bodyFontFamily={bodyFontFamily}
-            textColor={lightenColor(primaryColor, 120)}
+            textColor={fontColor}
             onClick={() => setActiveView('weather')}
           />
           <AstrologyCard
             primaryColor={primaryColor}
             bodyFontFamily={bodyFontFamily}
-            textColor={lightenColor(primaryColor, 120)}
+            textColor={fontColor}
             onClick={() => setActiveView('astrology')}
           />
           {/* Empty col for Row 2 */}
