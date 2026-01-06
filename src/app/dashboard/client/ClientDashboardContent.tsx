@@ -258,7 +258,7 @@ export default function ClientDashboardContent({
         width: '100%',
         marginBottom: '2rem',
         borderRadius: '6px',
-        minHeight: '200px',
+        minHeight: '160px',
         background: primaryColor,
         border: `2px solid ${primaryColor}`,
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
@@ -273,8 +273,8 @@ export default function ClientDashboardContent({
           alt="floral decoration" 
           style={{ 
             position: 'absolute',
-            top: '-22px',
-            left: '-28px',
+            top: '-30px',
+            left: '-37px',
             width: '200px',
             height: 'auto',
             zIndex: 1,
