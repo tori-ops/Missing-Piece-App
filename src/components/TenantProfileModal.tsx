@@ -19,7 +19,6 @@ interface TenantProfileModalProps {
   };
   isOpen: boolean;
   onClose: () => void;
-  primaryColor?: string;
 }
 
 export default function TenantProfileModal({
@@ -27,7 +26,6 @@ export default function TenantProfileModal({
   initialData,
   isOpen,
   onClose,
-  primaryColor = '#274E13'
 }: TenantProfileModalProps) {
   if (!isOpen) return null;
 
@@ -65,9 +63,9 @@ export default function TenantProfileModal({
           justifyContent: 'space-between', 
           alignItems: 'center',
           padding: '2rem',
-          borderBottom: `1px solid ${primaryColor}20`
+          borderBottom: `1px solid #274E13` + '20'
         }}>
-          <h2 style={{ margin: 0, color: primaryColor, fontFamily: "'Playfair Display', serif" }}>
+          <h2 style={{ margin: 0, color: '#274E13', fontFamily: "'Playfair Display', serif" }}>
             Edit Profile
           </h2>
           <button

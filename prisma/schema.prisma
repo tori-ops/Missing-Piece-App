@@ -376,6 +376,7 @@ model Tenant {
   brandingFontColor         String?           @default("#000000")      // Font color - universal text color (must be dark)
   brandingLogoUrl           String?                                     // Logo image URL
   brandingLogoBackgroundRemoval Boolean?      @default(false)          // Remove white background from logos
+  brandingOverlayUrl        String?                                     // Overlay/background image URL
   brandingCompanyName       String?                                     // Override for company display name
   brandingTagline           String?                                     // Company tagline
   brandingFaviconUrl        String?                                     // Favicon URL

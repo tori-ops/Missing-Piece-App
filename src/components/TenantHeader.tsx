@@ -77,7 +77,6 @@ export default function TenantHeader({
         initialData={tenantData}
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        primaryColor={accentColor}
       />
     </>
   );

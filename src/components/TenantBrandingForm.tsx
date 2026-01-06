@@ -14,6 +14,7 @@ interface TenantBrandingFormProps {
     brandingFontColor?: string | null;
     brandingLogoUrl?: string | null;
     brandingLogoBackgroundRemoval?: boolean | null;
+    brandingOverlayUrl?: string | null;
     brandingCompanyName?: string | null;
     brandingTagline?: string | null;
     brandingFaviconUrl?: string | null;
@@ -42,6 +43,8 @@ export default function TenantBrandingForm({
     logoFile: null as File | null,
     logoUrl: initialBranding.brandingLogoUrl || '',
     logoBackgroundRemoval: initialBranding.brandingLogoBackgroundRemoval || false,
+    overlayFile: null as File | null,
+    overlayUrl: initialBranding.brandingOverlayUrl || '',
     companyName: initialBranding.brandingCompanyName || initialBranding.businessName || '',
     tagline: initialBranding.brandingTagline || '',
     faviconFile: null as File | null,
@@ -58,10 +61,11 @@ export default function TenantBrandingForm({
   const [showPreview, setShowPreview] = useState(false);
   const [previewBranding, setPreviewBranding] = useState<any>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(initialBranding.brandingLogoUrl || null);
+  const [overlayPreview, setOverlayPreview] = useState<string | null>(initialBranding.brandingOverlayUrl || null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(initialBranding.brandingFaviconUrl || null);
   const [uploading, setUploading] = useState(false);
 
-  const uploadFile = async (file: File, fileType: 'logo' | 'favicon') => {
+  const uploadFile = async (file: File, fileType: 'logo' | 'favicon' | 'overlay') => {
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('file', file);
@@ -84,12 +88,12 @@ export default function TenantBrandingForm({
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: 'logo' | 'favicon') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: 'logo' | 'favicon' | 'overlay') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const fieldName = fileType === 'logo' ? 'logoFile' : 'faviconFile';
-    const previewSetter = fileType === 'logo' ? setLogoPreview : setFaviconPreview;
+    const fieldName = fileType === 'logo' ? 'logoFile' : fileType === 'favicon' ? 'faviconFile' : 'overlayFile';
+    const previewSetter = fileType === 'logo' ? setLogoPreview : fileType === 'favicon' ? setFaviconPreview : setOverlayPreview;
 
     setFormData((prev) => ({ ...prev, [fieldName]: file }));
 
@@ -149,6 +153,12 @@ export default function TenantBrandingForm({
         faviconUrl = await uploadFile(formData.faviconFile, 'favicon');
       }
 
+      // Upload overlay if a new file was selected
+      let overlayUrl = formData.overlayUrl;
+      if (formData.overlayFile) {
+        overlayUrl = await uploadFile(formData.overlayFile, 'overlay');
+      }
+
       setUploading(false);
 
       const response = await fetch('/api/admin/update-tenant-branding', {
@@ -162,6 +172,7 @@ export default function TenantBrandingForm({
           fontColor: formData.fontColor,
           logoUrl,
           logoBackgroundRemoval: formData.logoBackgroundRemoval,
+          overlayUrl,
           companyName: formData.companyName,
           tagline: formData.tagline,
           faviconUrl,
@@ -187,6 +198,7 @@ export default function TenantBrandingForm({
         fontColor: formData.fontColor,
         logoUrl: logoUrl || null,
         logoBackgroundRemoval: formData.logoBackgroundRemoval,
+        overlayUrl: overlayUrl || null,
         companyName: formData.companyName,
         tagline: formData.tagline || null,
         headerFontFamily: formData.headerFontFamily,
@@ -443,6 +455,46 @@ export default function TenantBrandingForm({
               mixBlendMode: 'lighten',
             }}
           />
+        )}
+      </div>
+
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+          Dashboard Overlay (PNG - Recommended for marble/texture patterns)
+        </label>
+        <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', color: formData.fontColor }}>
+          📐 Appears on client dashboard at 45% opacity. Best for repeating patterns or textures.
+        </p>
+        <input
+          type="file"
+          accept=".png,.jpg,.jpeg"
+          onChange={(e) => handleFileChange(e, 'overlay')}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            border: `2px solid ${formData.primaryColor}`,
+            borderRadius: '4px',
+            fontSize: '1rem',
+            boxSizing: 'border-box',
+            color: formData.fontColor,
+          }}
+        />
+        {(overlayPreview || formData.overlayUrl) && (
+          <div style={{ marginTop: '0.5rem', position: 'relative', height: '150px', overflow: 'hidden', borderRadius: '4px', border: `1px solid ${formData.primaryColor}20` }}>
+            <img
+              src={overlayPreview || formData.overlayUrl}
+              alt="Overlay preview"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                opacity: 0.45,
+              }}
+            />
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: formData.fontColor, fontWeight: '600' }}>
+              Preview (45% opacity)
+            </div>
+          </div>
         )}
       </div>
 
