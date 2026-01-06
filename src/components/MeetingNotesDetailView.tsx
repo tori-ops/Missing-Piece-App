@@ -160,9 +160,15 @@ export default function MeetingNotesDetailView({
         setSuccessMessage('Note deleted successfully!');
         await fetchNotes();
         setTimeout(() => setSuccessMessage(''), 3000);
+      } else {
+        const error = await response.json();
+        setSuccessMessage(`Error: ${error.error || 'Failed to delete note'}`);
+        setTimeout(() => setSuccessMessage(''), 3000);
       }
     } catch (error) {
       console.error('Failed to delete note:', error);
+      setSuccessMessage(`Error: ${error instanceof Error ? error.message : 'Failed to delete note'}`);
+      setTimeout(() => setSuccessMessage(''), 3000);
     }
   };
 
