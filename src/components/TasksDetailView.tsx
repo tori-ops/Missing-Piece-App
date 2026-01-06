@@ -182,62 +182,21 @@ export default function TasksDetailView({
 
   return (
     <div style={{ animation: 'slideIn 0.3s ease' }}>
-      {/* Branded Header */}
+      {/* Header */}
       <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
         marginBottom: '2rem',
         paddingBottom: '1rem',
         borderBottom: `2px solid ${primaryColor}20`,
-        gap: '2rem',
       }}>
-        {/* Left: Title & Tagline */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h2 style={{ 
-            color: primaryColor,
-            fontFamily: headerFontFamily,
-            marginTop: 0,
-            marginBottom: '0.5rem',
-            fontSize: '2.5rem',
-          }}>
-            Tasks
-          </h2>
-          {/* Tagline placeholder - to be added */}
-        </div>
-
-        {/* Right: Logo & Business Name */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-end',
-          gap: '0.5rem',
-          flexShrink: 0,
+        <h2 style={{ 
+          color: primaryColor,
+          fontFamily: headerFontFamily,
+          marginTop: 0,
+          marginBottom: 0,
+          fontSize: '2.5rem',
         }}>
-          {logoUrl && (
-            <img
-              src={logoUrl}
-              alt="Logo"
-              style={{
-                height: '4rem',
-                width: 'auto',
-                maxWidth: '200px',
-              }}
-            />
-          )}
-          {companyName && (
-            <div style={{
-              fontSize: '0.75rem',
-              color: fontColor,
-              fontWeight: '600',
-              textAlign: 'right',
-              lineHeight: 1.3,
-              maxWidth: '200px',
-            }}>
-              {companyName}
-            </div>
-          )}
-        </div>
+          Tasks
+        </h2>
       </div>
 
       {/* Success Message */}
