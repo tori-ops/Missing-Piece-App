@@ -22,6 +22,13 @@ export async function GET(request: Request) {
       where: { id: tenantId },
       select: {
         businessName: true,
+        firstName: true,
+        lastName: true,
+        phone: true,
+        email: true,
+        streetAddress: true,
+        city: true,
+        state: true,
         brandingCompanyName: true,
         brandingTagline: true,
         brandingFooterText: true,

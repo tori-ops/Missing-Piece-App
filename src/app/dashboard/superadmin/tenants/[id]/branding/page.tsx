@@ -11,6 +11,13 @@ import ExtrasTab from '@/components/branding/ExtrasTab';
 
 interface BrandingData {
   businessName: string;
+  firstName: string | null;
+  lastName: string | null;
+  phone: string | null;
+  email: string;
+  streetAddress: string | null;
+  city: string | null;
+  state: string | null;
   brandingCompanyName: string | null;
   brandingTagline: string | null;
   brandingFooterText: string | null;
@@ -42,6 +49,13 @@ export default function TenantBrandingSuitePage() {
   
   const [brandingData, setBrandingData] = useState<BrandingData>({
     businessName: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    streetAddress: '',
+    city: '',
+    state: '',
     brandingCompanyName: '',
     brandingTagline: '',
     brandingFooterText: '',
