@@ -258,7 +258,6 @@ export default function ClientDashboardContent({
         width: '100%',
         marginBottom: '2rem',
         borderRadius: '6px',
-        overflow: 'hidden',
         minHeight: '200px',
         background: primaryColor,
         border: `2px solid ${primaryColor}`,
