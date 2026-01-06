@@ -374,16 +374,34 @@ export default function ClientDashboardContent({
         </p>
       </div>
 
-      {/* Your Tools Header */}
-      <h2 style={{ 
-        color: primaryColor, 
-        margin: '0 0 1.5rem 0', 
-        fontSize: '2.5rem', 
-        fontFamily: headerFontFamily,
-        textAlign: 'center'
+      {/* Your Tools Card */}
+      <div style={{ 
+        position: 'relative',
+        width: 'fit-content',
+        marginBottom: '2rem',
+        borderRadius: '6px',
+        minHeight: 'auto',
+        background: primaryColor,
+        border: `2px solid ${primaryColor}`,
+        boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1.5rem 2rem',
+        marginLeft: 'auto',
+        marginRight: 'auto'
       }}>
-        Your Tools
-      </h2>
+        <h2 style={{ 
+          color: fontColor, 
+          margin: 0, 
+          fontSize: '1.75rem', 
+          fontFamily: headerFontFamily,
+          position: 'relative',
+          zIndex: 2
+        }}>
+          Your Tools
+        </h2>
+      </div>
 
       {/* Meeting Notes, Tasks, Weather & Astrology Cards */}
       {clientProfile.weddingDate && clientProfile.venueLat && clientProfile.venueLng && (

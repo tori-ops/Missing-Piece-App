@@ -230,7 +230,7 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
           Dashboard Overlay (PNG - Recommended for marble/texture patterns)
         </label>
         <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.85rem', color: '#999' }}>
-          📐 Appears on client dashboard at 45% opacity. Best for repeating patterns or textures like marble, watercolor, or geometric designs.
+          📐 Background image for client dashboard. Opacity is controlled by the slider below. Best for repeating patterns or textures like marble, watercolor, or geometric designs.
         </p>
         <input
           type="file"

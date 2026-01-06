@@ -473,7 +473,7 @@ export default function TenantBrandingForm({
           Dashboard Overlay (PNG - Recommended for marble/texture patterns)
         </label>
         <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', color: SUPERADMIN_FONT }}>
-          📐 Appears on client dashboard at 45% opacity. Best for repeating patterns or textures.
+          📐 Background image for client dashboard. Opacity is controlled by the slider below once uploaded.
         </p>
         <input
           type="file"
@@ -498,11 +498,11 @@ export default function TenantBrandingForm({
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                opacity: 0.45,
+                opacity: (formData.overlayOpacity || 60) / 100,
               }}
             />
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: SUPERADMIN_FONT, fontWeight: '600' }}>
-              Preview (45% opacity)
+              Opacity: {formData.overlayOpacity || 60}%
             </div>
           </div>
         )}
