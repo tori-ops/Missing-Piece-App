@@ -70,6 +70,7 @@ export default function TenantBrandingForm({
       const formDataToSend = new FormData();
       formDataToSend.append('file', file);
       formDataToSend.append('fileType', fileType);
+      formDataToSend.append('tenantId', tenantId);
 
       const response = await fetch('/api/admin/upload-logo', {
         method: 'POST',

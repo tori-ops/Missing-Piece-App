@@ -1,36 +1,58 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-import { put } from '@vercel/blob';
-import { v4 as uuidv4 } from 'uuid';
 
 const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
 const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'svg'];
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
     if (!session) {
-      return Response.json(
+      return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
+    // Only SUPERADMIN can upload branding files
+    if ((session.user as any)?.role !== 'SUPERADMIN') {
+      return NextResponse.json(
+        { error: 'Only superadmins can upload branding files' },
+        { status: 403 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const fileType = formData.get('fileType') as string; // 'logo' or 'favicon'
+    const fileType = formData.get('fileType') as string; // 'logo', 'favicon', or 'overlay'
+    const tenantId = formData.get('tenantId') as string;
 
     if (!file) {
-      return Response.json(
+      return NextResponse.json(
         { error: 'No file provided' },
+        { status: 400 }
+      );
+    }
+
+    if (!fileType || !['logo', 'favicon', 'overlay'].includes(fileType)) {
+      return NextResponse.json(
+        { error: 'Invalid file type. Must be logo, favicon, or overlay' },
+        { status: 400 }
+      );
+    }
+
+    if (!tenantId) {
+      return NextResponse.json(
+        { error: 'Tenant ID is required' },
         { status: 400 }
       );
     }
 
     // Validate file type
     if (!ALLOWED_TYPES.includes(file.type)) {
-      return Response.json(
+      return NextResponse.json(
         { error: 'Invalid file type. Only PNG, JPG, and SVG are allowed.' },
         { status: 400 }
       );
@@ -40,35 +62,62 @@ export async function POST(request: Request) {
     const fileName = file.name.toLowerCase();
     const hasValidExtension = ALLOWED_EXTENSIONS.some(ext => fileName.endsWith(`.${ext}`));
     if (!hasValidExtension) {
-      return Response.json(
+      return NextResponse.json(
         { error: 'Invalid file extension. Only PNG, JPG, and SVG are allowed.' },
         { status: 400 }
       );
     }
 
-    // Generate unique filename
-    const ext = fileName.split('.').pop();
-    const uniqueFileName = `${fileType}-${uuidv4()}.${ext}`;
-    
-    // Upload to Vercel Blob
-    const blob = await put(uniqueFileName, file, {
-      access: 'public',
-      addRandomSuffix: false,
-    });
+    // Import Supabase at runtime
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!
+    );
 
-    return Response.json(
+    // Generate unique filename: tenant-{fileType}-{timestamp}.{ext}
+    const ext = fileName.split('.').pop();
+    const timestamp = Date.now();
+    const storagePath = `${fileType}s/${tenantId}-${fileType}-${timestamp}.${ext}`;
+
+    // Convert file to buffer
+    const buffer = await file.arrayBuffer();
+
+    // Upload to Supabase tenant-branding bucket
+    const { error: uploadError } = await supabase.storage
+      .from('tenant-branding')
+      .upload(storagePath, buffer, {
+        contentType: file.type,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error('Supabase upload error:', uploadError);
+      return NextResponse.json(
+        { error: uploadError.message || 'Upload failed' },
+        { status: 500 }
+      );
+    }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('tenant-branding')
+      .getPublicUrl(storagePath);
+
+    return NextResponse.json(
       { 
-        filePath: blob.url,
-        fileName: uniqueFileName,
+        filePath: publicUrl,
+        fileName: `${tenantId}-${fileType}-${timestamp}.${ext}`,
         size: file.size,
-        type: file.type
+        type: file.type,
+        storagePath
       },
       { status: 200 }
     );
   } catch (error) {
     console.error('Upload error:', error);
-    return Response.json(
-      { error: 'Failed to upload file' },
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to upload file' },
       { status: 500 }
     );
   }
