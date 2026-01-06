@@ -302,6 +302,8 @@ export default function ClientDashboardContent({
         <h1 style={{ 
           color: fontColor, 
           margin: 0, 
+          marginTop: '5px',
+          marginLeft: '2px',
           fontSize: '2.5rem', 
           fontFamily: headerFontFamily,
           position: 'relative',
