@@ -369,18 +369,9 @@ export default function ClientDashboardContent({
             Your wedding details will appear here once they&apos;re added.
           </p>
         )}
-      </div>
-
-      {/* Coordinated By - Under Wedding Details Card */}
-      <div style={{ 
-        textAlign: 'center', 
-        marginBottom: '2rem',
-        color: primaryColor, 
-        fontSize: '1rem', 
-        fontFamily: bodyFontFamily,
-        opacity: 0.7
-      }}>
-        Coordinated by <strong style={{ fontWeight: '600' }}>{companyName}</strong>
+        <p style={{ color: fontColor, marginTop: '1rem', marginBottom: '0', fontSize: '0.9rem', borderTop: `1px solid ${fontColor}20`, paddingTop: '1rem' }}>
+          Coordinated by <strong style={{ fontWeight: '600' }}>{companyName}</strong>
+        </p>
       </div>
 
       {/* Your Tools Header */}
