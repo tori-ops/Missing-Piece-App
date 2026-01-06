@@ -43,8 +43,8 @@ export default function LoginForm() {
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.header}>
-          <h1 className={styles.title}>💍 Missing Piece</h1>
-          <p className={styles.subtitle}>Wedding Planning Platform</p>
+          <h1 className={styles.title}>Event Planning Workspace</h1>
+          <p className={styles.subtitle}>You'll be taken to your personal workspace, built for collaboration.</p>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -100,7 +100,7 @@ export default function LoginForm() {
         </div>
 
         <div className={styles.footer}>
-          <p>© 2025 Missing Piece. All rights reserved.</p>
+          <p>Engineered by The Missing Piece Planning & Events, LLC<br />© 2025</p>
         </div>
       </div>
 
