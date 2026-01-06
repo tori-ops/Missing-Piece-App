@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Trash2, FileText, Calendar, Plus } from 'lucide-react';
+import { FileText, Calendar, Plus } from 'lucide-react';
 import CreateTaskFromNoteModal from './CreateTaskFromNoteModal';
 
 interface MeetingNote {
@@ -153,24 +153,6 @@ export default function MeetingNotesDetailView({
     }
   };
 
-  const handleDeleteNote = async (noteId: string) => {
-    try {
-      const response = await fetch(`/api/meeting-notes/${noteId}`, { method: 'DELETE' });
-      if (response.ok) {
-        setSuccessMessage('Note deleted successfully!');
-        await fetchNotes();
-        setTimeout(() => setSuccessMessage(''), 3000);
-      } else {
-        const error = await response.json();
-        setSuccessMessage(`Error: ${error.error || 'Failed to delete note'}`);
-        setTimeout(() => setSuccessMessage(''), 3000);
-      }
-    } catch (error) {
-      console.error('Failed to delete note:', error);
-      setSuccessMessage(`Error: ${error instanceof Error ? error.message : 'Failed to delete note'}`);
-      setTimeout(() => setSuccessMessage(''), 3000);
-    }
-  };
 
   const startVoiceRecording = async () => {
     try {
@@ -557,7 +539,7 @@ export default function MeetingNotesDetailView({
                 style={{
                   border: `2px solid ${primaryColor}`,
                   borderRadius: '8px',
-                  padding: '1.5rem',
+                  padding: '1rem',
                   background: '#f9f9f9',
                   fontFamily: bodyFontFamily,
                 }}
@@ -565,7 +547,7 @@ export default function MeetingNotesDetailView({
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-                      <h4 style={{ margin: '0', color: fontColor, fontFamily: headerFontFamily }}>
+                      <h4 style={{ margin: '0', color: fontColor, fontFamily: headerFontFamily, fontSize: '1.4rem' }}>
                         {note.title}
                       </h4>
                       {note.client && !clientId && (
@@ -649,24 +631,6 @@ export default function MeetingNotesDetailView({
                       title="Create task from this note"
                     >
                       <Plus size={18} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteNote(note.id)}
-                      style={{
-                        background: '#f44336',
-                        color: '#ffffff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        padding: '0.5rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        fontFamily: bodyFontFamily,
-                      }}
-                      title="Delete note"
-                    >
-                      <Trash2 size={18} />
                     </button>
                   </div>
                 </div>
