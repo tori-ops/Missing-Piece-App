@@ -317,7 +317,7 @@ export default function ClientDashboardContent({
       <div style={{ 
         background: primaryColor, 
         border: `2px solid ${primaryColor}`, 
-        borderRadius: '6px', 
+        borderRadius: '3px',
         padding: '1.5rem',
         marginBottom: '0.5rem',
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
@@ -326,41 +326,39 @@ export default function ClientDashboardContent({
         boxSizing: 'border-box',
         position: 'relative'
       }}>
-        {/* Logo - positioned on the right, vertically centered */}
-        {logoUrl && (
-          <img 
-            src={logoUrl} 
-            alt={companyName} 
-            style={{ 
-              position: 'absolute',
-              right: '1.5rem',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              maxHeight: 'calc(100% - 3rem)',
-              maxWidth: '30%',
-              backgroundColor: 'transparent',
-              objectFit: 'contain'
-            }} 
-          />
-        )}
+        {/* Wedding Bands - positioned on the right, vertically centered */}
+        <img 
+          src="/uploads/silver-bands.png" 
+          alt="wedding bands" 
+          style={{ 
+            position: 'absolute',
+            right: '1.5rem',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            maxHeight: 'calc(100% - 3rem)',
+            maxWidth: '30%',
+            backgroundColor: 'transparent',
+            objectFit: 'contain'
+          }} 
+        />
         <h2 style={{ color: fontColor, marginTop: 0, marginBottom: '1rem', fontFamily: headerFontFamily, fontSize: '1.75rem' }}>Your Wedding Details</h2>
         {clientProfile.weddingDate && (
-          <p style={{ color: fontColor, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+          <p style={{ color: fontColor, marginBottom: '0.4rem', fontSize: '0.95rem' }}>
             Your Big Day: <strong>{new Date(clientProfile.weddingDate).toLocaleDateString()}</strong>
           </p>
         )}
         {clientProfile.budgetCents && (
-          <p style={{ color: fontColor, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+          <p style={{ color: fontColor, marginBottom: '0.4rem', fontSize: '0.95rem' }}>
             Budget: <strong>${(clientProfile.budgetCents / 100).toLocaleString()}</strong>
           </p>
         )}
         {clientProfile.estimatedGuestCount && (
-          <p style={{ color: fontColor, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+          <p style={{ color: fontColor, marginBottom: '0.4rem', fontSize: '0.95rem' }}>
             Guest Count: <strong>{clientProfile.estimatedGuestCount}</strong>
           </p>
         )}
         {clientProfile.weddingLocation && (
-          <p style={{ color: fontColor, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+          <p style={{ color: fontColor, marginBottom: '0.4rem', fontSize: '0.95rem' }}>
             Venue: <strong>{clientProfile.weddingLocation}</strong>
           </p>
         )}
@@ -369,11 +367,7 @@ export default function ClientDashboardContent({
             Your wedding details will appear here once they&apos;re added.
           </p>
         )}
-        <p style={{ color: fontColor, marginTop: '1rem', marginBottom: '0', fontSize: '0.9rem', borderTop: `1px solid ${fontColor}20`, paddingTop: '1rem' }}>
-          Coordinated by <strong style={{ fontWeight: '600' }}>{companyName}</strong>
-        </p>
-      </div>
-
+        <p style={{ color: fontColor, marginTop: '1rem', marginBottom: '0', fontSize: '0.9rem', paddingTop: '1rem' }}>
       {/* Your Tools Header */}
       <h2 style={{ 
         color: primaryColor, 
