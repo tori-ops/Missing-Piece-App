@@ -318,7 +318,7 @@ export default function ClientDashboardContent({
         background: primaryColor, 
         border: `2px solid ${primaryColor}`, 
         borderRadius: '3px',
-        padding: '1.5rem',
+        padding: '1rem',
         marginBottom: '0.5rem',
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
         fontFamily: bodyFontFamily,
