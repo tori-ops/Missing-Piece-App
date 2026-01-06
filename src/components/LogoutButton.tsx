@@ -11,30 +11,27 @@ export default function LogoutButton({ primaryColor = '#274E13' }: LogoutButtonP
     await signOut({ redirect: true, callbackUrl: '/' });
   };
 
-  const hoverColor = primaryColor === '#274E13' ? '#1a3d0a' : `${primaryColor}dd`;
-
   return (
     <button
       onClick={handleLogout}
       style={{
-        backgroundColor: primaryColor,
-        color: 'white',
-        border: 'none',
+        background: `${primaryColor}20`,
+        color: primaryColor,
+        border: `1px solid ${primaryColor}`,
         padding: '0.75rem 1.5rem',
         borderRadius: '6px',
-        fontSize: '1rem',
+        fontSize: '0.95rem',
         fontWeight: '600',
         cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        boxShadow: `0 2px 8px ${primaryColor}33`,
+        transition: 'all 0.2s ease',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = hoverColor;
-        e.currentTarget.style.boxShadow = `0 4px 12px ${primaryColor}55`;
+        (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
+        (e.currentTarget as HTMLButtonElement).style.color = 'white';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = primaryColor;
-        e.currentTarget.style.boxShadow = `0 2px 8px ${primaryColor}33`;
+        (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
+        (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
       }}
     >
       Logout

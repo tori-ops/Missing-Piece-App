@@ -1078,17 +1078,27 @@ export default function WebsiteBuilderForm({
           onClick={handleSave}
           disabled={saving}
           style={{
-            padding: '0.75rem 2rem',
+            padding: '0.75rem 1.5rem',
             backgroundColor: primaryColor,
             color: '#ffffff',
-            border: 'none',
-            borderRadius: '4px',
+            border: `1px solid ${primaryColor}`,
+            borderRadius: '6px',
             cursor: saving ? 'not-allowed' : 'pointer',
             fontFamily: bodyFontFamily,
-            fontSize: '1rem',
+            fontSize: '0.95rem',
             fontWeight: '600',
             opacity: saving ? 0.6 : 1,
             transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            if (!saving) {
+              (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${primaryColor}30`;
+              (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
+            (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
           }}
         >
           {saving ? 'Saving...' : 'Save Information'}
@@ -1096,16 +1106,24 @@ export default function WebsiteBuilderForm({
         <button
           onClick={onBack}
           style={{
-            padding: '0.75rem 2rem',
-            backgroundColor: 'transparent',
+            padding: '0.75rem 1.5rem',
+            background: `${primaryColor}20`,
             color: primaryColor,
-            border: `2px solid ${primaryColor}`,
-            borderRadius: '4px',
+            border: `1px solid ${primaryColor}`,
+            borderRadius: '6px',
             cursor: 'pointer',
             fontFamily: bodyFontFamily,
-            fontSize: '1rem',
+            fontSize: '0.95rem',
             fontWeight: '600',
             transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
+            (e.currentTarget as HTMLButtonElement).style.color = 'white';
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
+            (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
           }}
         >
           Back
