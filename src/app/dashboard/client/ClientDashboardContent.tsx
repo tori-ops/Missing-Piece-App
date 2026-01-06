@@ -230,21 +230,6 @@ export default function ClientDashboardContent({
             <div style={{ fontWeight: '600' }}>{companyName}</div>
           </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-          {logoUrl ? (
-            <img 
-              src={logoUrl} 
-              alt={companyName} 
-              style={{ 
-                height: '80px', 
-                maxWidth: '100%',
-                backgroundColor: 'transparent'
-              }} 
-            />
-          ) : (
-            <span style={{ fontSize: '2rem' }}>💍</span>
-          )}
-        </div>
       </div>
 
       {/* Wedding Details Card */}
@@ -257,8 +242,26 @@ export default function ClientDashboardContent({
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
         fontFamily: bodyFontFamily,
         width: '100%',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        position: 'relative'
       }}>
+        {/* Logo - positioned on the right, vertically centered */}
+        {logoUrl && (
+          <img 
+            src={logoUrl} 
+            alt={companyName} 
+            style={{ 
+              position: 'absolute',
+              right: '1.5rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              maxHeight: 'calc(100% - 3rem)',
+              maxWidth: '30%',
+              backgroundColor: 'transparent',
+              objectFit: 'contain'
+            }} 
+          />
+        )}
         <h2 style={{ color: fontColor, marginTop: 0, marginBottom: '1rem', fontFamily: headerFontFamily, fontSize: '1.75rem' }}>Your Wedding Details</h2>
         {clientProfile.weddingDate && (
           <p style={{ color: fontColor, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
