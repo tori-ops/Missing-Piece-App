@@ -273,8 +273,8 @@ export default function ClientDashboardContent({
           alt="floral decoration" 
           style={{ 
             position: 'absolute',
-            top: '-30px',
-            left: '-37px',
+            top: '-38px',
+            left: '-46px',
             width: '200px',
             height: 'auto',
             zIndex: 1,
