@@ -430,38 +430,68 @@ export default function WebsiteBuilderForm({
         </div>
       )}
 
-      {/* Tabs - Two rows: 4 on top, 3 on bottom */}
+      {/* Tabs - Two centered rows */}
       <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '0.5rem',
         marginBottom: '2rem',
         borderBottom: `2px solid ${primaryColor}15`,
         paddingBottom: '0.5rem'
       }}>
-        {(['story', 'images', 'design', 'hero', 'url', 'registries', 'misc'] as const).map((tab, index) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: activeTab === tab ? primaryColor : 'transparent',
-              color: activeTab === tab ? '#ffffff' : primaryColor,
-              border: 'none',
-              cursor: 'pointer',
-              fontFamily: bodyFontFamily,
-              fontSize: '0.85rem',
-              fontWeight: activeTab === tab ? '600' : '400',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease',
-              // Force second row for last 3 tabs
-              flexBasis: index < 4 ? 'auto' : 'auto',
-              marginRight: index === 3 ? '100%' : '0'
-            }}
-          >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </button>
-        ))}
+        {/* Row 1: Story, Images, Design, Hero */}
+        <div style={{
+          display: 'flex',
+          gap: '0.5rem',
+          marginBottom: '0.5rem',
+          justifyContent: 'center'
+        }}>
+          {(['story', 'images', 'design', 'hero'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '0.5rem 1rem',
+                backgroundColor: activeTab === tab ? primaryColor : 'transparent',
+                color: activeTab === tab ? '#ffffff' : primaryColor,
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: bodyFontFamily,
+                fontSize: '0.85rem',
+                fontWeight: activeTab === tab ? '600' : '400',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        {/* Row 2: URL, Registries, Miscellaneous */}
+        <div style={{
+          display: 'flex',
+          gap: '0.5rem',
+          justifyContent: 'center'
+        }}>
+          {(['url', 'registries', 'misc'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '0.5rem 1rem',
+                backgroundColor: activeTab === tab ? primaryColor : 'transparent',
+                color: activeTab === tab ? '#ffffff' : primaryColor,
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: bodyFontFamily,
+                fontSize: '0.85rem',
+                fontWeight: activeTab === tab ? '600' : '400',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {tab === 'misc' ? 'Miscellaneous' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Tab Content */}
