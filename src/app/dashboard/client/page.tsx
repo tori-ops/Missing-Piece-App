@@ -85,6 +85,7 @@ export default async function ClientDashboard() {
   // Use tenant branding with fallbacks
   const primaryColor = tenant?.brandingPrimaryColor || '#274E13';
   const secondaryColor = tenant?.brandingSecondaryColor || '#e1e0d0';
+  const secondaryColorOpacity = tenant?.brandingSecondaryColorOpacity || 55;
   const backgroundColor = secondaryColor; // Main container uses secondary color
   const fontColor = tenant?.brandingFontColor || '#1B5E20';
   const companyName = tenant?.brandingCompanyName || tenant?.businessName || 'The Missing Piece';
@@ -101,6 +102,7 @@ export default async function ClientDashboard() {
         companyName={companyName}
         primaryColor={primaryColor}
         backgroundColor={backgroundColor}
+        secondaryColorOpacity={secondaryColorOpacity}
         fontColor={fontColor}
         fontFamily={fontFamily}
         headerFontFamily={headerFontFamily}

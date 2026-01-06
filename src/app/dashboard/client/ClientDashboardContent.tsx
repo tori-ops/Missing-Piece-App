@@ -22,6 +22,7 @@ interface ClientDashboardContentProps {
   primaryColor: string;
   
   backgroundColor: string;
+  secondaryColorOpacity: number;
   fontColor: string;
   fontFamily: string;
   headerFontFamily: string;
@@ -37,6 +38,7 @@ export default function ClientDashboardContent({
   primaryColor,
   
   backgroundColor,
+  secondaryColorOpacity,
   fontColor,
   fontFamily,
   headerFontFamily,
@@ -220,12 +222,13 @@ export default function ClientDashboardContent({
         left: 0,
         width: '100%',
         height: '100%',
+        backgroundColor: backgroundColor,
         backgroundImage: `url('${overlayUrl}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
-        opacity: 0.45,
+        opacity: (secondaryColorOpacity / 100) * 0.45,
         zIndex: 0,
         pointerEvents: 'none'
       }} />
