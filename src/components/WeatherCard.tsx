@@ -19,7 +19,7 @@ export default function WeatherCard({
       style={{
         background: primaryColor,
         border: `2px solid ${primaryColor}`,
-        borderRadius: '8px',
+        borderRadius: '6px',
         padding: '1.5rem',
         cursor: 'pointer',
         transition: 'all 0.3s ease',
