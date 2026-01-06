@@ -2,7 +2,6 @@
 
 interface AstrologyCardProps {
   primaryColor?: string;
-  secondaryColor?: string;
   bodyFontFamily?: string;
   textColor?: string;
   onClick: () => void;
@@ -10,7 +9,6 @@ interface AstrologyCardProps {
 
 export default function AstrologyCard({
   primaryColor = '#274E13',
-  secondaryColor = '#e1e0d0',
   bodyFontFamily = "'Poppins', sans-serif",
   textColor = '#FFFFFF',
   onClick,
@@ -20,7 +18,7 @@ export default function AstrologyCard({
       onClick={onClick}
       style={{
         background: primaryColor,
-        border: `2px solid ${secondaryColor}`,
+        border: `2px solid ${primaryColor}`,
         borderRadius: '6px',
         padding: '1rem',
         cursor: 'pointer',
