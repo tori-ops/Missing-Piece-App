@@ -213,37 +213,43 @@ export default function ClientDashboardContent({
 
   // Main dashboard view
   return (
-    <>
-    {/* Overlay - Fixed behind all content (if provided) */}
-    {overlayUrl && (
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: backgroundColor,
-        backgroundImage: `url('${overlayUrl}')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-        opacity: (secondaryColorOpacity / 100) * 0.45,
-        zIndex: 0,
-        pointerEvents: 'none'
-      }} />
-    )}
-    <div style={{ 
-      padding: '1.5rem', 
-      minHeight: '100vh', 
-      background: backgroundColor, 
-      fontFamily, 
-      color: fontColor,
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
       width: '100%',
-      boxSizing: 'border-box',
-      position: 'relative',
-      zIndex: 1
+      height: '100%',
+      background: backgroundColor,
+      overflow: 'auto'
     }}>
+      {/* Overlay - Fixed behind all content (if provided) */}
+      {overlayUrl && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `url('${overlayUrl}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+          opacity: (secondaryColorOpacity / 100) * 0.45,
+          zIndex: 0,
+          pointerEvents: 'none'
+        }} />
+      )}
+      <div style={{ 
+        padding: '1.5rem', 
+        minHeight: '100vh', 
+        fontFamily, 
+        color: fontColor,
+        width: '100%',
+        boxSizing: 'border-box',
+        position: 'relative',
+        zIndex: 1
+      }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1.5rem', marginBottom: '2rem', flexWrap: 'wrap', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ flex: 1, minWidth: '200px' }}>
@@ -378,7 +384,7 @@ export default function ClientDashboardContent({
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <LogoutButton primaryColor={primaryColor} />
       </div>
+      </div>
     </div>
-    </>
   );
 }
