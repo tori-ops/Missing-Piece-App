@@ -250,7 +250,7 @@ export default function ClientDashboardContent({
       <div style={{ 
         background: primaryColor, 
         border: `2px solid ${primaryColor}`, 
-        borderRadius: '8px', 
+        borderRadius: '6px', 
         padding: '1.5rem',
         marginBottom: '1.5rem',
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
@@ -258,7 +258,7 @@ export default function ClientDashboardContent({
         width: '100%',
         boxSizing: 'border-box'
       }}>
-        <h2 style={{ color: lightenColor(primaryColor, 100), marginTop: 0, marginBottom: '1rem', fontFamily: headerFontFamily, fontSize: '1.5rem' }}>Your Wedding Details</h2>
+        <h2 style={{ color: lightenColor(primaryColor, 100), marginTop: 0, marginBottom: '1rem', fontFamily: headerFontFamily, fontSize: '1.75rem' }}>Your Wedding Details</h2>
         {clientProfile.weddingDate && (
           <p style={{ color: lightenColor(primaryColor, 100), marginBottom: '0.75rem', fontSize: '0.95rem' }}>
             Your Big Day: <strong>{new Date(clientProfile.weddingDate).toLocaleDateString()}</strong>
