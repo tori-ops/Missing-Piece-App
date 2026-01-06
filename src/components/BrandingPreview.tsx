@@ -12,6 +12,7 @@ interface BrandingPreviewProps {
     fontColor: string;
     logoUrl: string | null;
     logoBackgroundRemoval: boolean;
+    overlayUrl: string | null;
     companyName: string;
     tagline: string | null;
     headerFontFamily?: string;
@@ -59,9 +60,27 @@ export default function BrandingPreview({ branding, onClose, onConfirm }: Brandi
           overflowY: 'auto',
           boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
           position: 'relative',
+          overflow: 'hidden',
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Overlay Image */}
+        {branding.overlayUrl && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `url('${branding.overlayUrl}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: branding.overlayOpacity / 100,
+            zIndex: 0,
+            pointerEvents: 'none',
+          }} />
+        )}
         <button
           onClick={onClose}
           style={{
@@ -79,7 +98,7 @@ export default function BrandingPreview({ branding, onClose, onConfirm }: Brandi
           ✕
         </button>
 
-        <div style={{ padding: '2rem', background: secondaryColorWithOpacity, borderBottom: `3px solid ${branding.primaryColor}` }}>
+        <div style={{ padding: '2rem', background: secondaryColorWithOpacity, borderBottom: `3px solid ${branding.primaryColor}`, position: 'relative', zIndex: 1 }}>
           <h2 style={{ color: branding.primaryColor, margin: '0 0 1rem 0', fontSize: '1.5rem' }}>
             🎨 Brand Preview
           </h2>
@@ -90,7 +109,7 @@ export default function BrandingPreview({ branding, onClose, onConfirm }: Brandi
 
         <div style={{ padding: '2rem' }}>
           <h3 style={{ color: branding.primaryColor, marginTop: 0 }}>👰 Client Dashboard Preview</h3>
-          <div style={{ background: secondaryColorWithOpacity, borderRadius: '8px', padding: '1.5rem', border: `2px solid ${branding.primaryColor}` }}>
+          <div style={{ background: secondaryColorWithOpacity, borderRadius: '8px', padding: '1.5rem', border: `2px solid ${branding.primaryColor}`, position: 'relative', zIndex: 1 }}>
             <h2 style={{ color: branding.primaryColor, margin: '0 0 1rem 0', fontSize: '1.1rem' }}>Welcome, Sarah!</h2>
             <p style={{ color: branding.fontColor, fontSize: '0.75rem', margin: '0 0 1rem 0' }}>
               Powered by The Missing Piece Planning
@@ -106,7 +125,7 @@ export default function BrandingPreview({ branding, onClose, onConfirm }: Brandi
 
           <div style={{ marginTop: '3rem' }}>
             <h3 style={{ color: branding.primaryColor, marginTop: 0 }}>📊 Planner Dashboard</h3>
-            <div style={{ background: secondaryColorWithOpacity, borderRadius: '8px', padding: '1.5rem', border: `2px solid ${branding.primaryColor}` }}>
+            <div style={{ background: secondaryColorWithOpacity, borderRadius: '8px', padding: '1.5rem', border: `2px solid ${branding.primaryColor}`, position: 'relative', zIndex: 1 }}>
               <h2 style={{ color: branding.primaryColor, margin: '0 0 1rem 0', fontSize: '1.1rem' }}>Welcome to your planner workspace!</h2>
               <div style={{ background: 'white', border: `2px solid ${branding.primaryColor}`, borderRadius: '8px', padding: '1rem' }}>
                 <h3 style={{ color: branding.fontColor, marginTop: 0, fontSize: '1rem' }}>Your Planning Dashboard</h3>
@@ -119,13 +138,13 @@ export default function BrandingPreview({ branding, onClose, onConfirm }: Brandi
             </div>
           </div>
 
-          <div style={{ marginTop: '2rem', padding: '1.5rem', background: secondaryColorWithOpacity, borderRadius: '8px' }}>
+          <div style={{ marginTop: '2rem', padding: '1.5rem', background: secondaryColorWithOpacity, borderRadius: '8px', position: 'relative', zIndex: 1 }}>
             <p style={{ color: branding.fontColor, margin: 0 }}>✓ This branding will be applied to all your clients' dashboards and workspace.</p>
             {confirming && <p style={{ color: branding.primaryColor, margin: '0.5rem 0 0 0', fontWeight: 'bold' }}>🔄 Applying changes...</p>}
           </div>
         </div>
 
-        <div style={{ padding: '1.5rem', borderTop: '1px solid #eee', display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+        <div style={{ padding: '1.5rem', borderTop: '1px solid #eee', display: 'flex', gap: '1rem', justifyContent: 'flex-end', position: 'relative', zIndex: 1 }}>
           <button onClick={onClose} disabled={confirming} style={{ padding: '0.75rem 1.5rem', background: 'white', color: branding.primaryColor, border: `2px solid ${branding.primaryColor}`, borderRadius: '4px', cursor: 'pointer' }}>
             Back
           </button>
