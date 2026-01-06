@@ -20,7 +20,7 @@ export default function AstrologyCard({
         background: primaryColor,
         border: `2px solid ${primaryColor}`,
         borderRadius: '6px',
-        padding: '1.5rem',
+        padding: '1rem',
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         textAlign: 'center',
@@ -42,7 +42,7 @@ export default function AstrologyCard({
         (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
       }}
     >
-      <div style={{ fontSize: '2rem', margin: '0 0 0.5rem 0' }}>🌙⭐</div>
+      <div style={{ fontSize: '2rem', margin: '0 0 0.5rem 0' }}>⭐</div>
       <h3 style={{ color: textColor, fontFamily: bodyFontFamily, margin: '0.5rem 0', fontSize: '1rem' }}>
         Astrology
       </h3>

@@ -20,7 +20,7 @@ export default function WeatherCard({
         background: primaryColor,
         border: `2px solid ${primaryColor}`,
         borderRadius: '6px',
-        padding: '1.5rem',
+        padding: '1rem',
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         textAlign: 'center',
@@ -44,7 +44,7 @@ export default function WeatherCard({
     >
       <div style={{ fontSize: '2rem', margin: '0 0 0.5rem 0' }}>🌤️</div>
       <h3 style={{ color: textColor, fontFamily: bodyFontFamily, margin: '0.5rem 0', fontSize: '1rem' }}>
-        Weather & Golden Hour
+        Golden Hour Predictor
       </h3>
     </button>
   );
