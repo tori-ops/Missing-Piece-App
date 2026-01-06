@@ -260,7 +260,7 @@ export default function ClientDashboardContent({
         borderRadius: '6px',
         overflow: 'hidden',
         minHeight: '200px',
-        backgroundImage: `url('/client-welcome-card.svg')`,
+        backgroundImage: `url('/uploads/client-welcome-card.svg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
