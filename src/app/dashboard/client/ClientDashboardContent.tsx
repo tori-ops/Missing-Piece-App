@@ -225,9 +225,10 @@ export default function ClientDashboardContent({
           <h1 style={{ color: primaryColor, margin: 0, fontSize: '2.5rem', fontFamily: headerFontFamily }}>
             Welcome, {clientProfile.couple1FirstName}!
           </h1>
-          <p style={{ color: primaryColor, fontSize: '1rem', margin: '0.5rem 0 0 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
-            Coordinated by {companyName}
-          </p>
+          <div style={{ color: primaryColor, fontSize: '1rem', margin: '0.25rem 0 0 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
+            <div>Coordinated by</div>
+            <div style={{ fontWeight: '600' }}>{companyName}</div>
+          </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
           {logoUrl ? (
