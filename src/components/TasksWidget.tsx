@@ -44,7 +44,7 @@ export default function TasksWidget({
         style={{
           background: primaryColor,
           border: `2px solid ${primaryColor}`,
-          borderRadius: '12px',
+          borderRadius: '8px',
           padding: '1.5rem',
           cursor: 'pointer',
           transition: 'all 0.3s ease',
@@ -69,8 +69,8 @@ export default function TasksWidget({
         }}
         aria-label="Open tasks"
       >
-        <div style={{ fontSize: '2.5rem', margin: '0 0 0.5rem 0' }}>✓</div>
-        <h3 style={{ color: textColor, fontFamily: bodyFontFamily, margin: '0.5rem 0', fontSize: '1.25rem' }}>
+        <div style={{ fontSize: '2rem', margin: '0 0 0.5rem 0' }}>✓</div>
+        <h3 style={{ color: textColor, fontFamily: bodyFontFamily, margin: '0.5rem 0', fontSize: '1rem' }}>
           Tasks
         </h3>
       </button>
