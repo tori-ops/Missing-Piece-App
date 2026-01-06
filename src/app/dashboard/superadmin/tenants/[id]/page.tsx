@@ -4,7 +4,6 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import TenantBasicInfoForm from '@/components/TenantBasicInfoForm';
-import TenantBrandingForm from '@/components/TenantBrandingForm';
 import BrandingFooter from '@/components/BrandingFooter';
 
 export default async function TenantEditPage({ params }: { params: Promise<{ id: string }> }) {
@@ -123,11 +122,28 @@ export default async function TenantEditPage({ params }: { params: Promise<{ id:
           <h2 style={{ color: '#274E13', marginTop: 0 }}>🎨 Brand Suite (Optional)</h2>
           <p style={{ color: '#666', marginBottom: '0.5rem' }}>Customize how your clients see the platform with your brand colors, logo, and messaging.</p>
           <p style={{ color: '#999', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Leave fields empty to use default branding.</p>
-          <TenantBrandingForm 
-            tenantId={tenant.id} 
-            initialBranding={tenant}
-            isInEditPage={true}
-          />
+          
+          <Link href={`/dashboard/superadmin/tenants/${tenant.id}/branding`}>
+            <button style={{
+              padding: '0.75rem 1.5rem',
+              background: '#274E13',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = '#1f3c0a';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = '#274E13';
+            }}>
+              🎨 Open Branding Suite
+            </button>
+          </Link>
         </div>
       </div>
       <BrandingFooter />

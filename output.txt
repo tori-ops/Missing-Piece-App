@@ -1,0 +1,38 @@
+
+=== SUZIE (TENANT) ===
+Email: suzie@plan.com
+Role: TENANT
+Tenant ID: cmj3q2yug0004i89osf5pc0oh
+
+Suzie's Tenant:
+Tenant ID: cmj3q2yug0004i89osf5pc0oh
+Business Name: Once Upon a Plan..
+Branding Company: Once Upon a Plan..
+Branding Color: #8c005a
+Users: [
+  { email: 'testuser@test.local', role: 'TENANT' },
+  { email: 'suzie@plan.com', role: 'TENANT' },
+  { email: 'koleskiv05@yahoo.com', role: 'CLIENT' }
+]
+Clients: [ { id: 'cmjat7d4f0007jv04ye90izd0', couple1FirstName: 'Rebel' } ]
+
+=== KOLESKIV05 (CLIENT) ===
+Email: koleskiv05@yahoo.com
+Role: CLIENT
+Tenant ID: cmj3q2yug0004i89osf5pc0oh
+
+Koleskiv05's ClientProfile:
+Client ID: cmjat7d4f0007jv04ye90izd0
+Name: Rebel
+Assigned Tenant ID: cmj3q2yug0004i89osf5pc0oh
+Tenant Details: {
+  businessName: 'Once Upon a Plan..',
+  brandingCompanyName: 'Once Upon a Plan..'
+}
+
+=== TORI (TENANT) ===
+Role: TENANT
+Tenant ID: cmj9av3ty0000l104ergqbxck
+Tenant Business: The Missing Piece Planning and Events, LLC
+Tenant Branding: The Missing Piece Planning and Events, LLC
+Tenant Color: #274E13

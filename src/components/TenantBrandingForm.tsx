@@ -221,15 +221,20 @@ export default function TenantBrandingForm({
     }
   };
 
+  // SuperAdmin styling (fixed, not based on tenant branding being edited)
+  const SUPERADMIN_PRIMARY = '#274E13';
+  const SUPERADMIN_SECONDARY = '#D0CEB5';
+  const SUPERADMIN_FONT = '#000000';
+
   return (
     <form onSubmit={handleSubmit} style={{ 
       maxWidth: '600px',
-      color: '#000',
+      color: SUPERADMIN_FONT,
       fontFamily: 'Lora, serif',
       fontStyle: 'italic'
     }}>
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
           Company Name
         </label>
         <input
@@ -241,17 +246,17 @@ export default function TenantBrandingForm({
           style={{
             width: '100%',
             padding: '0.75rem',
-            border: `2px solid ${formData.primaryColor}`,
+            border: `2px solid ${SUPERADMIN_PRIMARY}`,
             borderRadius: '4px',
             fontSize: '1rem',
             boxSizing: 'border-box',
-            color: formData.fontColor,
+            color: SUPERADMIN_FONT,
           }}
         />
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
           Tagline
         </label>
         <input
@@ -263,18 +268,18 @@ export default function TenantBrandingForm({
           style={{
             width: '100%',
             padding: '0.75rem',
-            border: `2px solid ${formData.primaryColor}`,
+            border: `2px solid ${SUPERADMIN_PRIMARY}`,
             borderRadius: '4px',
             fontSize: '1rem',
             boxSizing: 'border-box',
-            color: formData.fontColor,
+            color: SUPERADMIN_FONT,
           }}
         />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
             Primary Color
           </label>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -286,7 +291,7 @@ export default function TenantBrandingForm({
               style={{
                 width: '60px',
                 height: '40px',
-                border: `2px solid ${formData.primaryColor}`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 cursor: 'pointer',
               }}
@@ -300,17 +305,17 @@ export default function TenantBrandingForm({
               style={{
                 flex: 1,
                 padding: '0.75rem',
-                border: `2px solid ${formData.primaryColor}`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 fontSize: '0.9rem',
-                color: formData.fontColor,
+                color: SUPERADMIN_FONT,
               }}
             />
           </div>
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
             Secondary Color
           </label>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -322,7 +327,7 @@ export default function TenantBrandingForm({
               style={{
                 width: '60px',
                 height: '40px',
-                border: `2px solid ${formData.primaryColor}`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 cursor: 'pointer',
               }}
@@ -336,10 +341,10 @@ export default function TenantBrandingForm({
               style={{
                 flex: 1,
                 padding: '0.75rem',
-                border: `2px solid ${formData.primaryColor}`,
+                border: `2px solid ${SUPERADMIN_PRIMARY}`,
                 borderRadius: '4px',
                 fontSize: '0.9rem',
-                color: formData.fontColor,
+                color: SUPERADMIN_FONT,
               }}
             />
           </div>
@@ -348,7 +353,7 @@ export default function TenantBrandingForm({
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
             Secondary Color Opacity
           </label>
           <div>
@@ -363,14 +368,14 @@ export default function TenantBrandingForm({
                 width: '100%',
               }}
             />
-            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: formData.fontColor }}>
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: SUPERADMIN_FONT }}>
               {formData.secondaryColorOpacity}% opacity
             </p>
           </div>
         </div>
 
         <div>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '600', color: formData.primaryColor, cursor: 'pointer' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY, cursor: 'pointer' }}>
             <input
               type="checkbox"
               name="logoBackgroundRemoval"
@@ -380,17 +385,17 @@ export default function TenantBrandingForm({
             />
             Remove Logo Background
           </label>
-          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: formData.fontColor }}>
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: SUPERADMIN_FONT }}>
             For logos with white backgrounds
           </p>
         </div>
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
           Font Color (Text Color - Must be Dark)
         </label>
-        <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', color: formData.fontColor }}>
+        <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', color: SUPERADMIN_FONT }}>
           ⚠️ Light colors (white, beige, vanilla, etc) are not recommended
         </p>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -416,17 +421,17 @@ export default function TenantBrandingForm({
             style={{
               flex: 1,
               padding: '0.75rem',
-              border: `2px solid ${formData.primaryColor}`,
+              border: `2px solid ${SUPERADMIN_PRIMARY}`,
               borderRadius: '4px',
               fontSize: '0.9rem',
-              color: formData.fontColor,
+              color: SUPERADMIN_FONT,
             }}
           />
         </div>
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
           Logo (PNG, JPG, or SVG)
         </label>
         <input
@@ -436,11 +441,11 @@ export default function TenantBrandingForm({
           style={{
             width: '100%',
             padding: '0.75rem',
-            border: `2px solid ${formData.primaryColor}`,
+            border: `2px solid ${SUPERADMIN_PRIMARY}`,
             borderRadius: '4px',
             fontSize: '1rem',
             boxSizing: 'border-box',
-            color: formData.fontColor,
+            color: SUPERADMIN_FONT,
           }}
         />
         {(logoPreview || formData.logoUrl) && (
@@ -460,10 +465,10 @@ export default function TenantBrandingForm({
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
           Dashboard Overlay (PNG - Recommended for marble/texture patterns)
         </label>
-        <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', color: formData.fontColor }}>
+        <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', color: SUPERADMIN_FONT }}>
           📐 Appears on client dashboard at 45% opacity. Best for repeating patterns or textures.
         </p>
         <input
@@ -473,15 +478,15 @@ export default function TenantBrandingForm({
           style={{
             width: '100%',
             padding: '0.75rem',
-            border: `2px solid ${formData.primaryColor}`,
+            border: `2px solid ${SUPERADMIN_PRIMARY}`,
             borderRadius: '4px',
             fontSize: '1rem',
             boxSizing: 'border-box',
-            color: formData.fontColor,
+            color: SUPERADMIN_FONT,
           }}
         />
         {(overlayPreview || formData.overlayUrl) && (
-          <div style={{ marginTop: '0.5rem', position: 'relative', height: '150px', overflow: 'hidden', borderRadius: '4px', border: `1px solid ${formData.primaryColor}20` }}>
+          <div style={{ marginTop: '0.5rem', position: 'relative', height: '150px', overflow: 'hidden', borderRadius: '4px', border: `1px solid ${SUPERADMIN_PRIMARY}20` }}>
             <img
               src={overlayPreview || formData.overlayUrl}
               alt="Overlay preview"
@@ -492,7 +497,7 @@ export default function TenantBrandingForm({
                 opacity: 0.45,
               }}
             />
-            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: formData.fontColor, fontWeight: '600' }}>
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: SUPERADMIN_FONT, fontWeight: '600' }}>
               Preview (45% opacity)
             </div>
           </div>
@@ -500,7 +505,7 @@ export default function TenantBrandingForm({
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
           Font Family
         </label>
         <select
@@ -510,12 +515,12 @@ export default function TenantBrandingForm({
           style={{
             width: '100%',
             padding: '0.75rem',
-            border: `2px solid ${formData.primaryColor}`,
+            border: `2px solid ${SUPERADMIN_PRIMARY}`,
             borderRadius: '4px',
             fontSize: '1rem',
             boxSizing: 'border-box',
             fontFamily: 'inherit',
-            color: formData.fontColor,
+            color: SUPERADMIN_FONT,
           }}
         >
           {AVAILABLE_FONTS.map((font) => (
@@ -524,7 +529,7 @@ export default function TenantBrandingForm({
             </option>
           ))}
         </select>
-        <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: formData.fontColor }}>
+        <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: SUPERADMIN_FONT }}>
           Preview: <span style={{ fontFamily: AVAILABLE_FONTS.find(f => f.name === formData.fontFamily)?.family || 'inherit', ...(AVAILABLE_FONTS.find(f => f.name === formData.fontFamily)?.displayStyle || {}) }}>
             The Quick Brown Fox Jumps Over the Lazy Dog
           </span>
@@ -533,7 +538,7 @@ export default function TenantBrandingForm({
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
             Header Font (Elegant, Script, Serif)
           </label>
           <select
@@ -542,12 +547,12 @@ export default function TenantBrandingForm({
             style={{
               width: '100%',
               padding: '0.75rem',
-              border: `2px solid ${formData.primaryColor}`,
+              border: `2px solid ${SUPERADMIN_PRIMARY}`,
               borderRadius: '4px',
               fontSize: '0.9rem',
               boxSizing: 'border-box',
               fontFamily: 'inherit',
-              color: formData.fontColor,
+              color: SUPERADMIN_FONT,
             }}
           >
             {HEADER_FONTS.map((font) => (
@@ -556,7 +561,7 @@ export default function TenantBrandingForm({
               </option>
             ))}
           </select>
-          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: formData.fontColor }}>
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: SUPERADMIN_FONT }}>
             Preview: <span style={{ fontFamily: HEADER_FONTS.find(f => f.name === formData.headerFontFamily)?.family || 'inherit', fontSize: '1.3rem', fontWeight: 'bold' }}>
               Elegant Heading
             </span>
@@ -564,7 +569,7 @@ export default function TenantBrandingForm({
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
             Body Font (Readable, Professional)
           </label>
           <select
@@ -573,12 +578,12 @@ export default function TenantBrandingForm({
             style={{
               width: '100%',
               padding: '0.75rem',
-              border: `2px solid ${formData.primaryColor}`,
+              border: `2px solid ${SUPERADMIN_PRIMARY}`,
               borderRadius: '4px',
               fontSize: '0.9rem',
               boxSizing: 'border-box',
               fontFamily: 'inherit',
-              color: formData.fontColor,
+              color: SUPERADMIN_FONT,
             }}
           >
             {BODY_FONTS.map((font) => (
@@ -587,7 +592,7 @@ export default function TenantBrandingForm({
               </option>
             ))}
           </select>
-          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: formData.fontColor }}>
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: SUPERADMIN_FONT }}>
             Preview: <span style={{ fontFamily: BODY_FONTS.find(f => f.name === formData.bodyFontFamily)?.family || 'inherit' }}>
               Body text for paragraphs
             </span>
@@ -596,7 +601,7 @@ export default function TenantBrandingForm({
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
           Favicon (PNG, JPG, or SVG)
         </label>
         <input
@@ -606,11 +611,11 @@ export default function TenantBrandingForm({
           style={{
             width: '100%',
             padding: '0.75rem',
-            border: `2px solid ${formData.primaryColor}`,
+            border: `2px solid ${SUPERADMIN_PRIMARY}`,
             borderRadius: '4px',
             fontSize: '1rem',
             boxSizing: 'border-box',
-            color: formData.fontColor,
+            color: SUPERADMIN_FONT,
           }}
         />
         {(faviconPreview || formData.faviconUrl) && (
@@ -629,7 +634,7 @@ export default function TenantBrandingForm({
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: formData.primaryColor }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
           Footer Text
         </label>
         <textarea
@@ -640,13 +645,13 @@ export default function TenantBrandingForm({
           style={{
             width: '100%',
             padding: '0.75rem',
-            border: `2px solid ${formData.primaryColor}`,
+            border: `2px solid ${SUPERADMIN_PRIMARY}`,
             borderRadius: '4px',
             fontSize: '1rem',
             minHeight: '80px',
             fontFamily: 'inherit',
             boxSizing: 'border-box',
-            color: formData.fontColor,
+            color: SUPERADMIN_FONT,
           }}
         />
       </div>
@@ -685,8 +690,8 @@ export default function TenantBrandingForm({
         style={{
           width: '100%',
           padding: '0.75rem 1.5rem',
-          background: formData.primaryColor,
-          color: formData.secondaryColor,
+          background: SUPERADMIN_PRIMARY,
+          color: SUPERADMIN_SECONDARY,
           border: 'none',
           borderRadius: '4px',
           fontSize: '1rem',
