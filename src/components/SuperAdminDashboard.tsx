@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import CreateTenantForm from './CreateTenantForm';
 import TenantBasicInfoForm from './TenantBasicInfoForm';
 import TenantBrandingForm from './TenantBrandingForm';
@@ -16,6 +17,7 @@ interface SquareSummary {
 }
 
 const SuperAdminDashboard: React.FC = () => {
+  const router = useRouter();
   const [tenants, setTenants] = useState<any[]>([]);
   const [showTenants, setShowTenants] = useState(false);
   const [square, setSquare] = useState<SquareSummary | null>(null);
@@ -113,10 +115,9 @@ const SuperAdminDashboard: React.FC = () => {
     }
   }
 
-  // Edit tenant handler - opens modal with forms
+  // Edit tenant handler - navigates to branding suite page
   function handleEditTenant(tenant: any) {
-    setEditingTenant(tenant);
-    setModal('edit-tenant');
+    router.push(`/dashboard/superadmin/tenants/${tenant.id}/branding`);
   }
 
   return (
