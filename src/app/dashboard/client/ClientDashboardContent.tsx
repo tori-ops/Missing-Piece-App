@@ -283,7 +283,7 @@ export default function ClientDashboardContent({
           }} 
         />
 
-        {/* Bottom Right Flora - 70% size */}
+        {/* Bottom Right Flora - 70% size, rotated 180 degrees */}
         <img 
           src="/uploads/corner-flora.png" 
           alt="floral decoration" 
@@ -294,7 +294,8 @@ export default function ClientDashboardContent({
             width: '140px',
             height: 'auto',
             zIndex: 1,
-            pointerEvents: 'none'
+            pointerEvents: 'none',
+            transform: 'rotate(180deg)'
           }} 
         />
         
