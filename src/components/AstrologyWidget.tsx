@@ -9,6 +9,7 @@ interface AstrologyWidgetProps {
   lng?: string;
   clientId?: string;
   primaryColor?: string;
+  secondaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
@@ -68,6 +69,7 @@ export default function AstrologyWidget({
   lng,
   clientId,
   primaryColor = '#274E13',
+  secondaryColor = '#e1e0d0',
   fontColor = '#000000',
   bodyFontFamily = "'Georgia', serif",
   headerFontFamily = "'Playfair Display', serif",
@@ -176,15 +178,15 @@ export default function AstrologyWidget({
   return (
     <div
       style={{
-        background: `linear-gradient(135deg, #6366F110 0%, #8B5CF610 100%)`,
-        border: `1px solid ${primaryColor}20`,
+        background: `linear-gradient(135deg, ${secondaryColor}20 0%, ${secondaryColor}10 100%)`,
+        border: `2px solid ${primaryColor}CC`,
         borderRadius: '12px',
         padding: '1.5rem',
       }}
     >
       <h3
         style={{
-          color: primaryColor,
+          color: secondaryColor,
           margin: '0 0 1.5rem 0',
           fontFamily: headerFontFamily,
           fontSize: '1.9em',

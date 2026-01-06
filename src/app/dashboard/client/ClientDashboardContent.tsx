@@ -129,6 +129,7 @@ export default function ClientDashboardContent({
           venueName={clientProfile.weddingLocation || undefined}
           venueAddress={venueAddress || undefined}
           primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}

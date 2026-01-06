@@ -11,6 +11,7 @@ interface AstrologyDetailViewProps {
   venueName?: string;
   venueAddress?: string;
   primaryColor?: string;
+  secondaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
@@ -28,6 +29,7 @@ export default function AstrologyDetailView({
   venueName,
   venueAddress,
   primaryColor = '#274E13',
+  secondaryColor = '#e1e0d0',
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
@@ -41,10 +43,10 @@ export default function AstrologyDetailView({
       <div style={{
         marginBottom: '2rem',
         paddingBottom: '1rem',
-        borderBottom: `2px solid ${primaryColor}20`,
+        borderBottom: `2px solid ${secondaryColor}`,
       }}>
         <h2 style={{ 
-          color: primaryColor,
+          color: secondaryColor,
           fontFamily: headerFontFamily,
           margin: 0,
           fontSize: '2.5rem',
@@ -84,6 +86,7 @@ export default function AstrologyDetailView({
         lat={venueLat}
         lng={venueLng}
         primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
         fontColor={fontColor}
         bodyFontFamily={bodyFontFamily}
         headerFontFamily={headerFontFamily}
@@ -93,9 +96,9 @@ export default function AstrologyDetailView({
       <button
         onClick={onBack}
         style={{
-          background: `${primaryColor}20`,
-          color: primaryColor,
-          border: `1px solid ${primaryColor}`,
+          background: primaryColor,
+          color: fontColor,
+          border: `2px solid ${secondaryColor}`,
           padding: '0.75rem 1.5rem',
           borderRadius: '6px',
           fontSize: '0.95rem',
@@ -107,11 +110,11 @@ export default function AstrologyDetailView({
         }}
         onMouseEnter={(e) => {
           (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-          (e.currentTarget as HTMLButtonElement).style.color = 'white';
+          (e.currentTarget as HTMLButtonElement).style.color = fontColor;
         }}
         onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-          (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+          (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
+          (e.currentTarget as HTMLButtonElement).style.color = fontColor;
         }}
       >
         ← Back to Dashboard
