@@ -454,41 +454,6 @@ export default function WebsiteBuilderForm({
         </div>
       </div>
 
-      {/* Business Name & Logo - Centered Below Tabs */}
-      {(logoUrl || companyName) && (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '0.5rem',
-          marginBottom: '2rem'
-        }}>
-          {companyName && (
-            <div style={{
-              fontSize: '0.75rem',
-              color: fontColor,
-              fontWeight: '600',
-              textAlign: 'center',
-              lineHeight: 1.3,
-              maxWidth: '200px',
-            }}>
-              {companyName}
-            </div>
-          )}
-          {logoUrl && (
-            <img
-              src={logoUrl}
-              alt="Logo"
-              style={{
-                height: '4rem',
-                width: 'auto',
-                maxWidth: '200px',
-              }}
-            />
-          )}
-        </div>
-      )}
-
       {/* Tab Content */}
       {activeTab === 'story' && (
         <div>
@@ -1146,6 +1111,41 @@ export default function WebsiteBuilderForm({
           Back
         </button>
       </div>
+
+      {/* Business Name & Logo - Centered at Bottom */}
+      {(logoUrl || companyName) && (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.5rem',
+          marginTop: '3rem'
+        }}>
+          {companyName && (
+            <div style={{
+              fontSize: '0.75rem',
+              color: fontColor,
+              fontWeight: '600',
+              textAlign: 'center',
+              lineHeight: 1.3,
+              maxWidth: '200px',
+            }}>
+              {companyName}
+            </div>
+          )}
+          {logoUrl && (
+            <img
+              src={logoUrl}
+              alt="Logo"
+              style={{
+                height: '4rem',
+                width: 'auto',
+                maxWidth: '200px',
+              }}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }
