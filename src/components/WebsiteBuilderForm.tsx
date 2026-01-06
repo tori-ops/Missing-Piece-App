@@ -430,15 +430,16 @@ export default function WebsiteBuilderForm({
         </div>
       )}
 
-      {/* Tabs */}
+      {/* Tabs - Two rows: 4 on top, 3 on bottom */}
       <div style={{
         display: 'flex',
+        flexWrap: 'wrap',
         gap: '0.5rem',
         marginBottom: '2rem',
         borderBottom: `2px solid ${primaryColor}15`,
-        overflowX: 'auto'
+        paddingBottom: '0.5rem'
       }}>
-        {(['story', 'images', 'design', 'hero', 'url', 'registries', 'misc'] as const).map(tab => (
+        {(['story', 'images', 'design', 'hero', 'url', 'registries', 'misc'] as const).map((tab, index) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -452,7 +453,10 @@ export default function WebsiteBuilderForm({
               fontSize: '0.85rem',
               fontWeight: activeTab === tab ? '600' : '400',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              // Force second row for last 3 tabs
+              flexBasis: index < 4 ? 'auto' : 'auto',
+              marginRight: index === 3 ? '100%' : '0'
             }}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
