@@ -104,6 +104,8 @@ export async function POST(request: NextRequest) {
       .from('tenant-branding')
       .getPublicUrl(storagePath);
 
+    console.log(`✓ Successfully uploaded ${fileType} for tenant ${tenantId}: ${publicUrl}`);
+
     return NextResponse.json(
       { 
         filePath: publicUrl,
@@ -116,8 +118,10 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('Upload error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to upload file';
+    console.error('Full error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to upload file' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
