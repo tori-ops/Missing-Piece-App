@@ -252,17 +252,39 @@ export default function ClientDashboardContent({
         position: 'relative',
         zIndex: 1
       }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1.5rem', marginBottom: '2rem', flexWrap: 'wrap', width: '100%', boxSizing: 'border-box' }}>
-        <div style={{ flex: 1, minWidth: '200px' }}>
-          <h1 style={{ color: primaryColor, margin: 0, fontSize: '2.5rem', fontFamily: headerFontFamily }}>
-            {greeting}
-          </h1>
-          <div style={{ color: primaryColor, fontSize: '1rem', margin: '0.25rem 0 0 0', opacity: 0.7, fontFamily: bodyFontFamily }}>
-            <div>Coordinated by</div>
-            <div style={{ fontWeight: '600' }}>{companyName}</div>
-          </div>
-        </div>
+      {/* Welcome Card with SVG Background */}
+      <div style={{ 
+        position: 'relative',
+        width: '100%',
+        marginBottom: '2rem',
+        borderRadius: '6px',
+        overflow: 'hidden',
+        minHeight: '200px',
+        backgroundImage: `url('/client-welcome-card.svg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        padding: '2rem'
+      }}>
+        {/* SVG Rectangle Color Override - inject primary color into SVG */}
+        <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }} viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid slice">
+          <rect width="1200" height="300" fill={primaryColor} opacity="0.85" />
+        </svg>
+        
+        {/* Welcome Message Overlay */}
+        <h1 style={{ 
+          color: fontColor, 
+          margin: 0, 
+          fontSize: '2.5rem', 
+          fontFamily: headerFontFamily,
+          position: 'relative',
+          zIndex: 1
+        }}>
+          {greeting}
+        </h1>
       </div>
 
       {/* Wedding Details Card */}
@@ -271,7 +293,7 @@ export default function ClientDashboardContent({
         border: `2px solid ${primaryColor}`, 
         borderRadius: '6px', 
         padding: '1.5rem',
-        marginBottom: '1.5rem',
+        marginBottom: '0.5rem',
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
         fontFamily: bodyFontFamily,
         width: '100%',
@@ -322,6 +344,29 @@ export default function ClientDashboardContent({
           </p>
         )}
       </div>
+
+      {/* Coordinated By - Under Wedding Details Card */}
+      <div style={{ 
+        textAlign: 'center', 
+        marginBottom: '2rem',
+        color: primaryColor, 
+        fontSize: '1rem', 
+        fontFamily: bodyFontFamily,
+        opacity: 0.7
+      }}>
+        Coordinated by <strong style={{ fontWeight: '600' }}>{companyName}</strong>
+      </div>
+
+      {/* Your Tools Header */}
+      <h2 style={{ 
+        color: primaryColor, 
+        margin: '0 0 1.5rem 0', 
+        fontSize: '2.5rem', 
+        fontFamily: headerFontFamily,
+        textAlign: 'center'
+      }}>
+        Your Tools
+      </h2>
 
       {/* Meeting Notes, Tasks, Weather & Astrology Cards */}
       {clientProfile.weddingDate && clientProfile.venueLat && clientProfile.venueLng && (
