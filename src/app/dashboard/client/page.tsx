@@ -92,6 +92,7 @@ export default async function ClientDashboard() {
   const headerFontFamily = tenant?.brandingHeaderFontFamily || "'Playfair Display', serif";
   const bodyFontFamily = tenant?.brandingBodyFontFamily || "'Poppins', sans-serif";
   const logoUrl = tenant?.brandingLogoUrl;
+  const overlayUrl = tenant?.brandingOverlayUrl;
 
   return (
     <>
@@ -105,6 +106,7 @@ export default async function ClientDashboard() {
         headerFontFamily={headerFontFamily}
         bodyFontFamily={bodyFontFamily}
         logoUrl={logoUrl}
+        overlayUrl={overlayUrl}
         currentUserId={user.id}
       />
       <BrandingFooter primaryColor={primaryColor} />

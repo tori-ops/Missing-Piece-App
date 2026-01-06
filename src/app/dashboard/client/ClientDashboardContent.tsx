@@ -27,6 +27,7 @@ interface ClientDashboardContentProps {
   headerFontFamily: string;
   bodyFontFamily: string;
   logoUrl?: string | null;
+  overlayUrl?: string | null;
   currentUserId: string;
 }
 
@@ -41,6 +42,7 @@ export default function ClientDashboardContent({
   headerFontFamily,
   bodyFontFamily,
   logoUrl,
+  overlayUrl,
   currentUserId,
 }: ClientDashboardContentProps) {
   const [isLoading, setIsLoading] = useState(true);
@@ -210,22 +212,24 @@ export default function ClientDashboardContent({
   // Main dashboard view
   return (
     <>
-    {/* Marble Overlay - Fixed behind all content */}
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      backgroundImage: "url('/uploads/overlay.png')",
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundAttachment: 'fixed',
-      opacity: 0.45,
-      zIndex: 0,
-      pointerEvents: 'none'
-    }} />
+    {/* Overlay - Fixed behind all content (if provided) */}
+    {overlayUrl && (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundImage: `url('${overlayUrl}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+        opacity: 0.45,
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+    )}
     <div style={{ 
       padding: '1.5rem', 
       minHeight: '100vh', 
