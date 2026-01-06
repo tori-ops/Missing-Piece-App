@@ -373,6 +373,7 @@ model Tenant {
   brandingPrimaryColor      String?           @default("#274E13")      // Primary color - accent/text color (dark)
   brandingSecondaryColor    String?           @default("#D0CEB5")      // Secondary color - background color
   brandingSecondaryColorOpacity Int?          @default(55)             // Secondary color opacity 0-100 (%)
+  brandingOverlayOpacity    Int?              @default(60)             // Overlay/background image opacity 0-100 (%)
   brandingFontColor         String?           @default("#000000")      // Font color - universal text color (must be dark)
   brandingLogoUrl           String?                                     // Logo image URL
   brandingLogoBackgroundRemoval Boolean?      @default(false)          // Remove white background from logos

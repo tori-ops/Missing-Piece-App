@@ -8,6 +8,7 @@ interface BrandingPreviewProps {
     primaryColor: string;
     secondaryColor: string;
     secondaryColorOpacity: number;
+    overlayOpacity: number;
     fontColor: string;
     logoUrl: string | null;
     logoBackgroundRemoval: boolean;

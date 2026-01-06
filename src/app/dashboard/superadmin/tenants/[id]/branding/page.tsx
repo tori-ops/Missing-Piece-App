@@ -23,6 +23,7 @@ interface BrandingData {
   brandingPrimaryColor: string | null;
   brandingSecondaryColor: string | null;
   brandingSecondaryColorOpacity: number | null;
+  brandingOverlayOpacity: number | null;
   brandingAccentColor: string | null;
   brandingFontColor: string | null;
   brandingFontFamily: string | null;
@@ -63,6 +64,7 @@ export default function TenantBrandingSuitePage() {
     brandingPrimaryColor: '#274E13',
     brandingSecondaryColor: '#D0CEB5',
     brandingSecondaryColorOpacity: 55,
+    brandingOverlayOpacity: 60,
     brandingAccentColor: '#FFB6C1',
     brandingFontColor: '#000000',
     brandingFontFamily: 'Poppins',
@@ -110,6 +112,7 @@ export default function TenantBrandingSuitePage() {
             primaryColor: brandingData.brandingPrimaryColor,
             secondaryColor: brandingData.brandingSecondaryColor,
             secondaryColorOpacity: brandingData.brandingSecondaryColorOpacity,
+            overlayOpacity: brandingData.brandingOverlayOpacity,
             accentColor: brandingData.brandingAccentColor,
             fontColor: brandingData.brandingFontColor,
             logoUrl: brandingData.brandingLogoUrl,

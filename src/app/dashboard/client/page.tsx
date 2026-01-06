@@ -95,6 +95,7 @@ export default async function ClientDashboard() {
     const bodyFontFamily = tenant?.brandingBodyFontFamily || "'Poppins', sans-serif";
     const logoUrl = tenant?.brandingLogoUrl;
     const overlayUrl = tenant?.brandingOverlayUrl;
+    const overlayOpacity = tenant?.brandingOverlayOpacity || 60;
 
     // Track first login
     const isFirstLogin = !clientProfile.firstLoginAt;
@@ -126,6 +127,7 @@ export default async function ClientDashboard() {
           bodyFontFamily={bodyFontFamily}
           logoUrl={logoUrl}
           overlayUrl={overlayUrl}
+          overlayOpacity={overlayOpacity}
           currentUserId={user.id}
           greeting={greeting}
         />

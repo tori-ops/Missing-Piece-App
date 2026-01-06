@@ -11,6 +11,7 @@ interface TenantBrandingFormProps {
     brandingPrimaryColor?: string | null;
     brandingSecondaryColor?: string | null;
     brandingSecondaryColorOpacity?: number | null;
+    brandingOverlayOpacity?: number | null;
     brandingFontColor?: string | null;
     brandingLogoUrl?: string | null;
     brandingLogoBackgroundRemoval?: boolean | null;
@@ -39,6 +40,7 @@ export default function TenantBrandingForm({
     primaryColor: initialBranding.brandingPrimaryColor || '#274E13',
     secondaryColor: initialBranding.brandingSecondaryColor || '#D0CEB5',
     secondaryColorOpacity: initialBranding.brandingSecondaryColorOpacity || 55,
+    overlayOpacity: initialBranding.brandingOverlayOpacity || 60,
     fontColor: initialBranding.brandingFontColor || '#000000',
     logoFile: null as File | null,
     logoUrl: initialBranding.brandingLogoUrl || '',
@@ -170,6 +172,7 @@ export default function TenantBrandingForm({
           primaryColor: formData.primaryColor,
           secondaryColor: formData.secondaryColor,
           secondaryColorOpacity: formData.secondaryColorOpacity,
+          overlayOpacity: formData.overlayOpacity,
           fontColor: formData.fontColor,
           logoUrl,
           logoBackgroundRemoval: formData.logoBackgroundRemoval,
@@ -196,6 +199,7 @@ export default function TenantBrandingForm({
         primaryColor: formData.primaryColor,
         secondaryColor: formData.secondaryColor,
         secondaryColorOpacity: formData.secondaryColorOpacity,
+        overlayOpacity: formData.overlayOpacity,
         fontColor: formData.fontColor,
         logoUrl: logoUrl || null,
         logoBackgroundRemoval: formData.logoBackgroundRemoval,

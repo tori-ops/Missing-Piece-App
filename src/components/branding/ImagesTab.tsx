@@ -7,6 +7,7 @@ interface BrandingData {
   brandingLogoBackgroundRemoval: boolean | null;
   brandingFaviconUrl: string | null;
   brandingOverlayUrl: string | null;
+  brandingOverlayOpacity: number | null;
   [key: string]: any;
 }
 
@@ -252,7 +253,7 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
         {(overlayPreview || data.brandingOverlayUrl) && (
           <div style={{ marginTop: '1.5rem' }}>
             <p style={{ fontSize: '0.85rem', color: '#999', marginBottom: '0.75rem', fontWeight: '600' }}>
-              Preview (45% opacity):
+              Preview:
             </p>
             <div style={{
               position: 'relative',
@@ -269,7 +270,7 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  opacity: 0.45,
+                  opacity: (data.brandingOverlayOpacity || 60) / 100,
                 }}
               />
               <div style={{
@@ -284,9 +285,32 @@ export default function ImagesTab({ data, onChange, tenantId }: ImagesTabProps) 
                 borderRadius: '4px',
                 fontSize: '0.9rem',
               }}>
-                This is how it looks at 45% opacity
+                Opacity: {data.brandingOverlayOpacity || 60}%
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Overlay Opacity Slider */}
+        {(overlayPreview || data.brandingOverlayUrl) && (
+          <div style={{ marginTop: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: SUPERADMIN_PRIMARY }}>
+              Overlay Opacity
+            </label>
+            <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.85rem', color: '#999' }}>
+              Controls how visible your background image is (0% = transparent, 100% = fully opaque)
+            </p>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={data.brandingOverlayOpacity || 60}
+              onChange={(e) => handleChange('brandingOverlayOpacity', parseInt(e.target.value, 10))}
+              style={{ width: '100%' }}
+            />
+            <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: SUPERADMIN_FONT }}>
+              {data.brandingOverlayOpacity || 60}% opacity
+            </p>
           </div>
         )}
       </div>

@@ -45,6 +45,7 @@ interface BrandingData {
   brandingPrimaryColor: string | null;
   brandingSecondaryColor: string | null;
   brandingSecondaryColorOpacity: number | null;
+  brandingOverlayOpacity: number | null;
   brandingAccentColor: string | null;
   brandingFontColor: string | null;
   brandingHeaderFontFamily: string | null;
