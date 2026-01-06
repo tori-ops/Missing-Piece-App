@@ -271,7 +271,7 @@ export default function MeetingNotesDetailView({
       {/* Create Note Form */}
       <div style={{
         background: primaryColor,
-        color: '#ffffff',
+        color: fontColor,
         padding: '1.5rem',
         borderRadius: '8px',
         marginBottom: '1.5rem',
@@ -466,7 +466,7 @@ export default function MeetingNotesDetailView({
         marginBottom: '2rem',
         fontFamily: bodyFontFamily,
       }}>
-        <h3 style={{ marginTop: 0, color: primaryColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>Filter Notes</h3>
+        <h3 style={{ marginTop: 0, color: fontColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>Filter Notes</h3>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
           <div>
@@ -679,8 +679,8 @@ export default function MeetingNotesDetailView({
         <button
           onClick={onBack}
           style={{
-            background: `${primaryColor}20`,
-            color: primaryColor,
+            background: primaryColor,
+            color: fontColor,
             border: `1px solid ${primaryColor}`,
             padding: '0.75rem 1.5rem',
             borderRadius: '6px',
@@ -692,12 +692,12 @@ export default function MeetingNotesDetailView({
             marginTop: '2rem',
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-            (e.currentTarget as HTMLButtonElement).style.color = 'white';
-          }}
-          onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
             (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
+            (e.currentTarget as HTMLButtonElement).style.color = fontColor;
           }}
         >
           ← Back to Dashboard

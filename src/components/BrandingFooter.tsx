@@ -8,13 +8,9 @@ export default function BrandingFooter({ primaryColor = '#274E13' }: BrandingFoo
   return (
     <div
       style={{
-        position: 'fixed',
-        bottom: 0,
-        right: 0,
-        left: 0,
-        zIndex: 100,
+        position: 'relative',
         textAlign: 'right',
-        padding: '1rem 2rem',
+        padding: '2rem 2rem 1rem 2rem',
         fontSize: '0.75rem',
         color: primaryColor,
         fontStyle: 'italic',
