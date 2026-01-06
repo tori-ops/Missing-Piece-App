@@ -20,7 +20,7 @@ interface ClientDashboardContentProps {
   clientProfile: ClientProfile;
   companyName: string;
   primaryColor: string;
-  
+  secondaryColor: string;
   backgroundColor: string;
   secondaryColorOpacity: number;
   overlayOpacity: number;
@@ -39,7 +39,7 @@ export default function ClientDashboardContent({
   clientProfile,
   companyName,
   primaryColor,
-  
+  secondaryColor,
   backgroundColor,
   secondaryColorOpacity,
   overlayOpacity,
@@ -97,6 +97,7 @@ export default function ClientDashboardContent({
           venueName={clientProfile.weddingLocation || undefined}
           venueAddress={venueAddress || undefined}
           primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}

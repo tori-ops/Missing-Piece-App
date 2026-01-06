@@ -7,6 +7,7 @@ interface WeatherGoldenHourWidgetProps {
   venueLat?: number;
   venueLng?: number;
   primaryColor?: string;
+  secondaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
@@ -53,6 +54,7 @@ export default function WeatherGoldenHourWidget({
   venueLat,
   venueLng,
   primaryColor = '#274E13',
+  secondaryColor = '#D0CEB5',
   fontColor = '#000000',
   bodyFontFamily = "'Georgia', serif",
   headerFontFamily = "'Playfair Display', serif",
@@ -196,13 +198,13 @@ export default function WeatherGoldenHourWidget({
       {weddingWeekData.length > 0 && (
         <div
           style={{
-            background: `linear-gradient(135deg, ${primaryColor}15 0%, ${primaryColor}05 100%)`,
+            background: `linear-gradient(135deg, ${secondaryColor}40 0%, ${secondaryColor}20 100%)`,
             border: `2px solid ${primaryColor}`,
             borderRadius: '12px',
             padding: '1.5rem',
           }}
         >
-          <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.9em' }}>
+          <h4 style={{ color: secondaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.9em' }}>
             Wedding Week (Prior Year)
           </h4>
           <div style={{ display: 'grid', gap: '1rem' }}>

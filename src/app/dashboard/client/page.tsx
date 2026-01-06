@@ -120,6 +120,7 @@ export default async function ClientDashboard() {
           clientProfile={clientProfile}
           companyName={companyName}
           primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
           backgroundColor={backgroundColor}
           secondaryColorOpacity={secondaryColorOpacity}
           fontColor={fontColor}

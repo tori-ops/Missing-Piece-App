@@ -9,6 +9,7 @@ interface WeatherDetailViewProps {
   venueName?: string;
   venueAddress?: string;
   primaryColor?: string;
+  secondaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
@@ -24,6 +25,7 @@ export default function WeatherDetailView({
   venueName,
   venueAddress,
   primaryColor = '#274E13',
+  secondaryColor = '#D0CEB5',
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
@@ -78,6 +80,7 @@ export default function WeatherDetailView({
         venueLat={venueLat}
         venueLng={venueLng}
         primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
         fontColor={fontColor}
         bodyFontFamily={bodyFontFamily}
         headerFontFamily={headerFontFamily}
