@@ -219,18 +219,20 @@ export default function TasksDetailView({
               src={logoUrl}
               alt="Logo"
               style={{
-                height: '2.5rem',
+                height: '4rem',
                 width: 'auto',
-                maxWidth: '150px',
+                maxWidth: '200px',
               }}
             />
           )}
           {companyName && (
             <div style={{
-              fontSize: '0.95rem',
+              fontSize: '0.75rem',
               color: fontColor,
               fontWeight: '600',
               textAlign: 'right',
+              lineHeight: 1.3,
+              maxWidth: '200px',
             }}>
               {companyName}
             </div>
