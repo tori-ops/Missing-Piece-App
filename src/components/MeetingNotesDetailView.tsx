@@ -27,6 +27,7 @@ interface MeetingNotesDetailViewProps {
   tenantId: string;
   clients?: Array<{ id: string; couple1FirstName?: string; couple1LastName?: string; fullName?: string; name?: string }>;
   primaryColor?: string;
+  secondaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
@@ -40,6 +41,7 @@ export default function MeetingNotesDetailView({
   tenantId,
   clients = [],
   primaryColor = '#274E13',
+  secondaryColor = '#e1e0d0',
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
@@ -241,10 +243,10 @@ export default function MeetingNotesDetailView({
       <div style={{
         marginBottom: '2rem',
         paddingBottom: '1rem',
-        borderBottom: `2px solid ${primaryColor}20`,
+        borderBottom: `2px solid ${secondaryColor}`,
       }}>
         <h2 style={{ 
-          color: primaryColor,
+          color: fontColor,
           fontFamily: headerFontFamily,
           marginTop: 0,
           marginBottom: 0,
@@ -280,7 +282,7 @@ export default function MeetingNotesDetailView({
         <h3 style={{ marginTop: 0, fontFamily: headerFontFamily, fontSize: '1.75rem' }}>Create New Meeting Note</h3>
         <form onSubmit={handleCreateNote}>
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Title *</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Title *</label>
             <input
               type="text"
               value={newNoteTitle}
@@ -290,7 +292,7 @@ export default function MeetingNotesDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: 'none',
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
               }}
@@ -298,7 +300,7 @@ export default function MeetingNotesDetailView({
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Content *</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Content *</label>
             <textarea
               value={newNoteBody}
               onChange={(e) => setNewNoteBody(e.target.value)}
@@ -308,7 +310,7 @@ export default function MeetingNotesDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: 'none',
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
                 resize: 'vertical',
@@ -317,7 +319,7 @@ export default function MeetingNotesDetailView({
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Tags (comma-separated)</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Tags (comma-separated)</label>
             <input
               type="text"
               value={newNoteTags}
@@ -326,7 +328,7 @@ export default function MeetingNotesDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: 'none',
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
               }}
@@ -334,7 +336,7 @@ export default function MeetingNotesDetailView({
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Meeting Date</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Meeting Date</label>
             <input
               type="date"
               value={newNoteMeetingDate}
@@ -342,7 +344,7 @@ export default function MeetingNotesDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: 'none',
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
               }}
@@ -356,14 +358,25 @@ export default function MeetingNotesDetailView({
               style={{
                 flex: 1,
                 padding: '0.75rem 1rem',
-                background: isRecording && recordingType === 'voice' ? '#d32f2f' : '#ffffff',
-                color: isRecording && recordingType === 'voice' ? '#ffffff' : primaryColor,
-                border: 'none',
+                background: isRecording && recordingType === 'voice' ? '#d32f2f' : primaryColor,
+                color: isRecording && recordingType === 'voice' ? '#ffffff' : fontColor,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontWeight: '600',
                 cursor: 'pointer',
                 fontFamily: bodyFontFamily,
                 whiteSpace: 'nowrap',
+                transition: 'background-color 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                if (!(isRecording && recordingType === 'voice')) {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!(isRecording && recordingType === 'voice')) {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
+                }
               }}
             >
               {isRecording && recordingType === 'voice' ? '⏹ Stop Voice' : '🎤 Voice'}
@@ -374,14 +387,25 @@ export default function MeetingNotesDetailView({
               style={{
                 flex: 1,
                 padding: '0.75rem 1rem',
-                background: isRecording && recordingType === 'camera' ? '#d32f2f' : '#ffffff',
-                color: isRecording && recordingType === 'camera' ? '#ffffff' : primaryColor,
-                border: 'none',
+                background: isRecording && recordingType === 'camera' ? '#d32f2f' : primaryColor,
+                color: isRecording && recordingType === 'camera' ? '#ffffff' : fontColor,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontWeight: '600',
                 cursor: 'pointer',
                 fontFamily: bodyFontFamily,
                 whiteSpace: 'nowrap',
+                transition: 'background-color 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                if (!(isRecording && recordingType === 'camera')) {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!(isRecording && recordingType === 'camera')) {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
+                }
               }}
             >
               {isRecording && recordingType === 'camera' ? '⏹ Stop Camera' : '📹 Camera'}
@@ -390,17 +414,18 @@ export default function MeetingNotesDetailView({
 
           {!clientId && clients.length > 0 && (
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Assign to Client (Optional)</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Assign to Client (Optional)</label>
               <select
                 value={newNoteClientId}
                 onChange={(e) => setNewNoteClientId(e.target.value)}
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  border: 'none',
+                  border: `1px solid ${secondaryColor}`,
                   borderRadius: '4px',
                   fontFamily: bodyFontFamily,
                   backgroundColor: '#ffffff',
+                  color: fontColor,
                 }}
               >
                 <option value="" disabled>Select a client...</option>
@@ -419,7 +444,7 @@ export default function MeetingNotesDetailView({
           )}
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Attachments (Documents, Images)</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Attachments (Documents, Images)</label>
             <input
               type="file"
               multiple
@@ -427,13 +452,13 @@ export default function MeetingNotesDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: 'none',
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
               }}
             />
             {attachmentFiles.length > 0 && (
-              <div style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+              <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: fontColor }}>
                 {attachmentFiles.length} file(s) selected: {attachmentFiles.map(f => f.name).join(', ')}
               </div>
             )}
@@ -444,13 +469,20 @@ export default function MeetingNotesDetailView({
             style={{
               width: '100%',
               padding: '0.75rem',
-              background: '#ffffff',
-              color: primaryColor,
-              border: 'none',
+              background: primaryColor,
+              color: fontColor,
+              border: `1px solid ${secondaryColor}`,
               borderRadius: '4px',
               fontWeight: '600',
               cursor: 'pointer',
               fontFamily: bodyFontFamily,
+              transition: 'background-color 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
             }}
           >
             Create Note
@@ -479,7 +511,7 @@ export default function MeetingNotesDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `1px solid ${primaryColor}`,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
               }}
@@ -495,7 +527,7 @@ export default function MeetingNotesDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `1px solid ${primaryColor}`,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
               }}
@@ -511,7 +543,7 @@ export default function MeetingNotesDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `1px solid ${primaryColor}`,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
               }}
@@ -528,7 +560,7 @@ export default function MeetingNotesDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `1px solid ${primaryColor}`,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
               }}
@@ -539,21 +571,21 @@ export default function MeetingNotesDetailView({
 
       {/* Notes List */}
       <div>
-        <h3 style={{ color: primaryColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>
+        <h3 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>
           Meeting Notes ({sortedNotes.length})
         </h3>
 
         {loading ? (
-          <p style={{ color: primaryColor, fontFamily: bodyFontFamily }}>Loading notes...</p>
+          <p style={{ color: fontColor, fontFamily: bodyFontFamily }}>Loading notes...</p>
         ) : sortedNotes.length === 0 ? (
-          <p style={{ color: primaryColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No meeting notes found.</p>
+          <p style={{ color: fontColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No meeting notes found.</p>
         ) : (
           <div style={{ display: 'grid', gap: '1.5rem' }}>
             {sortedNotes.map((note) => (
               <div
                 key={note.id}
                 style={{
-                  border: `2px solid ${primaryColor}`,
+                  border: `1px solid ${secondaryColor}`,
                   borderRadius: '8px',
                   padding: '1rem',
                   background: '#f9f9f9',
@@ -633,8 +665,8 @@ export default function MeetingNotesDetailView({
                       onClick={() => setTaskFromNoteModal({ noteId: note.id, title: note.title, body: note.body })}
                       style={{
                         background: primaryColor,
-                        color: '#ffffff',
-                        border: 'none',
+                        color: fontColor,
+                        border: `1px solid ${secondaryColor}`,
                         borderRadius: '4px',
                         padding: '0.5rem',
                         cursor: 'pointer',
@@ -643,8 +675,15 @@ export default function MeetingNotesDetailView({
                         gap: '0.5rem',
                         fontFamily: bodyFontFamily,
                         fontSize: '0.85rem',
+                        transition: 'background-color 0.2s ease',
                       }}
                       title="Create task from this note"
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
+                      }}
                     >
                       <Plus size={18} />
                     </button>
@@ -681,23 +720,21 @@ export default function MeetingNotesDetailView({
           style={{
             background: primaryColor,
             color: fontColor,
-            border: `1px solid ${primaryColor}`,
+            border: `1px solid ${secondaryColor}`,
             padding: '0.75rem 1.5rem',
             borderRadius: '6px',
             fontSize: '0.95rem',
             fontWeight: '600',
             cursor: 'pointer',
             fontFamily: bodyFontFamily,
-            transition: 'all 0.2s ease',
+            transition: 'background-color 0.2s ease',
             marginTop: '2rem',
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-            (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-            (e.currentTarget as HTMLButtonElement).style.color = fontColor;
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
           }}
         >
           ← Back to Dashboard
