@@ -480,7 +480,7 @@ export default function WebsiteBuilderForm({
       {/* Tab Content */}
       {activeTab === 'story' && (
         <div>
-          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '2rem' }}>Your Story</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.75rem', marginBottom: '2rem' }}>Your Story</h2>
           
           {/* Lined Paper Journal Container */}
           <div style={{
@@ -553,7 +553,7 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'images' && (
         <div>
-          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.3rem', marginBottom: '1rem' }}>Images</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.75rem', marginBottom: '1rem' }}>Images</h2>
           <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
             Upload up to 20 photos. You currently have {existingImages.length + newImages.length} images.
           </p>
@@ -867,7 +867,7 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'hero' && (
         <div>
-          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '1rem' }}>Hero Images</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.75rem', marginBottom: '1rem' }}>Hero Images</h2>
           <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
             Select or upload header and background images for your website, or let your planner choose for you.
           </p>
@@ -939,7 +939,7 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'url' && (
         <div>
-          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '1rem' }}>Website URL</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.75rem', marginBottom: '1rem' }}>Website URL</h2>
           
           <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
             Your website will be: <strong>https://www.missingpieceplanning.com/events/______</strong>
@@ -1001,7 +1001,7 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'registries' && (
         <div>
-          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '1rem' }}>Registries</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.75rem', marginBottom: '1rem' }}>Registries</h2>
           <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
             Add up to 5 registry links
           </p>
@@ -1068,7 +1068,7 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'misc' && (
         <div>
-          <h2 style={{ color: fontColor, fontSize: '1.5rem', marginBottom: '2rem' }}>Miscellaneous</h2>
+          <h2 style={{ color: fontColor, fontSize: '1.75rem', marginBottom: '2rem' }}>Miscellaneous</h2>
           
           {/* Lined Paper Journal Container */}
           <div style={{
