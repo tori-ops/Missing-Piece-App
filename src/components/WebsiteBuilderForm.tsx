@@ -499,15 +499,7 @@ export default function WebsiteBuilderForm({
               ${secondaryColor}60 33px
             )`,
             backgroundPosition: '0 0',
-            backgroundSize: '100% 33px',
-            transition: 'background-color 0.2s ease',
-            cursor: 'text'
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLDivElement).style.backgroundColor = `${secondaryColor}15`;
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLDivElement).style.backgroundColor = '#faf8f3';
+            backgroundSize: '100% 33px'
           }}>
             <div style={{ marginBottom: '3rem', position: 'relative', zIndex: 1 }}>
               <textarea
@@ -562,16 +554,16 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'images' && (
         <div>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem' }}>Images</h2>
+          <h2 style={{ color: fontColor, fontSize: '1.5rem', marginBottom: '1rem' }}>Images</h2>
           <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
             Upload up to 20 photos. You currently have {existingImages.length + newImages.length} images.
           </p>
 
           {/* Existing Images - Show FIRST as reference */}
           {existingImages.length > 0 && (
-            <div style={{ marginBottom: '2.5rem' }}>
-              <h3 style={{ color: primaryColor, marginBottom: '1rem' }}>Already Uploaded ({existingImages.length})</h3>
-              <p style={{ color: fontColor, opacity: 0.6, fontSize: '0.9rem', marginBottom: '1rem' }}>These are the photos you've already sent:</p>
+            <div style={{ marginBottom: '2.5rem', border: `1px solid ${secondaryColor}`, padding: '1.5rem', borderRadius: '8px' }}>
+              <h3 style={{ color: fontColor, marginBottom: '1rem' }}>Already Uploaded ({existingImages.length})</h3>
+              <p style={{ color: fontColor, opacity: 0.7, fontSize: '0.9rem', marginBottom: '1rem' }}>These are the photos you've already sent:</p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
                 {existingImages.map((image) => (
                   <div key={image.id} style={{ position: 'relative' }}>
@@ -627,30 +619,28 @@ export default function WebsiteBuilderForm({
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading || existingImages.length + newImages.length >= 20}
               style={{
+                background: uploading || existingImages.length + newImages.length >= 20 ? `${primaryColor}60` : primaryColor,
+                color: fontColor,
+                border: `1px solid ${secondaryColor}`,
                 padding: '0.75rem 1.5rem',
-                background: uploading || existingImages.length + newImages.length >= 20 ? `${primaryColor}40` : primaryColor,
-                color: '#ffffff',
-                border: `1px solid ${primaryColor}`,
                 borderRadius: '6px',
-                cursor: uploading || existingImages.length + newImages.length >= 20 ? 'not-allowed' : 'pointer',
-                fontFamily: bodyFontFamily,
                 fontSize: '0.95rem',
                 fontWeight: '600',
-                opacity: uploading || existingImages.length + newImages.length >= 20 ? 0.6 : 1,
+                cursor: uploading || existingImages.length + newImages.length >= 20 ? 'not-allowed' : 'pointer',
+                fontFamily: bodyFontFamily,
+                transition: 'background-color 0.2s ease',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                transition: 'all 0.2s ease'
+                opacity: uploading || existingImages.length + newImages.length >= 20 ? 0.6 : 1,
               }}
               onMouseEnter={(e) => {
                 if (!(uploading || existingImages.length + newImages.length >= 20)) {
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${primaryColor}30`;
-                  (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
                 }
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
-                (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
               }}
             >
               <Upload size={20} />
@@ -659,8 +649,8 @@ export default function WebsiteBuilderForm({
           </div>
 
           {/* Image Categories with Suggestions */}
-          <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: primaryColor, marginBottom: '1rem' }}>Image Suggestions</h3>
+          <div style={{ marginBottom: '2rem', border: `1px solid ${secondaryColor}`, padding: '1.5rem', borderRadius: '8px' }}>
+            <h3 style={{ color: fontColor, marginBottom: '1rem' }}>Image Suggestions</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
               {IMAGE_CATEGORIES.map(category => (
                 <div key={category.id} style={{
@@ -678,8 +668,8 @@ export default function WebsiteBuilderForm({
 
           {/* New Images Preview */}
           {newImages.length > 0 && (
-            <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ color: primaryColor, marginBottom: '1rem' }}>New Images ({newImages.length})</h3>
+            <div style={{ marginBottom: '2rem', border: `1px solid ${secondaryColor}`, padding: '1.5rem', borderRadius: '8px' }}>
+              <h3 style={{ color: fontColor, marginBottom: '1rem' }}>New Images ({newImages.length})</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
                 {newImages.map((file, index) => (
                   <div key={index} style={{ position: 'relative' }}>
@@ -721,27 +711,25 @@ export default function WebsiteBuilderForm({
                 onClick={handleUploadImages}
                 disabled={uploading}
                 style={{
+                  background: uploading ? `${primaryColor}60` : primaryColor,
+                  color: fontColor,
+                  border: `1px solid ${secondaryColor}`,
                   padding: '0.75rem 1.5rem',
-                  background: uploading ? `${primaryColor}40` : primaryColor,
-                  color: '#ffffff',
-                  border: `1px solid ${primaryColor}`,
                   borderRadius: '6px',
-                  cursor: uploading ? 'not-allowed' : 'pointer',
-                  fontFamily: bodyFontFamily,
                   fontSize: '0.95rem',
                   fontWeight: '600',
+                  cursor: uploading ? 'not-allowed' : 'pointer',
+                  fontFamily: bodyFontFamily,
+                  transition: 'background-color 0.2s ease',
                   opacity: uploading ? 0.6 : 1,
-                  transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
                   if (!uploading) {
-                    (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${primaryColor}30`;
-                    (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
+                    (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
                   }
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
-                  (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
                 }}
               >
                 {uploading ? 'Uploading...' : 'Upload Selected Photos'}
@@ -1081,7 +1069,7 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'misc' && (
         <div>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '2rem' }}>Miscellaneous</h2>
+          <h2 style={{ color: fontColor, fontSize: '1.5rem', marginBottom: '2rem' }}>Miscellaneous</h2>
           
           {/* Lined Paper Journal Container */}
           <div style={{
@@ -1099,15 +1087,7 @@ export default function WebsiteBuilderForm({
               ${secondaryColor}60 33px
             )`,
             backgroundPosition: '0 0',
-            backgroundSize: '100% 33px',
-            transition: 'background-color 0.2s ease',
-            cursor: 'text'
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLDivElement).style.backgroundColor = `${secondaryColor}15`;
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLDivElement).style.backgroundColor = '#faf8f3';
+            backgroundSize: '100% 33px'
           }}>
             <div style={{ position: 'relative', zIndex: 1 }}>
               <textarea
