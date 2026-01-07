@@ -179,7 +179,7 @@ export default function AstrologyWidget({
     <div
       style={{
         background: `linear-gradient(135deg, ${secondaryColor}20 0%, ${secondaryColor}10 100%)`,
-        border: `2px solid ${primaryColor}CC`,
+        border: `2px solid ${secondaryColor}`,
         borderRadius: '12px',
         padding: '1.5rem',
       }}
@@ -208,7 +208,7 @@ export default function AstrologyWidget({
             style={{
               padding: '0.5rem',
               fontSize: '0.95rem',
-              border: `1px solid ${primaryColor}40`,
+              border: `1px solid ${secondaryColor}`,
               borderRadius: '6px',
               backgroundColor: `${primaryColor}08`,
               color: fontColor,
@@ -218,11 +218,11 @@ export default function AstrologyWidget({
               transition: 'all 0.2s ease',
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = primaryColor;
+              e.currentTarget.style.borderColor = secondaryColor;
               e.currentTarget.style.backgroundColor = `${primaryColor}15`;
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = `${primaryColor}40`;
+              e.currentTarget.style.borderColor = secondaryColor;
               e.currentTarget.style.backgroundColor = `${primaryColor}08`;
             }}
           />
@@ -233,8 +233,8 @@ export default function AstrologyWidget({
               padding: '0.5rem 1rem',
               fontSize: '0.95rem',
               backgroundColor: primaryColor,
-              color: '#ffffff',
-              border: 'none',
+              color: fontColor,
+              border: `1px solid ${secondaryColor}`,
               borderRadius: '6px',
               cursor: loading || isSaving ? 'not-allowed' : 'pointer',
               fontFamily: "'Poppins', sans-serif",
@@ -409,7 +409,7 @@ function Card({ title, children, primaryColor, fontColor, headerFontFamily }: an
     >
       <h5
         style={{
-          color: primaryColor,
+          color: fontColor,
           margin: '0 0 0.75rem 0',
           fontSize: '1.5rem',
           fontFamily: headerFontFamily,
