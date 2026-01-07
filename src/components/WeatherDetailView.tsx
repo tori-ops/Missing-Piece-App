@@ -48,7 +48,7 @@ export default function WeatherDetailView({
           fontSize: '2.5rem',
           lineHeight: 1.2,
         }}>
-          Weather & Golden Hour
+          Golden Hour Predictor
         </h2>
       </div>
 
