@@ -8,6 +8,7 @@ import AstrologyDetailView from '@/components/AstrologyDetailView';
 import TasksDetailView from '@/components/TasksDetailView';
 import MeetingNotesDetailView from '@/components/MeetingNotesDetailView';
 import LogoutButton from '@/components/LogoutButton';
+import BrandingFooter from '@/components/BrandingFooter';
 import TasksWidget from '@/components/TasksWidget';
 import MeetingNotesWidget from '@/components/MeetingNotesWidget';
 import WebsiteBuilderWidget from '@/components/WebsiteBuilderWidget';
@@ -481,9 +482,10 @@ export default function ClientDashboardContent({
 
       {/* Footer */}
       {/* Logout Button */}
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
         <LogoutButton primaryColor={primaryColor} />
       </div>
+      <BrandingFooter primaryColor={primaryColor} secondaryColor={secondaryColor} />
       </div>
     </div>
   );

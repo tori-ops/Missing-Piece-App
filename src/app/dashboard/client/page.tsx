@@ -4,7 +4,6 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getGreeting } from '@/lib/greetings';
 import ClientDashboardContent from './ClientDashboardContent';
-import BrandingFooter from '@/components/BrandingFooter';
 
 export const dynamic = 'force-dynamic';
 
@@ -134,7 +133,6 @@ export default async function ClientDashboard() {
           currentUserId={user.id}
           greeting={greeting}
         />
-        <BrandingFooter primaryColor={primaryColor} secondaryColor={secondaryColor} />
       </>
     );
   } catch (error) {
