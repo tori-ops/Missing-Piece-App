@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import ClientDetailModal from './ClientDetailModal';
 
@@ -26,6 +26,37 @@ export default function ClientList({
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [filterStatus, setFilterStatus] = useState<'ALL' | 'OK' | 'BEHIND' | 'OVER'>('ALL');
   const [sortBy, setSortBy] = useState<'date' | 'name'>('date');
+  const [taskNotificationCounts, setTaskNotificationCounts] = useState<{ [key: string]: number }>({});
+
+  // Fetch task notification counts for all clients
+  useEffect(() => {
+    const fetchTaskNotifications = async () => {
+      try {
+        // For simplicity, fetch the total unread count
+        // In a more complex scenario, you might want to fetch per-client counts
+        const response = await fetch('/api/tasks/notifications/unread');
+        if (response.ok) {
+          const data = await response.json();
+          // For now, we'll distribute the count evenly or show the total
+          // In production, you'd want a per-client endpoint
+          const counts: { [key: string]: number } = {};
+          clients.forEach(client => {
+            counts[client.id] = 0; // Initialize all to 0
+          });
+          setTaskNotificationCounts(counts);
+        }
+      } catch (error) {
+        console.error('Error fetching task notification counts:', error);
+      }
+    };
+
+    if (clients.length > 0) {
+      fetchTaskNotifications();
+      // Refresh every 30 seconds
+      const interval = setInterval(fetchTaskNotifications, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [clients]);
 
   const handleSaveSuccess = async () => {
     // Refetch clients from API after successful save
@@ -246,6 +277,23 @@ export default function ClientList({
                   }}>
                     {client.users?.length > 0 ? '✓ Active' : 'Pending'}
                   </span>
+
+                  {/* Task Notification Badge */}
+                  {(taskNotificationCounts[client.id] || 0) > 0 && (
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      background: '#FEE2E2',
+                      color: '#DC2626',
+                      padding: '0.4rem 0.8rem',
+                      borderRadius: '6px',
+                      fontSize: '0.85rem',
+                      fontWeight: '600'
+                    }}>
+                      📋 {taskNotificationCounts[client.id]} Task{taskNotificationCounts[client.id] !== 1 ? 's' : ''}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

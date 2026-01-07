@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getTaskById, updateTask, deleteTask } from '@/lib/services/taskService';
-import { createNotificationLog } from '@/lib/services/notificationService';
+import { createTaskNotifications } from '@/lib/services/notificationService';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -97,19 +97,11 @@ export async function PATCH(
       });
 
       // Create notifications for the newly assigned users
-      if (assignedToClientId) {
+      if (assignedToClientId || assignedToTenantId) {
         try {
-          await createNotificationLog(taskId, assignedToClientId, 'task_reassigned');
+          await createTaskNotifications(taskId, assignedToClientId, assignedToTenantId, 'task_reassigned');
         } catch (err) {
-          console.error('Error creating client notification:', err);
-        }
-      }
-
-      if (assignedToTenantId) {
-        try {
-          await createNotificationLog(taskId, assignedToTenantId, 'task_reassigned');
-        } catch (err) {
-          console.error('Error creating tenant notification:', err);
+          console.error('Error creating task notification:', err);
         }
       }
 

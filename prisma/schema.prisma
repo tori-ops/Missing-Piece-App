@@ -173,6 +173,7 @@ model User {
   taskComments          TaskComment[]         @relation("TaskComments")
   notificationLogs      NotificationLog[]     @relation("NotificationLogs")
   notificationPrefs     NotificationPreference? @relation("NotificationPreferences")
+  taskNotifications     TaskNotification[]
   meetingNotes          MeetingNote[]
   
   @@index([email])
@@ -697,8 +698,8 @@ model MeetingNote {
 enum TaskStatus {
   TODO
   IN_PROGRESS
-  DONE
-  BLOCKED
+  CHANGED_MIND
+  COMPLETED
 }
 
 enum TaskPriority {
@@ -764,6 +765,7 @@ model Task {
   // New relations for comments and notifications
   comments              TaskComment[]         @relation("TaskComments")
   notifications         NotificationLog[]     @relation("TaskNotifications")
+  taskNotifications     TaskNotification[]    @relation("TaskNotifications")
   
   @@index([tenantId])
   @@index([clientId])
@@ -895,6 +897,36 @@ model NotificationPreference {
   
   @@index([userId])
   @@map("notification_preferences")
+}
+
+
+// ============================================================================
+// TASK NOTIFICATIONS (In-App Real-Time Notifications)
+// ============================================================================
+
+model TaskNotification {
+  id                    String                @id @default(cuid())
+  
+  // Recipient
+  userId                String
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Task Reference
+  taskId                String
+  task                  Task                  @relation("TaskNotifications", fields: [taskId], references: [id], onDelete: Cascade)
+  
+  // Notification Details
+  notificationType      String                // 'task_assigned', 'task_reassigned'
+  isRead                Boolean               @default(false)
+  
+  // Timestamps
+  createdAt             DateTime              @default(now())
+  
+  @@unique([taskId, userId, notificationType])
+  @@index([userId])
+  @@index([taskId])
+  @@index([isRead])
+  @@map("task_notifications")
 }
 
 

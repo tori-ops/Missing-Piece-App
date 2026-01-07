@@ -391,3 +391,151 @@ export async function deleteNotification(notificationId: string) {
   }
 }
 
+// ============================================================================
+// TASK NOTIFICATIONS (In-App Real-Time Notifications)
+// ============================================================================
+
+/**
+ * Create task notifications when task is assigned to client and/or tenant users
+ */
+export async function createTaskNotifications(
+  taskId: string,
+  assignedToClientId?: string,
+  assignedToTenantId?: string,
+  notificationType: 'task_assigned' | 'task_reassigned' = 'task_assigned'
+) {
+  try {
+    const notifications = [];
+    
+    // Create notification for assigned client user
+    if (assignedToClientId) {
+      const clientNotif = await prisma.taskNotification.upsert({
+        where: {
+          taskId_userId_notificationType: {
+            taskId,
+            userId: assignedToClientId,
+            notificationType,
+          },
+        },
+        create: {
+          taskId,
+          userId: assignedToClientId,
+          notificationType,
+          isRead: false,
+        },
+        update: {
+          isRead: false,
+          createdAt: new Date(),
+        },
+      });
+      notifications.push(clientNotif);
+    }
+    
+    // Create notification for assigned tenant user
+    if (assignedToTenantId) {
+      const tenantNotif = await prisma.taskNotification.upsert({
+        where: {
+          taskId_userId_notificationType: {
+            taskId,
+            userId: assignedToTenantId,
+            notificationType,
+          },
+        },
+        create: {
+          taskId,
+          userId: assignedToTenantId,
+          notificationType,
+          isRead: false,
+        },
+        update: {
+          isRead: false,
+          createdAt: new Date(),
+        },
+      });
+      notifications.push(tenantNotif);
+    }
+    
+    return notifications;
+  } catch (error) {
+    console.error('Error creating task notifications:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get unread task notifications for a user
+ */
+export async function getUnreadTaskNotificationCount(userId: string): Promise<number> {
+  try {
+    const count = await prisma.taskNotification.count({
+      where: {
+        userId,
+        isRead: false,
+      },
+    });
+    return count;
+  } catch (error) {
+    console.error('Error getting unread task notification count:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get task notifications for a user
+ */
+export async function getTaskNotifications(userId: string, limit: number = 50) {
+  try {
+    const notifications = await prisma.taskNotification.findMany({
+      where: { userId },
+      include: {
+        task: {
+          select: {
+            id: true,
+            title: true,
+            assignedToClientId: true,
+            assignedToTenantId: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+    });
+    return notifications;
+  } catch (error) {
+    console.error('Error getting task notifications:', error);
+    throw error;
+  }
+}
+
+/**
+ * Mark task notification as read
+ */
+export async function markTaskNotificationAsRead(notificationId: string) {
+  try {
+    const notification = await prisma.taskNotification.update({
+      where: { id: notificationId },
+      data: { isRead: true },
+    });
+    return notification;
+  } catch (error) {
+    console.error('Error marking task notification as read:', error);
+    throw error;
+  }
+}
+
+/**
+ * Mark all task notifications as read for a user
+ */
+export async function markAllTaskNotificationsAsRead(userId: string) {
+  try {
+    const result = await prisma.taskNotification.updateMany({
+      where: { userId, isRead: false },
+      data: { isRead: true },
+    });
+    return result;
+  } catch (error) {
+    console.error('Error marking all task notifications as read:', error);
+    throw error;
+  }
+}
+

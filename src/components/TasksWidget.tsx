@@ -34,13 +34,13 @@ export default function TasksWidget({
   useEffect(() => {
     const fetchUnreadCount = async () => {
       try {
-        const response = await fetch('/api/notifications/count/unread');
+        const response = await fetch('/api/tasks/notifications/unread');
         if (response.ok) {
           const data = await response.json();
           setUnreadCount(data.count || 0);
         }
       } catch (error) {
-        console.error('Error fetching unread count:', error);
+        console.error('Error fetching unread task notification count:', error);
       }
     };
 
