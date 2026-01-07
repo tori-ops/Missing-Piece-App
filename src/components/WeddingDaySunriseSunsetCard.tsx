@@ -103,11 +103,10 @@ export default function WeddingDaySunriseSunsetCard({
         border: `1px solid ${secondaryColor}`,
         borderRadius: '12px',
         padding: '1.5rem',
-        marginBottom: '1.5rem',
       }}
     >
-      <h4 style={{ color: primaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.5em' }}>
-        ☀️ Your Wedding Day Sunrise & Sunset
+      <h4 style={{ color: fontColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.5em' }}>
+        Your Wedding Day Sunrise & Sunset
       </h4>
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
@@ -116,7 +115,7 @@ export default function WeddingDaySunriseSunsetCard({
           <p style={{ fontSize: '0.9rem', fontWeight: '600', color: fontColor, margin: '0 0 0.5rem 0' }}>
             Sunrise
           </p>
-          <p style={{ fontSize: '1.4rem', fontWeight: 'bold', color: primaryColor, margin: 0 }}>
+          <p style={{ fontSize: '1.4rem', fontWeight: 'bold', color: fontColor, margin: 0 }}>
             {formatTime(weddingDayData.sunrise)}
           </p>
         </div>
@@ -126,7 +125,7 @@ export default function WeddingDaySunriseSunsetCard({
           <p style={{ fontSize: '0.9rem', fontWeight: '600', color: fontColor, margin: '0 0 0.5rem 0' }}>
             Sunset
           </p>
-          <p style={{ fontSize: '1.4rem', fontWeight: 'bold', color: primaryColor, margin: 0 }}>
+          <p style={{ fontSize: '1.4rem', fontWeight: 'bold', color: fontColor, margin: 0 }}>
             {formatTime(weddingDayData.sunset)}
           </p>
         </div>

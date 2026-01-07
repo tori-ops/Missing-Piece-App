@@ -68,29 +68,30 @@ export default function WeatherDetailView({
         showAstrology={false}
       />
 
-      {/* Prior Year Sunrise/Sunset Card */}
-      <PriorYearSunriseSunsetCard
-        weddingDate={weddingDate}
-        venueLat={venueLat}
-        venueLng={venueLng}
-        primaryColor={primaryColor}
-        secondaryColor={secondaryColor}
-        fontColor={fontColor}
-        bodyFontFamily={bodyFontFamily}
-        headerFontFamily={headerFontFamily}
-      />
+      {/* Sunrise/Sunset Cards - Side by Side */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        <PriorYearSunriseSunsetCard
+          weddingDate={weddingDate}
+          venueLat={venueLat}
+          venueLng={venueLng}
+          primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
+          fontColor={fontColor}
+          bodyFontFamily={bodyFontFamily}
+          headerFontFamily={headerFontFamily}
+        />
 
-      {/* Wedding Day Sunrise/Sunset Card */}
-      <WeddingDaySunriseSunsetCard
-        weddingDate={weddingDate}
-        venueLat={venueLat}
-        venueLng={venueLng}
-        primaryColor={primaryColor}
-        secondaryColor={secondaryColor}
-        fontColor={fontColor}
-        bodyFontFamily={bodyFontFamily}
-        headerFontFamily={headerFontFamily}
-      />
+        <WeddingDaySunriseSunsetCard
+          weddingDate={weddingDate}
+          venueLat={venueLat}
+          venueLng={venueLng}
+          primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
+          fontColor={fontColor}
+          bodyFontFamily={bodyFontFamily}
+          headerFontFamily={headerFontFamily}
+        />
+      </div>
 
       {/* Historical Weather Widget */}
       <WeatherGoldenHourWidget
