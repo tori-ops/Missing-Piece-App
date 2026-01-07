@@ -3,7 +3,6 @@
 import WeatherGoldenHourWidget from './WeatherGoldenHourWidget';
 import PriorYearSunriseSunsetCard from './PriorYearSunriseSunsetCard';
 import WeddingDaySunriseSunsetCard from './WeddingDaySunriseSunsetCard';
-import WeddingDayWidget from './WeddingDayWidget';
 
 interface WeatherDetailViewProps {
   weddingDate: string;
@@ -54,19 +53,6 @@ export default function WeatherDetailView({
           Golden Hour Predictor
         </h2>
       </div>
-
-      {/* Wedding Details Card */}
-      <WeddingDayWidget
-        weddingDate={weddingDate}
-        venueLat={venueLat}
-        venueLng={venueLng}
-        primaryColor={primaryColor}
-        secondaryColor={secondaryColor}
-        fontColor={fontColor}
-        bodyFontFamily={bodyFontFamily}
-        headerFontFamily={headerFontFamily}
-        showAstrology={false}
-      />
 
       {/* Sunrise/Sunset Cards - Side by Side */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
