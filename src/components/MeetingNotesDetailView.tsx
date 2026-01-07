@@ -250,11 +250,21 @@ export default function MeetingNotesDetailView({
           color: fontColor,
           fontFamily: headerFontFamily,
           marginTop: 0,
-          marginBottom: 0,
+          marginBottom: '1rem',
           fontSize: '2.5rem',
         }}>
           Meeting Notes
         </h2>
+        <p style={{
+          color: fontColor,
+          fontFamily: bodyFontFamily,
+          fontSize: '0.95rem',
+          fontStyle: 'italic',
+          margin: 0,
+          opacity: 0.8,
+        }}>
+          This is your planning memory. Log notes from meetings, conversations, and ideas using voice-to-text, scanned handwritten notes, or typed entries. Turn any note into a task to keep timelines clear and progress steady - all viewable by you and your planner.
+        </p>
       </div>
 
       {/* Success Message */}
