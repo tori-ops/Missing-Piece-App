@@ -276,3 +276,118 @@ export async function queueEmail(
   // For now, log to console
   console.log(`[EMAIL QUEUED] To: ${toEmail}, Subject: ${subject}`);
 }
+
+/**
+ * Create a notification log entry for a user
+ * Used for in-app notifications about tasks
+ */
+export async function createNotificationLog(
+  taskId: string,
+  userId: string,
+  notificationType: 'task_assigned' | 'task_completed' | 'due_date_warning' | 'task_reassigned'
+) {
+  try {
+    const notification = await prisma.notificationLog.create({
+      data: {
+        taskId,
+        userId,
+        notificationType,
+        isRead: false,
+      },
+    });
+    return notification;
+  } catch (error) {
+    console.error('Error creating notification log:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get unread notifications for a user
+ */
+export async function getUserNotifications(userId: string, limit = 20) {
+  try {
+    const notifications = await prisma.notificationLog.findMany({
+      where: { userId },
+      include: {
+        task: {
+          select: {
+            id: true,
+            title: true,
+            status: true,
+            dueDate: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+    });
+    return notifications;
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get unread notification count for a user
+ */
+export async function getUnreadNotificationCount(userId: string) {
+  try {
+    const count = await prisma.notificationLog.count({
+      where: { userId, isRead: false },
+    });
+    return count;
+  } catch (error) {
+    console.error('Error counting unread notifications:', error);
+    throw error;
+  }
+}
+
+/**
+ * Mark notification as read
+ */
+export async function markNotificationAsRead(notificationId: string) {
+  try {
+    const notification = await prisma.notificationLog.update({
+      where: { id: notificationId },
+      data: { isRead: true },
+    });
+    return notification;
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+    throw error;
+  }
+}
+
+/**
+ * Mark all notifications as read for a user
+ */
+export async function markAllNotificationsAsRead(userId: string) {
+  try {
+    const result = await prisma.notificationLog.updateMany({
+      where: { userId, isRead: false },
+      data: { isRead: true },
+    });
+    return result;
+  } catch (error) {
+    console.error('Error marking all notifications as read:', error);
+    throw error;
+  }
+}
+
+/**
+ * Delete a notification
+ */
+export async function deleteNotification(notificationId: string) {
+  try {
+    const notification = await prisma.notificationLog.delete({
+      where: { id: notificationId },
+    });
+    return notification;
+  } catch (error) {
+    console.error('Error deleting notification:', error);
+    throw error;
+  }
+}
+

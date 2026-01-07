@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { listTasks, createTask } from '@/lib/services/taskService';
+import { createNotificationLog } from '@/lib/services/notificationService';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -186,13 +187,18 @@ export async function POST(req: NextRequest) {
       assignedToTenantId: assignedToTenantId || undefined,
     });
 
-    // TODO: Create notifications for assigned users
-    // if (assignedToClientId) {
-    //   await createNotification(assignedToClientId, 'task_assigned', task.id);
-    // }
-    // if (assignedToTenantId) {
-    //   await createNotification(assignedToTenantId, 'task_assigned', task.id);
-    // }
+    // Create notifications for assigned users
+    try {
+      if (assignedToClientId) {
+        await createNotificationLog(task.id, assignedToClientId, 'task_assigned');
+      }
+      if (assignedToTenantId) {
+        await createNotificationLog(task.id, assignedToTenantId, 'task_assigned');
+      }
+    } catch (notificationError) {
+      console.error('Error creating notifications:', notificationError);
+      // Don't fail the task creation if notifications fail
+    }
 
     return NextResponse.json(task, { status: 201 });
   } catch (error) {
