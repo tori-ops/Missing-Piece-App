@@ -740,10 +740,10 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'design' && (
         <div>
-          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '1rem' }}>Design Preferences</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.75rem', marginBottom: '1rem' }}>Design Preferences</h2>
           
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: bodyFontFamily, fontSize: '0.95rem', fontStyle: 'italic' }}>
               Header Font (Script/Fancy)
             </label>
             <select
@@ -768,7 +768,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: bodyFontFamily, fontSize: '0.95rem', fontStyle: 'italic' }}>
               Body Font (Serif/Sans Serif)
             </label>
             <select
@@ -793,7 +793,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: bodyFontFamily, fontSize: '0.95rem', fontStyle: 'italic' }}>
               Font Color (used throughout website)
             </label>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -829,7 +829,7 @@ export default function WebsiteBuilderForm({
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
             {(['colorPrimary', 'colorSecondary', 'colorAccent'] as const).map(color => (
               <div key={color}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem', color: fontColor, fontFamily: headerFontFamily }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem', color: fontColor, fontFamily: bodyFontFamily, fontStyle: 'italic' }}>
                   {color === 'colorPrimary' ? 'Primary' : color === 'colorSecondary' ? 'Secondary' : 'Accent'}
                 </label>
                 <input
