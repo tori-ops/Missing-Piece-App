@@ -2,6 +2,7 @@
 
 interface WebsiteBuilderWidgetProps {
   primaryColor: string;
+  secondaryColor?: string;
   bodyFontFamily: string;
   textColor: string;
   onClick: () => void;
@@ -9,6 +10,7 @@ interface WebsiteBuilderWidgetProps {
 
 export default function WebsiteBuilderWidget({
   primaryColor,
+  secondaryColor = '#e1e0d0',
   bodyFontFamily,
   textColor,
   onClick,
@@ -19,7 +21,7 @@ export default function WebsiteBuilderWidget({
       onClick={onClick}
       style={{
         background: primaryColor,
-        border: `2px solid ${primaryColor}`,
+        border: `2px solid ${secondaryColor}`,
         borderRadius: '6px',
         padding: '1.5rem',
         cursor: 'pointer',

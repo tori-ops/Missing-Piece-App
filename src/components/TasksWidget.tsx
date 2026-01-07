@@ -5,6 +5,7 @@ import TasksList from './TasksList';
 
 interface TasksWidgetProps {
   primaryColor: string;
+  secondaryColor?: string;
   bodyFontFamily: string;
   textColor?: string;
   clientId?: string;
@@ -15,6 +16,7 @@ interface TasksWidgetProps {
 
 export default function TasksWidget({
   primaryColor,
+  secondaryColor = '#e1e0d0',
   bodyFontFamily,
   textColor = '#FFFFFF',
   clientId,
@@ -43,7 +45,7 @@ export default function TasksWidget({
         onClick={handleClick}
         style={{
           background: primaryColor,
-          border: `2px solid ${primaryColor}`,
+          border: `2px solid ${secondaryColor}`,
           borderRadius: '6px',
           padding: '1.5rem',
           cursor: 'pointer',

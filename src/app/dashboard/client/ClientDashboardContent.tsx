@@ -266,7 +266,7 @@ export default function ClientDashboardContent({
         borderRadius: '6px',
         minHeight: '160px',
         background: primaryColor,
-        border: `2px solid ${primaryColor}`,
+        border: `2px solid ${secondaryColor}`,
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
         display: 'flex',
         alignItems: 'center',
@@ -326,7 +326,7 @@ export default function ClientDashboardContent({
       {/* Wedding Details Card */}
       <div style={{ 
         background: primaryColor, 
-        border: `2px solid ${primaryColor}`, 
+        border: `2px solid ${secondaryColor}`, 
         borderRadius: '3px',
         padding: '1rem',
         marginBottom: '2.5rem',
@@ -392,7 +392,7 @@ export default function ClientDashboardContent({
         borderRadius: '6px',
         minHeight: 'auto',
         background: primaryColor,
-        border: `2px solid ${primaryColor}`,
+        border: `2px solid ${secondaryColor}`,
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
         display: 'flex',
         alignItems: 'center',
@@ -428,6 +428,7 @@ export default function ClientDashboardContent({
           {/* Row 1 */}
           <MeetingNotesWidget
             primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
             bodyFontFamily={bodyFontFamily}
             textColor={fontColor}
             clientId={clientProfile.id}
@@ -438,6 +439,7 @@ export default function ClientDashboardContent({
           />
           <TasksWidget
             primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
             bodyFontFamily={bodyFontFamily}
             textColor={fontColor}
             clientId={clientProfile.id}
@@ -448,6 +450,7 @@ export default function ClientDashboardContent({
           {clientProfile.websiteBuilderEnabled ? (
             <WebsiteBuilderWidget
               primaryColor={primaryColor}
+              secondaryColor={secondaryColor}
               bodyFontFamily={bodyFontFamily}
               textColor={fontColor}
               onClick={() => setActiveView('website')}
@@ -457,12 +460,14 @@ export default function ClientDashboardContent({
           {/* Row 2 */}
           <WeatherCard
             primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
             bodyFontFamily={bodyFontFamily}
             textColor={fontColor}
             onClick={() => setActiveView('weather')}
           />
           <AstrologyCard
             primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
             bodyFontFamily={bodyFontFamily}
             textColor={fontColor}
             onClick={() => setActiveView('astrology')}
