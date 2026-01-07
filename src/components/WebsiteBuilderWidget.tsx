@@ -48,7 +48,7 @@ export default function WebsiteBuilderWidget({
       }}
       aria-label="Open website design suite"
     >
-      <div style={{ fontSize: '2rem', margin: '0 0 0.5rem 0' }}>📖</div>
+      <div style={{ fontSize: '2rem', margin: '0 0 0.35rem 0' }}>📖</div>
       <h3 style={{ color: textColor, fontFamily: bodyFontFamily, margin: '0.5rem 0', fontSize: '1rem' }}>
         Web Design Suite
       </h3>
