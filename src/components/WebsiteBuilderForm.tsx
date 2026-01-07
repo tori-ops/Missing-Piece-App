@@ -874,7 +874,7 @@ export default function WebsiteBuilderForm({
           </p>
 
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>Header Image</h3>
+            <h3 style={{ color: fontColor, fontFamily: bodyFontFamily, fontSize: '0.95rem', fontStyle: 'italic', marginBottom: '1rem', fontWeight: '600', opacity: 0.7 }}>Header Image</h3>
             <div style={{
               padding: '2rem',
               border: `2px dashed ${primaryColor}40`,
@@ -895,7 +895,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>Background Image</h3>
+            <h3 style={{ color: fontColor, fontFamily: bodyFontFamily, fontSize: '0.95rem', fontStyle: 'italic', marginBottom: '1rem', fontWeight: '600', opacity: 0.7 }}>Background Image</h3>
             <div style={{
               padding: '2rem',
               border: `2px dashed ${primaryColor}40`,
@@ -916,7 +916,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: bodyFontFamily, fontSize: '0.95rem', fontStyle: 'italic', opacity: 0.7 }}>
               Describe Your Ideal Images (Optional)
             </label>
             <textarea
