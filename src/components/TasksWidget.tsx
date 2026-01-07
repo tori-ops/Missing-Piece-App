@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TasksList from './TasksList';
 
 interface TasksWidgetProps {
@@ -28,6 +28,28 @@ export default function TasksWidget({
   // (typically widget is used with either clientId or tenantId but not both)
   const role = userRole || (clientId && !tenantId ? 'CLIENT' : 'TENANT');
   const [isOpen, setIsOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Fetch unread notification count
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const response = await fetch('/api/notifications/count/unread');
+        if (response.ok) {
+          const data = await response.json();
+          setUnreadCount(data.count || 0);
+        }
+      } catch (error) {
+        console.error('Error fetching unread count:', error);
+      }
+    };
+
+    fetchUnreadCount();
+
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleClick = () => {
     if (onClick) {
@@ -60,6 +82,7 @@ export default function TasksWidget({
           width: '100%',
           maxWidth: '150px',
           margin: '0 auto',
+          position: 'relative',
         }}
         onMouseEnter={(e) => {
           (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${primaryColor}30`;
@@ -71,7 +94,30 @@ export default function TasksWidget({
         }}
         aria-label="Open tasks"
       >
-        <div style={{ fontSize: '2rem', margin: '0 0 0.35rem 0' }}>✓</div>
+        <div style={{ fontSize: '2rem', margin: '0 0 0.35rem 0', position: 'relative' }}>
+          ✓
+          {unreadCount > 0 && (
+            <span
+              style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-12px',
+                background: '#EF4444',
+                color: '#FFFFFF',
+                borderRadius: '50%',
+                width: '20px',
+                height: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.75rem',
+                fontWeight: 'bold',
+              }}
+            >
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
+        </div>
         <h3 style={{ color: textColor, fontFamily: bodyFontFamily, margin: '0.5rem 0', fontSize: '1rem' }}>
           Tasks
         </h3>
