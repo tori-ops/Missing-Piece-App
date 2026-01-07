@@ -26,7 +26,10 @@ interface Task {
 
 interface TasksListProps {
   primaryColor: string;
+  secondaryColor?: string;
+  fontColor?: string;
   bodyFontFamily: string;
+  headerFontFamily?: string;
   clientId?: string;
   tenantId?: string;
   userRole?: 'TENANT' | 'CLIENT';
@@ -35,7 +38,10 @@ interface TasksListProps {
 
 export default function TasksList({
   primaryColor,
+  secondaryColor = '#e1e0d0',
+  fontColor = '#1B5E20',
   bodyFontFamily,
+  headerFontFamily = "'Playfair Display', serif",
   clientId,
   tenantId,
   userRole = 'TENANT',
@@ -258,7 +264,10 @@ export default function TasksList({
         {showForm ? (
           <TaskForm
             primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
+            fontColor={fontColor}
             bodyFontFamily={bodyFontFamily}
+            headerFontFamily={headerFontFamily}
             clientId={clientId}
             tenantId={tenantId}
             userRole={userRole}

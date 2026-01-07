@@ -6,7 +6,9 @@ import TasksList from './TasksList';
 interface TasksWidgetProps {
   primaryColor: string;
   secondaryColor?: string;
+  fontColor?: string;
   bodyFontFamily: string;
+  headerFontFamily?: string;
   textColor?: string;
   clientId?: string;
   tenantId?: string;
@@ -17,7 +19,9 @@ interface TasksWidgetProps {
 export default function TasksWidget({
   primaryColor,
   secondaryColor = '#e1e0d0',
+  fontColor = '#1B5E20',
   bodyFontFamily,
+  headerFontFamily = "'Playfair Display', serif",
   textColor = '#FFFFFF',
   clientId,
   tenantId,
@@ -127,7 +131,10 @@ export default function TasksWidget({
       {isOpen && (
         <TasksList
           primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
+          fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
+          headerFontFamily={headerFontFamily}
           clientId={clientId}
           tenantId={tenantId}
           userRole={role}

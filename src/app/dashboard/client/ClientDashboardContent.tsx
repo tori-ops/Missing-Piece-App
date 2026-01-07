@@ -542,7 +542,9 @@ export default function ClientDashboardContent({
           <TasksWidget
             primaryColor={primaryColor}
             secondaryColor={secondaryColor}
+            fontColor={fontColor}
             bodyFontFamily={bodyFontFamily}
+            headerFontFamily={headerFontFamily}
             textColor={fontColor}
             clientId={clientProfile.id}
             tenantId={clientProfile.tenantId}
