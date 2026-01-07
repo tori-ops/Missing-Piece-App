@@ -395,7 +395,6 @@ export default function WebsiteBuilderForm({
       {/* Tabs - Two centered rows */}
       <div style={{
         marginBottom: '2rem',
-        borderBottom: `2px solid ${secondaryColor}`,
         paddingBottom: '0.5rem'
       }}>
         {/* Row 1: Story, Images, Design, Hero */}
@@ -554,7 +553,7 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'images' && (
         <div>
-          <h2 style={{ color: fontColor, fontSize: '1.5rem', marginBottom: '1rem' }}>Images</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.3rem', marginBottom: '1rem' }}>Images</h2>
           <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
             Upload up to 20 photos. You currently have {existingImages.length + newImages.length} images.
           </p>
@@ -649,7 +648,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           {/* Image Categories with Suggestions */}
-          <div style={{ marginBottom: '2rem', border: `1px solid ${secondaryColor}`, padding: '1.5rem', borderRadius: '8px' }}>
+          <div style={{ marginBottom: '2rem', border: `1px solid ${secondaryColor}`, padding: '1.5rem', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }}>
             <h3 style={{ color: fontColor, marginBottom: '1rem' }}>Image Suggestions</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
               {IMAGE_CATEGORIES.map(category => (
@@ -659,8 +658,8 @@ export default function WebsiteBuilderForm({
                   borderRadius: '4px',
                   border: `1px solid ${primaryColor}30`
                 }}>
-                  <h4 style={{ margin: '0 0 0.25rem 0', color: primaryColor, fontSize: '0.95rem' }}>{category.label}</h4>
-                  <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>{category.description}</p>
+                  <h4 style={{ margin: '0 0 0.25rem 0', color: fontColor, fontSize: '0.95rem' }}>{category.label}</h4>
+                  <p style={{ margin: 0, fontSize: '0.8rem', color: fontColor, opacity: 0.7 }}>{category.description}</p>
                 </div>
               ))}
             </div>
