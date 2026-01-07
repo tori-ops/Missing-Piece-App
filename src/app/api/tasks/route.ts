@@ -101,7 +101,18 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { title, description, dueDate, priority, assigneeType, assigneeId, clientId, meetingNoteId } = body;
+    const {
+      title,
+      description,
+      dueDate,
+      priority,
+      assigneeType,
+      assigneeId,
+      assignedToClientId,
+      assignedToTenantId,
+      clientId,
+      meetingNoteId,
+    } = body;
 
     if (!title) {
       return NextResponse.json(
@@ -171,7 +182,17 @@ export async function POST(req: NextRequest) {
       assigneeId: effectiveAssigneeId,
       createdByUserId: user.id,
       meetingNoteId,
+      assignedToClientId: assignedToClientId || undefined,
+      assignedToTenantId: assignedToTenantId || undefined,
     });
+
+    // TODO: Create notifications for assigned users
+    // if (assignedToClientId) {
+    //   await createNotification(assignedToClientId, 'task_assigned', task.id);
+    // }
+    // if (assignedToTenantId) {
+    //   await createNotification(assignedToTenantId, 'task_assigned', task.id);
+    // }
 
     return NextResponse.json(task, { status: 201 });
   } catch (error) {

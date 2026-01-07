@@ -17,6 +17,8 @@ export interface CreateTaskInput {
   createdByUserId: string;
   source?: 'MANUAL' | 'MEETING_NOTE';
   meetingNoteId?: string;
+  assignedToClientId?: string; // NEW: UUID of client user assigned to task
+  assignedToTenantId?: string; // NEW: UUID of tenant user assigned to task
 }
 
 export interface UpdateTaskInput {
@@ -201,6 +203,8 @@ export async function createTask(input: CreateTaskInput): Promise<Task> {
         createdByUserId: input.createdByUserId,
         source: input.source || 'MANUAL',
         meetingNoteId: input.meetingNoteId,
+        assignedToClientId: input.assignedToClientId,
+        assignedToTenantId: input.assignedToTenantId,
       },
     });
 

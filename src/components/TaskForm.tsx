@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BrandedDatePicker from './BrandedDatePicker';
 
 interface Task {
@@ -19,6 +19,18 @@ interface Task {
   meetingNoteId?: string | null;
 }
 
+interface ClientProfile {
+  id: string;
+  couple1FirstName?: string;
+  couple1LastName?: string;
+}
+
+interface TenantProfile {
+  id: string;
+  businessName?: string;
+}
+
+
 interface TaskFormProps {
   primaryColor: string;
   secondaryColor: string;
@@ -31,6 +43,8 @@ interface TaskFormProps {
   meetingNoteId?: string;
   onTaskCreated: (task: Task) => void;
   onCancel: () => void;
+  clients?: ClientProfile[];
+  tenants?: TenantProfile[];
 }
 
 export default function TaskForm({
@@ -45,18 +59,46 @@ export default function TaskForm({
   meetingNoteId,
   onTaskCreated,
   onCancel,
+  clients = [],
+  tenants = [],
 }: TaskFormProps) {
-  const defaultAssign = userRole === 'CLIENT' ? 'CLIENT_SELF' : 'TENANT_SELF';
-  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     dueDate: '',
     priority: 'MEDIUM',
-    assignTo: defaultAssign,
+    assignedToClientId: userRole === 'TENANT' ? '' : (clientId || ''),
+    assignedToTenantId: userRole === 'TENANT' ? (tenantId || '') : '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [loadedClients, setLoadedClients] = useState<ClientProfile[]>(clients);
+  const [loadedTenants, setLoadedTenants] = useState<TenantProfile[]>(tenants);
+
+  // Load clients and tenants if not provided
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        if (userRole === 'TENANT' && loadedClients.length === 0) {
+          const response = await fetch('/api/clients');
+          if (response.ok) {
+            const data = await response.json();
+            setLoadedClients(data);
+          }
+        }
+        if (userRole === 'CLIENT' && loadedTenants.length === 0) {
+          const response = await fetch('/api/tenants');
+          if (response.ok) {
+            const data = await response.json();
+            setLoadedTenants(data);
+          }
+        }
+      } catch (err) {
+        console.error('Error loading clients/tenants:', err);
+      }
+    };
+    loadData();
+  }, [userRole]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -72,17 +114,25 @@ export default function TaskForm({
       return;
     }
 
+    // Validate that at least one assignment is selected
+    if (!formData.assignedToClientId && !formData.assignedToTenantId) {
+      setError('Please assign this task to either a client or planner');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      let assigneeType: 'TENANT' | 'CLIENT';
-      let assigneeId: string;
+      // Build assignment data based on what's selected
+      let assigneeType: 'TENANT' | 'CLIENT' = 'TENANT';
+      let assigneeId: string = '';
 
-      if (formData.assignTo === 'TENANT_SELF' || formData.assignTo === 'CLIENT_TO_TENANT') {
+      // Determine primary assignment for backward compatibility
+      if (formData.assignedToTenantId) {
         assigneeType = 'TENANT';
-        assigneeId = tenantId || '';
-      } else {
+        assigneeId = formData.assignedToTenantId;
+      } else if (formData.assignedToClientId) {
         assigneeType = 'CLIENT';
-        assigneeId = clientId || '';
+        assigneeId = formData.assignedToClientId;
       }
 
       const response = await fetch('/api/tasks', {
@@ -95,6 +145,8 @@ export default function TaskForm({
           priority: formData.priority,
           assigneeType,
           assigneeId,
+          assignedToClientId: formData.assignedToClientId || null,
+          assignedToTenantId: formData.assignedToTenantId || null,
           clientId: clientId || null,
           source: meetingNoteId ? 'MEETING_NOTE' : 'MANUAL',
           meetingNoteId: meetingNoteId || null,
@@ -268,49 +320,127 @@ export default function TaskForm({
           </select>
         </div>
 
-        {/* Assign To */}
+        {/* Assign To Client */}
+        {userRole === 'TENANT' && (
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label
+              htmlFor="assignedToClientId"
+              style={{
+                display: 'block',
+                fontWeight: '600',
+                color: primaryColor,
+                marginBottom: '0.5rem',
+                fontSize: '0.95rem',
+              }}
+            >
+              Assign to Client
+            </label>
+            <select
+              id="assignedToClientId"
+              name="assignedToClientId"
+              value={formData.assignedToClientId}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                borderRadius: '4px',
+                border: `1px solid ${primaryColor}40`,
+                fontSize: '0.95rem',
+                fontFamily: bodyFontFamily,
+                boxSizing: 'border-box',
+                cursor: 'pointer',
+              }}
+            >
+              <option value="">-- Select a client --</option>
+              {loadedClients.map((client) => (
+                <option key={client.id} value={client.id}>
+                  {client.couple1FirstName && client.couple1LastName
+                    ? `${client.couple1FirstName} ${client.couple1LastName}`
+                    : `Client ${client.id.substring(0, 8)}`}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Assign To Tenant/Planner */}
+        {userRole === 'CLIENT' && (
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label
+              htmlFor="assignedToTenantId"
+              style={{
+                display: 'block',
+                fontWeight: '600',
+                color: primaryColor,
+                marginBottom: '0.5rem',
+                fontSize: '0.95rem',
+              }}
+            >
+              Assign to Planner
+            </label>
+            <select
+              id="assignedToTenantId"
+              name="assignedToTenantId"
+              value={formData.assignedToTenantId}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                borderRadius: '4px',
+                border: `1px solid ${primaryColor}40`,
+                fontSize: '0.95rem',
+                fontFamily: bodyFontFamily,
+                boxSizing: 'border-box',
+                cursor: 'pointer',
+              }}
+            >
+              <option value="">-- Select a planner --</option>
+              {loadedTenants.map((tenant) => (
+                <option key={tenant.id} value={tenant.id}>
+                  {tenant.businessName || `Planner ${tenant.id.substring(0, 8)}`}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Self-Assignment Option */}
         <div style={{ marginBottom: '1.5rem' }}>
           <label
-            htmlFor="assignTo"
             style={{
-              display: 'block',
-              fontWeight: '600',
-              color: primaryColor,
-              marginBottom: '0.5rem',
-              fontSize: '0.95rem',
-            }}
-          >
-            Assign To
-          </label>
-          <select
-            id="assignTo"
-            name="assignTo"
-            value={formData.assignTo}
-            onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: `1px solid ${primaryColor}40`,
-              fontSize: '0.95rem',
-              fontFamily: bodyFontFamily,
-              boxSizing: 'border-box',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
               cursor: 'pointer',
+              fontWeight: '600',
+              color: fontColor,
+              fontSize: '0.95rem',
             }}
           >
-            {userRole === 'TENANT' && (
-              <>
-                <option value="TENANT_SELF">Me (Tenant)</option>
-                {clientId && <option value="CLIENT_SELF">My Client</option>}
-              </>
-            )}
-            {userRole === 'CLIENT' && (
-              <>
-                <option value="CLIENT_SELF">Me</option>
-                {tenantId && <option value="CLIENT_TO_TENANT">Planner</option>}
-              </>
-            )}
-          </select>
+            <input
+              type="checkbox"
+              checked={userRole === 'TENANT' ? !!formData.assignedToTenantId : !!formData.assignedToClientId}
+              onChange={(e) => {
+                if (userRole === 'TENANT') {
+                  setFormData((prev) => ({
+                    ...prev,
+                    assignedToTenantId: e.target.checked ? (tenantId || '') : '',
+                  }));
+                } else {
+                  setFormData((prev) => ({
+                    ...prev,
+                    assignedToClientId: e.target.checked ? (clientId || '') : '',
+                  }));
+                }
+              }}
+              style={{
+                cursor: 'pointer',
+              }}
+            />
+            {userRole === 'TENANT'
+              ? 'Assign to myself (Planner)'
+              : 'Assign to myself (Client)'}
+          </label>
         </div>
 
         {/* Submit & Cancel */}
