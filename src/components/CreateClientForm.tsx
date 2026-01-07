@@ -2,13 +2,25 @@
 
 import { useState } from 'react';
 import styles from './CreateClientForm.module.css';
+import BrandedDatePicker from './BrandedDatePicker';
 
 interface CreateClientFormProps {
   tenantId: string;
   onSuccess?: () => void;
+  primaryColor?: string;
+  secondaryColor?: string;
+  fontColor?: string;
+  bodyFontFamily?: string;
 }
 
-export default function CreateClientForm({ tenantId, onSuccess }: CreateClientFormProps) {
+export default function CreateClientForm({ 
+  tenantId, 
+  onSuccess,
+  primaryColor = '#274E13',
+  secondaryColor = '#e1e0d0',
+  fontColor = '#000000',
+  bodyFontFamily = "'Poppins', sans-serif",
+}: CreateClientFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -224,12 +236,14 @@ export default function CreateClientForm({ tenantId, onSuccess }: CreateClientFo
         <div className={styles.row}>
           <div className={styles.field}>
             <label>Wedding Date *</label>
-            <input
-              type="date"
-              name="weddingDate"
-              value={formData.weddingDate}
-              onChange={handleChange}
-              required
+            <BrandedDatePicker
+              selected={formData.weddingDate ? new Date(formData.weddingDate) : null}
+              onChange={(date) => setFormData((prev) => ({ ...prev, weddingDate: date ? date.toISOString().split('T')[0] : '' }))}
+              placeholderText="Select wedding date"
+              primaryColor={primaryColor}
+              secondaryColor={secondaryColor}
+              fontColor={fontColor}
+              bodyFontFamily={bodyFontFamily}
             />
           </div>
 

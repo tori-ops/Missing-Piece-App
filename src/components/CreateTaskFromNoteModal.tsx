@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import BrandedDatePicker from './BrandedDatePicker';
 
 interface CreateTaskFromNoteModalProps {
   noteTitle: string;
@@ -10,7 +11,9 @@ interface CreateTaskFromNoteModalProps {
   clientId?: string;
   tenantId: string;
   primaryColor?: string;
+  secondaryColor?: string;
   fontColor?: string;
+  bodyFontFamily?: string;
   onClose: () => void;
   onTaskCreated: () => void;
 }
@@ -22,7 +25,9 @@ export default function CreateTaskFromNoteModal({
   clientId,
   tenantId,
   primaryColor = '#274E13',
+  secondaryColor = '#D4AF37',
   fontColor = '#000000',
+  bodyFontFamily = 'inherit',
   onClose,
   onTaskCreated,
 }: CreateTaskFromNoteModalProps) {
@@ -174,22 +179,17 @@ export default function CreateTaskFromNoteModal({
 
           {/* Due Date */}
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', color: primaryColor, fontWeight: 'bold', marginBottom: '0.5rem' }}>
+            <label style={{ display: 'block', color: fontColor, fontWeight: 'bold', marginBottom: '0.5rem' }}>
               Due Date
             </label>
-            <input
-              type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: `1px solid ${primaryColor}`,
-                borderRadius: '4px',
-                fontSize: '1rem',
-                fontFamily: 'inherit',
-                boxSizing: 'border-box',
-              }}
+            <BrandedDatePicker
+              selected={dueDate ? new Date(dueDate) : null}
+              onChange={(date) => setDueDate(date ? date.toISOString().split('T')[0] : '')}
+              placeholderText="Select due date"
+              primaryColor={primaryColor}
+              secondaryColor={secondaryColor}
+              fontColor={fontColor}
+              bodyFontFamily={bodyFontFamily}
             />
           </div>
 
@@ -231,13 +231,21 @@ export default function CreateTaskFromNoteModal({
               onClick={onClose}
               style={{
                 padding: '0.75rem 1.5rem',
-                border: `1px solid ${primaryColor}`,
-                background: 'white',
-                color: primaryColor,
+                border: `1px solid ${secondaryColor}`,
+                background: '#ffffff',
+                color: fontColor,
                 borderRadius: '4px',
                 cursor: 'pointer',
                 fontSize: '1rem',
                 fontWeight: 'bold',
+                fontFamily: bodyFontFamily,
+                transition: 'background-color 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#ffffff';
               }}
             >
               Cancel
@@ -248,13 +256,25 @@ export default function CreateTaskFromNoteModal({
               style={{
                 padding: '0.75rem 1.5rem',
                 background: primaryColor,
-                color: 'white',
-                border: 'none',
+                color: fontColor,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 cursor: isSubmitting ? 'not-allowed' : 'pointer',
                 fontSize: '1rem',
                 fontWeight: 'bold',
+                fontFamily: bodyFontFamily,
                 opacity: isSubmitting ? 0.6 : 1,
+                transition: 'background-color 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                if (!isSubmitting) {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isSubmitting) {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
+                }
               }}
             >
               {isSubmitting ? 'Creating...' : 'Create Task'}

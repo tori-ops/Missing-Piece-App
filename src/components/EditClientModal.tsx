@@ -2,10 +2,15 @@
 
 import { useState, useRef } from 'react';
 import styles from './CreateClientForm.module.css';
+import BrandedDatePicker from './BrandedDatePicker';
 
 interface EditClientModalProps {
   client: any;
   tenantId: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  fontColor?: string;
+  bodyFontFamily?: string;
   onClose: () => void;
   onSave: (updatedClient: any) => void;
 }
@@ -29,7 +34,16 @@ interface PlaceDetails {
   website?: string;
 }
 
-export default function EditClientModal({ client, tenantId, onClose, onSave }: EditClientModalProps) {
+export default function EditClientModal({ 
+  client, 
+  tenantId,
+  primaryColor = '#274E13',
+  secondaryColor = '#e1e0d0',
+  fontColor = '#000000',
+  bodyFontFamily = "'Poppins', sans-serif",
+  onClose, 
+  onSave 
+}: EditClientModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [venueSearchLoading, setVenueSearchLoading] = useState(false);
@@ -277,12 +291,14 @@ export default function EditClientModal({ client, tenantId, onClose, onSave }: E
           <div className={styles.row}>
             <div className={styles.field}>
               <label>Wedding Date *</label>
-              <input
-                type="date"
-                name="weddingDate"
-                value={formData.weddingDate}
-                onChange={handleChange}
-                required
+              <BrandedDatePicker
+                selected={formData.weddingDate ? new Date(formData.weddingDate) : null}
+                onChange={(date) => setFormData((prev) => ({ ...prev, weddingDate: date ? date.toISOString().split('T')[0] : '' }))}
+                placeholderText="Select wedding date"
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+                fontColor={fontColor}
+                bodyFontFamily={bodyFontFamily}
               />
             </div>
 

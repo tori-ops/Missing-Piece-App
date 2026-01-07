@@ -2,9 +2,12 @@
 
 import { useState, useRef } from 'react';
 import { X } from 'lucide-react';
+import BrandedDatePicker from './BrandedDatePicker';
 
 interface MeetingNoteFormProps {
   primaryColor: string;
+  secondaryColor: string;
+  fontColor: string;
   bodyFontFamily: string;
   noteId?: string;
   initialTitle?: string;
@@ -21,6 +24,8 @@ interface MeetingNoteFormProps {
 
 export default function MeetingNoteForm({
   primaryColor,
+  secondaryColor,
+  fontColor,
   bodyFontFamily,
   noteId,
   initialTitle = '',
@@ -148,28 +153,21 @@ export default function MeetingNoteForm({
             style={{
               display: 'block',
               fontWeight: '600',
-              color: primaryColor,
+              color: fontColor,
               marginBottom: '0.5rem',
               fontSize: '0.95rem',
             }}
           >
             Meeting Date
           </label>
-          <input
-            id="meetingDate"
-            name="meetingDate"
-            type="date"
-            value={formData.meetingDate}
-            onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: `1px solid ${primaryColor}40`,
-              fontSize: '0.95rem',
-              fontFamily: bodyFontFamily,
-              boxSizing: 'border-box',
-            }}
+          <BrandedDatePicker
+            selected={formData.meetingDate ? new Date(formData.meetingDate) : null}
+            onChange={(date) => setFormData((prev) => ({ ...prev, meetingDate: date ? date.toISOString().split('T')[0] : '' }))}
+            placeholderText="Select meeting date"
+            primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
+            fontColor={fontColor}
+            bodyFontFamily={bodyFontFamily}
           />
         </div>
 

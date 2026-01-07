@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import BrandedDatePicker from './BrandedDatePicker';
 
 interface Task {
   id: string;
@@ -20,7 +21,10 @@ interface Task {
 
 interface TaskFormProps {
   primaryColor: string;
+  secondaryColor: string;
+  fontColor: string;
   bodyFontFamily: string;
+  headerFontFamily: string;
   clientId?: string;
   tenantId?: string;
   userRole?: 'TENANT' | 'CLIENT';
@@ -31,7 +35,10 @@ interface TaskFormProps {
 
 export default function TaskForm({
   primaryColor,
+  secondaryColor,
+  fontColor,
   bodyFontFamily,
+  headerFontFamily,
   clientId,
   tenantId,
   userRole = 'TENANT',
@@ -207,28 +214,21 @@ export default function TaskForm({
             style={{
               display: 'block',
               fontWeight: '600',
-              color: primaryColor,
+              color: fontColor,
               marginBottom: '0.5rem',
               fontSize: '0.95rem',
             }}
           >
             Due Date
           </label>
-          <input
-            id="dueDate"
-            name="dueDate"
-            type="date"
-            value={formData.dueDate}
-            onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: `1px solid ${primaryColor}40`,
-              fontSize: '0.95rem',
-              fontFamily: bodyFontFamily,
-              boxSizing: 'border-box',
-            }}
+          <BrandedDatePicker
+            selected={formData.dueDate ? new Date(formData.dueDate) : null}
+            onChange={(date) => setFormData((prev) => ({ ...prev, dueDate: date ? date.toISOString().split('T')[0] : '' }))}
+            placeholderText="Select due date"
+            primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
+            fontColor={fontColor}
+            bodyFontFamily={bodyFontFamily}
           />
         </div>
 
@@ -321,19 +321,20 @@ export default function TaskForm({
             style={{
               padding: '0.75rem 1.5rem',
               borderRadius: '4px',
-              border: `1px solid ${primaryColor}40`,
-              background: 'transparent',
-              color: primaryColor,
+              border: `1px solid ${secondaryColor}`,
+              background: '#ffffff',
+              color: fontColor,
               cursor: 'pointer',
               fontWeight: '600',
               fontSize: '0.95rem',
-              transition: 'all 0.2s',
+              fontFamily: bodyFontFamily,
+              transition: 'background-color 0.2s ease',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}10`;
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#ffffff';
             }}
           >
             Cancel
@@ -344,23 +345,24 @@ export default function TaskForm({
             style={{
               padding: '0.75rem 1.5rem',
               borderRadius: '4px',
-              border: 'none',
+              border: `1px solid ${secondaryColor}`,
               background: primaryColor,
-              color: '#fff',
+              color: fontColor,
               cursor: isSubmitting ? 'not-allowed' : 'pointer',
               fontWeight: '600',
               fontSize: '0.95rem',
+              fontFamily: bodyFontFamily,
               opacity: isSubmitting ? 0.6 : 1,
-              transition: 'opacity 0.2s',
+              transition: 'background-color 0.2s ease',
             }}
             onMouseEnter={(e) => {
               if (!isSubmitting) {
-                (e.currentTarget as HTMLButtonElement).style.opacity = '0.9';
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
               }
             }}
             onMouseLeave={(e) => {
               if (!isSubmitting) {
-                (e.currentTarget as HTMLButtonElement).style.opacity = '1';
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
               }
             }}
           >

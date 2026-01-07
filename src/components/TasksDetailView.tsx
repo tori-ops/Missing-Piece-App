@@ -316,17 +316,14 @@ export default function TasksDetailView({
 
             <div>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Due Date</label>
-              <input
-                type="date"
-                value={newTaskDueDate}
-                onChange={(e) => setNewTaskDueDate(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: 'none',
-                  borderRadius: '4px',
-                  fontFamily: bodyFontFamily,
-                }}
+              <BrandedDatePicker
+                selected={newTaskDueDate ? new Date(newTaskDueDate) : null}
+                onChange={(date) => setNewTaskDueDate(date ? date.toISOString().split('T')[0] : '')}
+                placeholderText="Select due date"
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+                fontColor={fontColor}
+                bodyFontFamily={bodyFontFamily}
               />
             </div>
           </div>
