@@ -48,6 +48,8 @@ export default function PriorYearSunriseSunsetCard({
         const priorYearDate = new Date(year - 1, month - 1, day);
         const priorYearDateStr = priorYearDate.toLocaleDateString('en-CA'); // Returns YYYY-MM-DD
 
+        console.log('[PriorYearSunriseSunsetCard] Fetching data:', { priorYearDateStr, venueLat, venueLng });
+
         const response = await fetch(
           `/api/wedding/sunrise-sunset?lat=${venueLat}&lng=${venueLng}&date=${priorYearDateStr}`
         );

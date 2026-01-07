@@ -47,6 +47,8 @@ export default function WeddingDaySunriseSunsetCard({
         // Use it directly without timezone conversion
         const weddingDateStr = weddingDate;
 
+        console.log('[WeddingDaySunriseSunsetCard] Fetching data:', { weddingDateStr, venueLat, venueLng });
+
         const response = await fetch(
           `/api/wedding/sunrise-sunset?lat=${venueLat}&lng=${venueLng}&date=${weddingDateStr}`
         );
