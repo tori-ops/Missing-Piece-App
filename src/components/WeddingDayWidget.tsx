@@ -89,6 +89,8 @@ export default function WeddingDayWidget({
         setLoading(true);
         const dateStr = new Date(weddingDate).toISOString().split('T')[0];
 
+        console.log('[WeddingDayWidget] Fetching wedding day details:', { dateStr, venueLat, venueLng });
+
         // Fetch all three in parallel
         const [weatherRes, goldenHourRes, astrologyRes] = await Promise.all([
           venueLat && venueLng
@@ -154,6 +156,41 @@ export default function WeddingDayWidget({
 
   return (
     <div style={{ fontFamily: bodyFontFamily }}>
+      {/* Wedding Details Header - Always Show */}
+      <div
+        style={{
+          background: `linear-gradient(135deg, ${primaryColor}20 0%, ${primaryColor}10 100%)`,
+          border: `1px solid ${secondaryColor}`,
+          borderRadius: '12px',
+          padding: '1.5rem',
+          marginBottom: '1.5rem',
+        }}
+      >
+        <h4 style={{ color: fontColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.5em' }}>
+          Your Wedding Details
+        </h4>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div>
+            <p style={{ fontSize: '0.8rem', color: fontColor, opacity: 0.6, margin: '0 0 0.25rem 0' }}>
+              Wedding Date
+            </p>
+            <p style={{ fontSize: '1.1rem', fontWeight: '600', color: fontColor, margin: 0 }}>
+              {new Date(weddingDate).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+            </p>
+          </div>
+          {venueLat && venueLng && (
+            <div>
+              <p style={{ fontSize: '0.8rem', color: fontColor, opacity: 0.6, margin: '0 0 0.25rem 0' }}>
+                Venue Coordinates
+              </p>
+              <p style={{ fontSize: '0.95rem', fontWeight: '600', color: fontColor, margin: 0 }}>
+                {venueLat.toFixed(4)}°, {venueLng.toFixed(4)}°
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Weather Section */}
       {weather && (
         <div
