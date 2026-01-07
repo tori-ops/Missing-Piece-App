@@ -1142,27 +1142,25 @@ export default function WebsiteBuilderForm({
           onClick={handleSave}
           disabled={saving}
           style={{
+            background: primaryColor,
+            color: fontColor,
+            border: `1px solid ${secondaryColor}`,
             padding: '0.75rem 1.5rem',
-            backgroundColor: primaryColor,
-            color: '#ffffff',
-            border: `1px solid ${primaryColor}`,
             borderRadius: '6px',
-            cursor: saving ? 'not-allowed' : 'pointer',
-            fontFamily: bodyFontFamily,
             fontSize: '0.95rem',
             fontWeight: '600',
+            cursor: saving ? 'not-allowed' : 'pointer',
+            fontFamily: bodyFontFamily,
+            transition: 'background-color 0.2s ease',
             opacity: saving ? 0.6 : 1,
-            transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
             if (!saving) {
-              (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${primaryColor}30`;
-              (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
             }
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
-            (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
           }}
         >
           {saving ? 'Saving...' : 'Save Information'}
@@ -1170,27 +1168,25 @@ export default function WebsiteBuilderForm({
         <button
           onClick={onBack}
           style={{
+            background: primaryColor,
+            color: fontColor,
+            border: `1px solid ${secondaryColor}`,
             padding: '0.75rem 1.5rem',
-            background: `${primaryColor}20`,
-            color: primaryColor,
-            border: `1px solid ${primaryColor}`,
             borderRadius: '6px',
-            cursor: 'pointer',
-            fontFamily: bodyFontFamily,
             fontSize: '0.95rem',
             fontWeight: '600',
-            transition: 'all 0.2s ease'
+            cursor: 'pointer',
+            fontFamily: bodyFontFamily,
+            transition: 'background-color 0.2s ease',
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-            (e.currentTarget as HTMLButtonElement).style.color = 'white';
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-            (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
           }}
         >
-          Back
+          ← Back to Dashboard
         </button>
       </div>
 
