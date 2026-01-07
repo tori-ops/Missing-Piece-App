@@ -55,6 +55,8 @@ export default function TasksDetailView({
   const [newTaskDueDate, setNewTaskDueDate] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState<'LOW' | 'MEDIUM' | 'HIGH'>('MEDIUM');
   const [newTaskClientId, setNewTaskClientId] = useState<string>('');
+  const [assignedToClient, setAssignedToClient] = useState(false);
+  const [assignedToTenant, setAssignedToTenant] = useState(false);
 
   // Filters
   const [filterStatus, setFilterStatus] = useState<'ALL' | 'TODO' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED'>('ALL');
@@ -102,6 +104,8 @@ export default function TasksDetailView({
           clientId: newTaskClientId || clientId,
           assigneeType: (newTaskClientId || clientId) ? 'CLIENT' : 'TENANT',
           assigneeId: (newTaskClientId || clientId) || tenantId,
+          assignedToClientId: assignedToClient ? (newTaskClientId || clientId) : undefined,
+          assignedToTenantId: assignedToTenant ? tenantId : undefined,
         }),
       });
 
@@ -116,6 +120,8 @@ export default function TasksDetailView({
       setNewTaskDueDate('');
       setNewTaskPriority('MEDIUM');
       setNewTaskClientId('');
+      setAssignedToClient(false);
+      setAssignedToTenant(false);
       await fetchTasks();
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
@@ -325,6 +331,134 @@ export default function TasksDetailView({
                 fontColor={fontColor}
                 bodyFontFamily={bodyFontFamily}
               />
+            </div>
+          </div>
+
+          {/* Assign Task To Section */}
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: `${primaryColor}08`,
+              border: `1px solid ${secondaryColor}`,
+              borderRadius: '4px',
+              marginTop: '1rem',
+              marginBottom: '1rem',
+            }}
+          >
+            <label
+              style={{
+                display: 'block',
+                marginBottom: '1rem',
+                fontWeight: '600',
+                color: fontColor,
+                fontFamily: headerFontFamily,
+              }}
+            >
+              Assign Task To
+            </label>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {isClient ? (
+                <>
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      fontFamily: bodyFontFamily,
+                      color: fontColor,
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={assignedToClient}
+                      onChange={(e) => setAssignedToClient(e.target.checked)}
+                      style={{
+                        marginRight: '0.75rem',
+                        cursor: 'pointer',
+                        width: '18px',
+                        height: '18px',
+                        accentColor: primaryColor,
+                      }}
+                    />
+                    Myself (Client)
+                  </label>
+
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      fontFamily: bodyFontFamily,
+                      color: fontColor,
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={assignedToTenant}
+                      onChange={(e) => setAssignedToTenant(e.target.checked)}
+                      style={{
+                        marginRight: '0.75rem',
+                        cursor: 'pointer',
+                        width: '18px',
+                        height: '18px',
+                        accentColor: primaryColor,
+                      }}
+                    />
+                    My Planner (Tenant)
+                  </label>
+                </>
+              ) : (
+                <>
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      fontFamily: bodyFontFamily,
+                      color: fontColor,
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={assignedToClient}
+                      onChange={(e) => setAssignedToClient(e.target.checked)}
+                      style={{
+                        marginRight: '0.75rem',
+                        cursor: 'pointer',
+                        width: '18px',
+                        height: '18px',
+                        accentColor: primaryColor,
+                      }}
+                    />
+                    Client
+                  </label>
+
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      fontFamily: bodyFontFamily,
+                      color: fontColor,
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={assignedToTenant}
+                      onChange={(e) => setAssignedToTenant(e.target.checked)}
+                      style={{
+                        marginRight: '0.75rem',
+                        cursor: 'pointer',
+                        width: '18px',
+                        height: '18px',
+                        accentColor: primaryColor,
+                      }}
+                    />
+                    Myself (Planner)
+                  </label>
+                </>
+              )}
             </div>
           </div>
 
