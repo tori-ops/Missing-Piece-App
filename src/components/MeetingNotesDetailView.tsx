@@ -278,6 +278,7 @@ export default function MeetingNotesDetailView({
         borderRadius: '8px',
         marginBottom: '1.5rem',
         fontFamily: bodyFontFamily,
+        border: `1px solid ${secondaryColor}`,
       }}>
         <h3 style={{ marginTop: 0, fontFamily: headerFontFamily, fontSize: '1.75rem' }}>Create New Meeting Note</h3>
         <form onSubmit={handleCreateNote}>
@@ -497,6 +498,7 @@ export default function MeetingNotesDetailView({
         borderRadius: '8px',
         marginBottom: '2rem',
         fontFamily: bodyFontFamily,
+        border: `1px solid ${secondaryColor}`,
       }}>
         <h3 style={{ marginTop: 0, color: fontColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>Filter Notes</h3>
         
