@@ -14,6 +14,7 @@ interface WebsiteBuilderFormProps {
   clientId: string;
   tenantId: string;
   primaryColor: string;
+  secondaryColor?: string;
   fontColor: string;
   bodyFontFamily: string;
   headerFontFamily: string;
@@ -74,6 +75,7 @@ const IMAGE_CATEGORIES = [
 export default function WebsiteBuilderForm({
   clientId,
   primaryColor,
+  secondaryColor = '#e1e0d0',
   fontColor,
   bodyFontFamily,
   headerFontFamily,
@@ -355,10 +357,10 @@ export default function WebsiteBuilderForm({
       <div style={{
         marginBottom: '2rem',
         paddingBottom: '1rem',
-        borderBottom: `2px solid ${primaryColor}20`,
+        borderBottom: `2px solid ${secondaryColor}`,
       }}>
         <h1 style={{ 
-          color: primaryColor,
+          color: fontColor,
           fontFamily: headerFontFamily,
           fontSize: '2.5rem',
           margin: '0 0 0.5rem 0',
@@ -393,7 +395,7 @@ export default function WebsiteBuilderForm({
       {/* Tabs - Two centered rows */}
       <div style={{
         marginBottom: '2rem',
-        borderBottom: `2px solid ${primaryColor}15`,
+        borderBottom: `2px solid ${secondaryColor}`,
         paddingBottom: '0.5rem'
       }}>
         {/* Row 1: Story, Images, Design, Hero */}
@@ -409,27 +411,25 @@ export default function WebsiteBuilderForm({
               onClick={() => setActiveTab(tab)}
               style={{
                 padding: '0.75rem 1.5rem',
-                background: activeTab === tab ? primaryColor : `${primaryColor}20`,
-                color: activeTab === tab ? '#ffffff' : primaryColor,
-                border: `1px solid ${primaryColor}`,
+                background: activeTab === tab ? primaryColor : '#ffffff',
+                color: activeTab === tab ? '#ffffff' : fontColor,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontFamily: bodyFontFamily,
                 fontSize: '0.95rem',
                 fontWeight: '600',
                 whiteSpace: 'nowrap',
-                transition: 'all 0.2s ease'
+                transition: 'background-color 0.2s ease'
               }}
               onMouseEnter={(e) => {
                 if (activeTab !== tab) {
-                  (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-                  (e.currentTarget as HTMLButtonElement).style.color = 'white';
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
                 }
               }}
               onMouseLeave={(e) => {
                 if (activeTab !== tab) {
-                  (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-                  (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#ffffff';
                 }
               }}
             >
@@ -450,27 +450,25 @@ export default function WebsiteBuilderForm({
               onClick={() => setActiveTab(tab)}
               style={{
                 padding: '0.75rem 1.5rem',
-                background: activeTab === tab ? primaryColor : `${primaryColor}20`,
-                color: activeTab === tab ? '#ffffff' : primaryColor,
-                border: `1px solid ${primaryColor}`,
+                background: activeTab === tab ? primaryColor : '#ffffff',
+                color: activeTab === tab ? '#ffffff' : fontColor,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontFamily: bodyFontFamily,
                 fontSize: '0.95rem',
                 fontWeight: '600',
                 whiteSpace: 'nowrap',
-                transition: 'all 0.2s ease'
+                transition: 'background-color 0.2s ease'
               }}
               onMouseEnter={(e) => {
                 if (activeTab !== tab) {
-                  (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-                  (e.currentTarget as HTMLButtonElement).style.color = 'white';
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
                 }
               }}
               onMouseLeave={(e) => {
                 if (activeTab !== tab) {
-                  (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-                  (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#ffffff';
                 }
               }}
             >
