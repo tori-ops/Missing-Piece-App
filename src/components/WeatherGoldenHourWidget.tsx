@@ -163,7 +163,7 @@ export default function WeatherGoldenHourWidget({
         borderLeft: `4px solid ${primaryColor}`,
       }}
     >
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '1rem', marginBottom: '0.75rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '0.75rem' }}>
         <div>
           <p style={{ fontSize: '0.75rem', color: fontColor, opacity: 0.6, margin: 0 }}>
             {day.dayOfWeek}
@@ -188,33 +188,7 @@ export default function WeatherGoldenHourWidget({
             {day.precipitation}"
           </p>
         </div>
-        <div>
-          <p style={{ fontSize: '0.75rem', color: fontColor, opacity: 0.6, margin: 0 }}>
-            Sunrise / Sunset
-          </p>
-          <p style={{ fontSize: '0.9rem', fontWeight: '600', color: fontColor, margin: '0.25rem 0 0 0' }}>
-            {day.sunriseTime} / {day.sunsetTime}
-          </p>
-        </div>
       </div>
-      {day.morningGoldenStart && (
-        <div
-          style={{
-            fontSize: '0.85rem',
-            color: fontColor,
-            opacity: 0.8,
-            paddingTop: '0.75rem',
-            borderTop: `1px solid ${fontColor}20`,
-          }}
-        >
-          <p style={{ margin: '0 0 0.25rem 0' }}>
-            Morning Golden: {day.morningGoldenStart} - {day.morningGoldenEnd}
-          </p>
-          <p style={{ margin: 0 }}>
-            Evening Golden: {day.eveningGoldenStart} - {day.eveningGoldenEnd}
-          </p>
-        </div>
-      )}
       {day.pollen && (
         <div
           style={{
