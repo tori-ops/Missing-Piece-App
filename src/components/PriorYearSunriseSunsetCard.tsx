@@ -43,10 +43,10 @@ export default function PriorYearSunriseSunsetCard({
           return;
         }
 
-        // Calculate prior year date
-        const priorYearDate = new Date(weddingDate);
-        priorYearDate.setFullYear(priorYearDate.getFullYear() - 1);
-        const priorYearDateStr = priorYearDate.toISOString().split('T')[0];
+        // Parse date string as YYYY-MM-DD to avoid timezone issues
+        const [year, month, day] = weddingDate.split('-').map(Number);
+        const priorYearDate = new Date(year - 1, month - 1, day);
+        const priorYearDateStr = priorYearDate.toLocaleDateString('en-CA'); // Returns YYYY-MM-DD
 
         const response = await fetch(
           `/api/wedding/sunrise-sunset?lat=${venueLat}&lng=${venueLng}&date=${priorYearDateStr}`

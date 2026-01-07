@@ -43,7 +43,9 @@ export default function WeddingDaySunriseSunsetCard({
           return;
         }
 
-        const weddingDateStr = new Date(weddingDate).toISOString().split('T')[0];
+        // weddingDate is already in YYYY-MM-DD format from parent
+        // Use it directly without timezone conversion
+        const weddingDateStr = weddingDate;
 
         const response = await fetch(
           `/api/wedding/sunrise-sunset?lat=${venueLat}&lng=${venueLng}&date=${weddingDateStr}`
