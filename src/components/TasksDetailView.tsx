@@ -47,6 +47,9 @@ export default function TasksDetailView({
   companyName,
   onBack,
 }: TasksDetailViewProps) {
+  // Determine if current user is a client (has clientId in props)
+  const isClient = !!clientId;
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState('');
