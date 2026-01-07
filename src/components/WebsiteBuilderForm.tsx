@@ -1069,7 +1069,7 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'misc' && (
         <div>
-          <h2 style={{ color: fontColor, fontSize: '1.75rem', marginBottom: '2rem' }}>Miscellaneous</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.75rem', marginBottom: '2rem' }}>Miscellaneous</h2>
           
           {/* Lined Paper Journal Container */}
           <div style={{
