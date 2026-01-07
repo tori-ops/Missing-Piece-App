@@ -100,7 +100,7 @@ export default function LoginForm() {
         </div>
 
         <div className={styles.footer}>
-          <p>Engineered by The Missing Piece Planning & Events, LLC<br />© 2025</p>
+          <p style={{ color: '#e1e0d0' }}>Engineered by The Missing Piece Planning & Events, LLC<br />© 2025</p>
         </div>
       </div>
 

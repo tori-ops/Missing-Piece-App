@@ -481,7 +481,7 @@ export default function WebsiteBuilderForm({
       {/* Tab Content */}
       {activeTab === 'story' && (
         <div>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '2rem' }}>Your Story</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '2rem' }}>Your Story</h2>
           
           {/* Lined Paper Journal Container */}
           <div style={{
@@ -490,15 +490,24 @@ export default function WebsiteBuilderForm({
             borderRadius: '8px',
             padding: '2rem',
             marginBottom: '2rem',
+            border: `1px solid ${secondaryColor}`,
             backgroundImage: `repeating-linear-gradient(
               to bottom,
               transparent 0px,
               transparent 32px,
-              ${primaryColor}15 32px,
-              ${primaryColor}15 33px
+              ${secondaryColor}60 32px,
+              ${secondaryColor}60 33px
             )`,
             backgroundPosition: '0 0',
-            backgroundSize: '100% 33px'
+            backgroundSize: '100% 33px',
+            transition: 'background-color 0.2s ease',
+            cursor: 'text'
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLDivElement).style.backgroundColor = `${secondaryColor}15`;
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLDivElement).style.backgroundColor = '#faf8f3';
           }}>
             <div style={{ marginBottom: '3rem', position: 'relative', zIndex: 1 }}>
               <textarea
@@ -1081,15 +1090,24 @@ export default function WebsiteBuilderForm({
             borderRadius: '8px',
             padding: '2rem',
             marginBottom: '2rem',
+            border: `1px solid ${secondaryColor}`,
             backgroundImage: `repeating-linear-gradient(
               to bottom,
               transparent 0px,
               transparent 32px,
-              ${primaryColor}15 32px,
-              ${primaryColor}15 33px
+              ${secondaryColor}60 32px,
+              ${secondaryColor}60 33px
             )`,
             backgroundPosition: '0 0',
-            backgroundSize: '100% 33px'
+            backgroundSize: '100% 33px',
+            transition: 'background-color 0.2s ease',
+            cursor: 'text'
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLDivElement).style.backgroundColor = `${secondaryColor}15`;
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLDivElement).style.backgroundColor = '#faf8f3';
           }}>
             <div style={{ position: 'relative', zIndex: 1 }}>
               <textarea

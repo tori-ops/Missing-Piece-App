@@ -2,9 +2,10 @@
 
 interface BrandingFooterProps {
   primaryColor?: string;
+  secondaryColor?: string;
 }
 
-export default function BrandingFooter({ primaryColor = '#274E13' }: BrandingFooterProps) {
+export default function BrandingFooter({ primaryColor = '#274E13', secondaryColor = '#e1e0d0' }: BrandingFooterProps) {
   return (
     <div
       style={{
@@ -18,7 +19,7 @@ export default function BrandingFooter({ primaryColor = '#274E13' }: BrandingFoo
         borderTop: `1px solid ${primaryColor}20`,
       }}
     >
-      Engineered by The Missing Piece Planning
+      <span style={{ color: secondaryColor }}>Engineered by The Missing Piece Planning</span>
     </div>
   );
 }
