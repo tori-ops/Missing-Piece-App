@@ -134,7 +134,7 @@ export default async function ClientDashboard() {
           currentUserId={user.id}
           greeting={greeting}
         />
-        <BrandingFooter primaryColor={primaryColor} />
+        <BrandingFooter primaryColor={primaryColor} secondaryColor={secondaryColor} />
       </>
     );
   } catch (error) {
