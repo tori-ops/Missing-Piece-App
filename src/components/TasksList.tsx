@@ -163,6 +163,22 @@ export default function TasksList({
           </button>
         </div>
 
+        {/* Descriptor Text */}
+        <div style={{ padding: '1rem 1.5rem 0 1.5rem' }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: '0.9rem',
+              color: '#666',
+              fontStyle: 'italic',
+              fontFamily: bodyFontFamily,
+              lineHeight: 1.5,
+            }}
+          >
+            This is where plans turn into action. Create tasks with all the details you need, set priority levels and due dates, and decide whether the task is assigned to you or your planner. This keeps responsibilities clear, progress visible, and planning moving forward without anything falling through the cracks.
+          </p>
+        </div>
+
         {/* Controls */}
         <div
           style={{

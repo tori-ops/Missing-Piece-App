@@ -735,9 +735,15 @@ model Task {
   status                TaskStatus            @default(TODO)
   priority              TaskPriority          @default(MEDIUM)
   
-  // Assignment
-  assigneeType          TaskAssigneeType      // TENANT or CLIENT
-  assigneeId            String                // tenantId or clientId based on assigneeType
+  // Assignment - NEW FIELDS
+  assignedToClientId    String?               // UUID of client user assigned to this task
+  assignedToTenantId    String?               // UUID of tenant user assigned to this task
+  assignedByUserId      String?               // UUID of user who made the assignment
+  lastReassignedAt      DateTime?             // Track when task was last reassigned
+  
+  // Legacy assignment fields (kept for backward compatibility)
+  assigneeType          TaskAssigneeType?     // TENANT or CLIENT
+  assigneeId            String?               // tenantId or clientId based on assigneeType
   
   // Tracking
   createdByUserId       String
@@ -761,8 +767,8 @@ model Task {
   
   @@index([tenantId])
   @@index([clientId])
-  @@index([assigneeType])
-  @@index([assigneeId])
+  @@index([assignedToClientId])
+  @@index([assignedToTenantId])
   @@index([status])
   @@index([dueDate])
   @@index([createdAt])
