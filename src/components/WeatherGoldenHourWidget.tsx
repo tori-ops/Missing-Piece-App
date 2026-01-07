@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import WeddingDayWidget from './WeddingDayWidget';
 
 interface WeatherGoldenHourWidgetProps {
   weddingDate: string;
@@ -11,6 +12,7 @@ interface WeatherGoldenHourWidgetProps {
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
+  clientId?: string;
 }
 
 interface HistoricalWeatherDay {
@@ -58,6 +60,7 @@ export default function WeatherGoldenHourWidget({
   fontColor = '#000000',
   bodyFontFamily = "'Georgia', serif",
   headerFontFamily = "'Playfair Display', serif",
+  clientId,
 }: WeatherGoldenHourWidgetProps) {
   const [historicalData, setHistoricalData] = useState<HistoricalWeatherData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -124,8 +127,6 @@ export default function WeatherGoldenHourWidget({
     );
   }
 
-  const weddingWeekData = historicalData.daily.filter((d) => d.isWeddingWeek);
-
   // Helper function to determine pollen level
   const getPollenLevel = (count: number | undefined): { level: string; emoji: string; color: string } => {
     if (!count) return { level: 'None', emoji: '✅', color: '#22c55e' };
@@ -147,7 +148,7 @@ export default function WeatherGoldenHourWidget({
       <div
         style={{
           background: `linear-gradient(135deg, ${primaryColor}20 0%, ${primaryColor}10 100%)`,
-          border: `2px solid ${primaryColor}CC`,
+          border: `1px solid ${secondaryColor}`,
           borderRadius: '12px',
           padding: '1.5rem',
         }}
@@ -194,115 +195,18 @@ export default function WeatherGoldenHourWidget({
         </div>
       </div>
 
-      {/* Wedding Week Focus */}
-      {weddingWeekData.length > 0 && (
-        <div
-          style={{
-            background: `linear-gradient(135deg, ${secondaryColor}40 0%, ${secondaryColor}20 100%)`,
-            border: `2px solid ${primaryColor}`,
-            borderRadius: '12px',
-            padding: '1.5rem',
-          }}
-        >
-          <h4 style={{ color: secondaryColor, margin: '0 0 1rem 0', fontFamily: headerFontFamily, fontSize: '1.9em' }}>
-            Wedding Week (Prior Year)
-          </h4>
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            {weddingWeekData.map((day) => (
-              <div
-                key={day.date}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.3)',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  borderLeft: `4px solid ${primaryColor}`,
-                }}
-              >
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '1rem', marginBottom: '0.75rem' }}>
-                  <div>
-                    <p style={{ fontSize: '0.75rem', color: fontColor, opacity: 0.6, margin: 0 }}>
-                      {day.dayOfWeek}
-                    </p>
-                    <p style={{ fontSize: '0.95rem', fontWeight: '600', color: fontColor, margin: '0.25rem 0 0 0' }}>
-                      {new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                    </p>
-                  </div>
-                  <div>
-                    <p style={{ fontSize: '0.75rem', color: fontColor, opacity: 0.6, margin: 0 }}>
-                      High / Low
-                    </p>
-                    <p style={{ fontSize: '0.95rem', fontWeight: '600', color: fontColor, margin: '0.25rem 0 0 0' }}>
-                      {day.tempMax}° / {day.tempMin}°
-                    </p>
-                  </div>
-                  <div>
-                    <p style={{ fontSize: '0.75rem', color: fontColor, opacity: 0.6, margin: 0 }}>
-                      Precipitation
-                    </p>
-                    <p style={{ fontSize: '0.95rem', fontWeight: '600', color: fontColor, margin: '0.25rem 0 0 0' }}>
-                      {day.precipitation}"
-                    </p>
-                  </div>
-                  <div>
-                    <p style={{ fontSize: '0.75rem', color: fontColor, opacity: 0.6, margin: 0 }}>
-                      Sunrise / Sunset
-                    </p>
-                    <p style={{ fontSize: '0.9rem', fontWeight: '600', color: fontColor, margin: '0.25rem 0 0 0' }}>
-                      {day.sunriseTime} / {day.sunsetTime}
-                    </p>
-                  </div>
-                </div>
-                {day.morningGoldenStart && (
-                  <div
-                    style={{
-                      fontSize: '0.85rem',
-                      color: fontColor,
-                      opacity: 0.8,
-                      paddingTop: '0.75rem',
-                      borderTop: `1px solid ${fontColor}20`,
-                    }}
-                  >
-                    <p style={{ margin: '0 0 0.25rem 0' }}>
-                      Morning Golden: {day.morningGoldenStart} - {day.morningGoldenEnd}
-                    </p>
-                    <p style={{ margin: 0 }}>
-                      Evening Golden: {day.eveningGoldenStart} - {day.eveningGoldenEnd}
-                    </p>
-                  </div>
-                )}
-                {day.pollen && (
-                  <div
-                    style={{
-                      fontSize: '0.85rem',
-                      color: fontColor,
-                      opacity: 0.8,
-                      paddingTop: '0.75rem',
-                      borderTop: `1px solid ${fontColor}20`,
-                    }}
-                  >
-                    {(() => {
-                      const maxLevel = getMaxPollenLevel(day.pollen);
-                      return (
-                        <>
-                          <p style={{ margin: '0 0 0.25rem 0', fontWeight: '600' }}>
-                              Pollen: {maxLevel.level}
-                            </p>
-                            <div style={{ fontSize: '0.75rem', opacity: 0.7, marginTop: '0.25rem' }}>
-                              {(day.pollen?.tree || 0) > 0 && <p style={{ margin: '0.1rem 0' }}>Tree: {day.pollen.tree}</p>}
-                              {(day.pollen?.grass || 0) > 0 && <p style={{ margin: '0.1rem 0' }}>Grass: {day.pollen.grass}</p>}
-                              {(day.pollen?.weed || 0) > 0 && <p style={{ margin: '0.1rem 0' }}>Weed: {day.pollen.weed}</p>}
-                              {(day.pollen?.ragweed || 0) > 0 && <p style={{ margin: '0.1rem 0' }}>Ragweed: {day.pollen.ragweed}</p>}
-                          </div>
-                        </>
-                      );
-                    })()}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Wedding Details Card */}
+      <WeddingDayWidget
+        weddingDate={weddingDate}
+        venueLat={venueLat}
+        venueLng={venueLng}
+        primaryColor={primaryColor}
+        fontColor={fontColor}
+        bodyFontFamily={bodyFontFamily}
+        headerFontFamily={headerFontFamily}
+        showAstrology={false}
+        clientId={clientId}
+      />
 
       {/* Full 60-Day Timeline */}
       <details style={{ cursor: 'pointer' }}>
