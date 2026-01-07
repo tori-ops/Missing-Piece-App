@@ -1,7 +1,8 @@
 'use client';
 
 import WeatherGoldenHourWidget from './WeatherGoldenHourWidget';
-import SunriseSunsetCard from './SunriseSunsetCard';
+import PriorYearSunriseSunsetCard from './PriorYearSunriseSunsetCard';
+import WeddingDaySunriseSunsetCard from './WeddingDaySunriseSunsetCard';
 import WeddingDayWidget from './WeddingDayWidget';
 
 interface WeatherDetailViewProps {
@@ -67,8 +68,20 @@ export default function WeatherDetailView({
         showAstrology={false}
       />
 
-      {/* Sunrise/Sunset Comparison Card */}
-      <SunriseSunsetCard
+      {/* Prior Year Sunrise/Sunset Card */}
+      <PriorYearSunriseSunsetCard
+        weddingDate={weddingDate}
+        venueLat={venueLat}
+        venueLng={venueLng}
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        fontColor={fontColor}
+        bodyFontFamily={bodyFontFamily}
+        headerFontFamily={headerFontFamily}
+      />
+
+      {/* Wedding Day Sunrise/Sunset Card */}
+      <WeddingDaySunriseSunsetCard
         weddingDate={weddingDate}
         venueLat={venueLat}
         venueLng={venueLng}
