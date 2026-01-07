@@ -32,6 +32,7 @@ interface TasksDetailViewProps {
   logoUrl?: string | null;
   companyName?: string;
   onBack: () => void;
+  onTaskCreated?: () => void;
 }
 
 export default function TasksDetailView({
@@ -46,6 +47,7 @@ export default function TasksDetailView({
   logoUrl,
   companyName,
   onBack,
+  onTaskCreated,
 }: TasksDetailViewProps) {
   // Determine if current user is a client (has clientId in props)
   const isClient = !!clientId;
@@ -126,6 +128,15 @@ export default function TasksDetailView({
       setAssignedToClient(false);
       setAssignedToTenant(false);
       await fetchTasks();
+      
+      // Notify via custom event for TasksWidget to refresh
+      if (onTaskCreated) {
+        onTaskCreated();
+      } else {
+        // Fallback: dispatch a custom event
+        window.dispatchEvent(new CustomEvent('taskCreated', { detail: { taskId: null } }));
+      }
+      
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
       console.error('Failed to create task:', error);

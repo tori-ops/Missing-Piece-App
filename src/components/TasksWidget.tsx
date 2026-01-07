@@ -35,24 +35,35 @@ export default function TasksWidget({
   const [unreadCount, setUnreadCount] = useState(0);
 
   // Fetch unread notification count
-  useEffect(() => {
-    const fetchUnreadCount = async () => {
-      try {
-        const response = await fetch('/api/tasks/notifications/unread');
-        if (response.ok) {
-          const data = await response.json();
-          setUnreadCount(data.count || 0);
-        }
-      } catch (error) {
-        console.error('Error fetching unread task notification count:', error);
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await fetch('/api/tasks/notifications/unread');
+      if (response.ok) {
+        const data = await response.json();
+        setUnreadCount(data.count || 0);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching unread task notification count:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchUnreadCount();
 
     // Refresh every 30 seconds
     const interval = setInterval(fetchUnreadCount, 30000);
-    return () => clearInterval(interval);
+    
+    // Listen for task creation events from TasksDetailView
+    const handleTaskCreated = () => {
+      fetchUnreadCount();
+    };
+    
+    window.addEventListener('taskCreated', handleTaskCreated);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('taskCreated', handleTaskCreated);
+    };
   }, []);
 
   const handleClick = () => {
@@ -106,7 +117,7 @@ export default function TasksWidget({
                 position: 'absolute',
                 top: '-8px',
                 right: '-12px',
-                background: '#EF4444',
+                background: '#A0453A',
                 color: '#FFFFFF',
                 borderRadius: '50%',
                 width: '20px',
