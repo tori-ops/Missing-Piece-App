@@ -201,6 +201,7 @@ export default function WeatherGoldenHourWidget({
         venueLat={venueLat}
         venueLng={venueLng}
         primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
         fontColor={fontColor}
         bodyFontFamily={bodyFontFamily}
         headerFontFamily={headerFontFamily}

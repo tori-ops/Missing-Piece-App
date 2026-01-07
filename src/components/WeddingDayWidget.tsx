@@ -7,6 +7,7 @@ interface WeddingDayWidgetProps {
   venueLat?: number;
   venueLng?: number;
   primaryColor?: string;
+  secondaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
@@ -49,6 +50,7 @@ export default function WeddingDayWidget({
   venueLat,
   venueLng,
   primaryColor = '#274E13',
+  secondaryColor = '#D0CEB5',
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
