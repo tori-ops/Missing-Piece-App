@@ -156,6 +156,7 @@ export default function ClientDashboardContent({
           clientId={clientProfile.id}
           tenantId={clientProfile.tenantId}
           primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
           fontColor={fontColor}
           bodyFontFamily={bodyFontFamily}
           headerFontFamily={headerFontFamily}

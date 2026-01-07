@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Trash2, Check } from 'lucide-react';
+import BrandedDatePicker from './BrandedDatePicker';
 
 interface Task {
   id: string;
@@ -24,6 +25,7 @@ interface TasksDetailViewProps {
   tenantId: string;
   clients?: Array<{ id: string; couple1FirstName?: string; couple1LastName?: string; fullName?: string; name?: string }>;
   primaryColor?: string;
+  secondaryColor?: string;
   fontColor?: string;
   bodyFontFamily?: string;
   headerFontFamily?: string;
@@ -37,6 +39,7 @@ export default function TasksDetailView({
   tenantId,
   clients = [],
   primaryColor = '#274E13',
+  secondaryColor = '#e1e0d0',
   fontColor = '#000000',
   bodyFontFamily = "'Poppins', sans-serif",
   headerFontFamily = "'Playfair Display', serif",
@@ -186,10 +189,10 @@ export default function TasksDetailView({
       <div style={{
         marginBottom: '2rem',
         paddingBottom: '1rem',
-        borderBottom: `2px solid ${primaryColor}20`,
+        borderBottom: `2px solid ${secondaryColor}`,
       }}>
         <h2 style={{ 
-          color: primaryColor,
+          color: fontColor,
           fontFamily: headerFontFamily,
           marginTop: 0,
           marginBottom: 0,
@@ -221,11 +224,12 @@ export default function TasksDetailView({
         borderRadius: '8px',
         marginBottom: '1.5rem',
         fontFamily: bodyFontFamily,
+        border: `1px solid ${secondaryColor}`,
       }}>
         <h3 style={{ marginTop: 0, fontFamily: headerFontFamily, fontSize: '1.75rem' }}>Create New Task</h3>
         <form onSubmit={handleCreateTask}>
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Title *</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Title *</label>
             <input
               type="text"
               value={newTaskTitle}
@@ -235,7 +239,7 @@ export default function TasksDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: 'none',
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
               }}
@@ -243,7 +247,7 @@ export default function TasksDetailView({
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Description</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Description</label>
             <textarea
               value={newTaskDescription}
               onChange={(e) => setNewTaskDescription(e.target.value)}
@@ -252,7 +256,7 @@ export default function TasksDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: 'none',
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
                 resize: 'vertical',
@@ -262,16 +266,18 @@ export default function TasksDetailView({
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Priority</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Priority</label>
               <select
                 value={newTaskPriority}
                 onChange={(e) => setNewTaskPriority(e.target.value as 'LOW' | 'MEDIUM' | 'HIGH')}
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  border: 'none',
+                  border: `1px solid ${secondaryColor}`,
                   borderRadius: '4px',
                   fontFamily: bodyFontFamily,
+                  color: fontColor,
+                  backgroundColor: '#ffffff',
                 }}
               >
                 <option value="LOW">Low</option>
@@ -282,16 +288,18 @@ export default function TasksDetailView({
 
             {!clientId && clients.length > 0 && (
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Assign to Client</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Assign to Client</label>
                 <select
                   value={newTaskClientId}
                   onChange={(e) => setNewTaskClientId(e.target.value)}
                   style={{
                     width: '100%',
                     padding: '0.75rem',
-                    border: 'none',
+                    border: `1px solid ${secondaryColor}`,
                     borderRadius: '4px',
                     fontFamily: bodyFontFamily,
+                    color: fontColor,
+                    backgroundColor: '#ffffff',
                   }}
                 >
                   <option value="" disabled>Select a client...</option>
@@ -328,13 +336,20 @@ export default function TasksDetailView({
             style={{
               width: '100%',
               padding: '0.75rem',
-              background: '#ffffff',
-              color: primaryColor,
-              border: 'none',
+              background: primaryColor,
+              color: fontColor,
+              border: `1px solid ${secondaryColor}`,
               borderRadius: '4px',
               fontWeight: '600',
               cursor: 'pointer',
               fontFamily: bodyFontFamily,
+              transition: 'background-color 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
             }}
           >
             Create Task
@@ -349,6 +364,7 @@ export default function TasksDetailView({
         borderRadius: '8px',
         marginBottom: '2rem',
         fontFamily: bodyFontFamily,
+        border: `1px solid ${secondaryColor}`,
       }}>
         <h3 style={{ marginTop: 0, color: fontColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>Filter Tasks</h3>
         
@@ -361,9 +377,11 @@ export default function TasksDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `1px solid ${primaryColor}`,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
+                color: fontColor,
+                backgroundColor: '#ffffff',
               }}
             >
               <option value="ALL">All</option>
@@ -382,9 +400,11 @@ export default function TasksDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `1px solid ${primaryColor}`,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
+                color: fontColor,
+                backgroundColor: '#ffffff',
               }}
             >
               <option value="ALL">All</option>
@@ -396,17 +416,14 @@ export default function TasksDetailView({
 
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Due Date</label>
-            <input
-              type="date"
-              value={filterDueDate}
-              onChange={(e) => setFilterDueDate(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: `1px solid ${primaryColor}`,
-                borderRadius: '4px',
-                fontFamily: bodyFontFamily,
-              }}
+            <BrandedDatePicker
+              selected={filterDueDate ? new Date(filterDueDate) : null}
+              onChange={(date) => setFilterDueDate(date ? date.toISOString().split('T')[0] : '')}
+              placeholderText="Select due date"
+              primaryColor={primaryColor}
+              secondaryColor={secondaryColor}
+              fontColor={fontColor}
+              bodyFontFamily={bodyFontFamily}
             />
           </div>
 
@@ -420,9 +437,10 @@ export default function TasksDetailView({
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: `1px solid ${primaryColor}`,
+                border: `1px solid ${secondaryColor}`,
                 borderRadius: '4px',
                 fontFamily: bodyFontFamily,
+                color: fontColor,
               }}
             />
           </div>
@@ -431,14 +449,14 @@ export default function TasksDetailView({
 
       {/* Task List */}
       <div>
-        <h3 style={{ color: primaryColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>
+        <h3 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>
           Tasks ({filteredTasks.length})
         </h3>
 
         {loading ? (
-          <p style={{ color: primaryColor, fontFamily: bodyFontFamily }}>Loading tasks...</p>
+          <p style={{ color: fontColor, fontFamily: bodyFontFamily }}>Loading tasks...</p>
         ) : filteredTasks.length === 0 ? (
-          <p style={{ color: primaryColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No tasks found.</p>
+          <p style={{ color: fontColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No tasks found.</p>
         ) : (
           <div style={{ display: 'grid', gap: '1rem' }}>
             {filteredTasks.map((task) => (
@@ -565,23 +583,21 @@ export default function TasksDetailView({
           style={{
             background: primaryColor,
             color: fontColor,
-            border: `1px solid ${primaryColor}`,
+            border: `1px solid ${secondaryColor}`,
             padding: '0.75rem 1.5rem',
             borderRadius: '6px',
             fontSize: '0.95rem',
             fontWeight: '600',
             cursor: 'pointer',
             fontFamily: bodyFontFamily,
-            transition: 'all 0.2s ease',
+            transition: 'background-color 0.2s ease',
             marginTop: '2rem',
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-            (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${secondaryColor}30`;
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-            (e.currentTarget as HTMLButtonElement).style.color = fontColor;
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryColor;
           }}
         >
           ← Back to Dashboard
