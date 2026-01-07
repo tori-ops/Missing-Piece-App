@@ -737,8 +737,8 @@ model Task {
   priority              TaskPriority          @default(MEDIUM)
   
   // Assignment - NEW FIELDS
-  assignedToClientId    String?               @map("assigned_to_client_id") // UUID of client user assigned to this task
-  assignedToTenantId    String?               @map("assigned_to_tenant_id") // UUID of tenant user assigned to this task
+  assignedToClientId    String?               @map("assigned_to_client_id") // ID of client user assigned to this task
+  assignedToTenantId    String?               @map("assigned_to_tenant_id") // ID of tenant user assigned to this task
   lastReassignedAt      DateTime?             @map("last_reassigned_at") // Track when task was last reassigned
   
   // Legacy assignment fields (kept for backward compatibility)
