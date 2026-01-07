@@ -257,6 +257,19 @@ export default function MeetingNotesDetailView({
         </h2>
       </div>
 
+      {/* Explanatory Text */}
+      <p style={{
+        color: fontColor,
+        fontFamily: bodyFontFamily,
+        fontSize: '0.95rem',
+        fontStyle: 'italic',
+        marginTop: 0,
+        marginBottom: '1.5rem',
+        opacity: 0.8,
+      }}>
+        This is your planning memory. Log notes from meetings, conversations, and ideas using voice-to-text, scanned handwritten notes, or typed entries. Turn any note into a task to keep timelines clear and progress steady - all viewable by you and your planner.
+      </p>
+
       {/* Success Message */}
       {successMessage && (
         <div style={{
@@ -565,17 +578,6 @@ export default function MeetingNotesDetailView({
 
       {/* Notes List */}
       <div>
-        <p style={{
-          color: fontColor,
-          fontFamily: bodyFontFamily,
-          fontSize: '0.95rem',
-          fontStyle: 'italic',
-          marginTop: 0,
-          marginBottom: '1.5rem',
-          opacity: 0.8,
-        }}>
-          This is your planning memory. Log notes from meetings, conversations, and ideas using voice-to-text, scanned handwritten notes, or typed entries. Turn any note into a task to keep timelines clear and progress steady - all viewable by you and your planner.
-        </p>
         <h3 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.9em' }}>
           Meeting Notes ({sortedNotes.length})
         </h3>
