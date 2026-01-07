@@ -58,11 +58,18 @@ export default function TasksWidget({
       fetchUnreadCount();
     };
     
+    // Listen for task status change events
+    const handleTaskStatusChanged = () => {
+      fetchUnreadCount();
+    };
+    
     window.addEventListener('taskCreated', handleTaskCreated);
+    window.addEventListener('taskStatusChanged', handleTaskStatusChanged);
     
     return () => {
       clearInterval(interval);
       window.removeEventListener('taskCreated', handleTaskCreated);
+      window.removeEventListener('taskStatusChanged', handleTaskStatusChanged);
     };
   }, []);
 

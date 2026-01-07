@@ -463,6 +463,20 @@ export async function createTaskNotifications(
 }
 
 /**
+ * Clear all notifications for a task (when task is completed or deleted)
+ */
+export async function clearTaskNotifications(taskId: string) {
+  try {
+    await prisma.taskNotification.deleteMany({
+      where: { taskId },
+    });
+  } catch (error) {
+    console.error('Error clearing task notifications:', error);
+    throw error;
+  }
+}
+
+/**
  * Get unread task notifications for a user
  */
 export async function getUnreadTaskNotificationCount(userId: string): Promise<number> {

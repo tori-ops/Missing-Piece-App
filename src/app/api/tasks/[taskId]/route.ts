@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getTaskById, updateTask, deleteTask } from '@/lib/services/taskService';
-import { createTaskNotifications } from '@/lib/services/notificationService';
+import { createTaskNotifications, clearTaskNotifications } from '@/lib/services/notificationService';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -122,6 +122,41 @@ export async function PATCH(
       user.tenantId || '',
       user.clientId || undefined
     );
+
+    // Handle notifications based on status change
+    if (status) {
+      try {
+        // Get the task to find assigned users
+        const fullTask = await prisma.task.findUnique({
+          where: { id: taskId },
+          select: {
+            assignedToClientId: true,
+            assignedToTenantId: true,
+            clientId: true,
+          },
+        });
+
+        if (fullTask) {
+          // Status changed TO TODO or IN_PROGRESS - create notifications
+          if (status === 'TODO' || status === 'IN_PROGRESS') {
+            const clientToNotify = fullTask.assignedToClientId || fullTask.clientId;
+            await createTaskNotifications(
+              taskId,
+              clientToNotify || undefined,
+              fullTask.assignedToTenantId || undefined,
+              'task_assigned'
+            );
+          }
+          // Status changed TO COMPLETED or DELETED - clear notifications
+          else if (status === 'COMPLETED' || status === 'DELETED') {
+            await clearTaskNotifications(taskId);
+          }
+        }
+      } catch (notificationError) {
+        console.error('Error managing task notifications:', notificationError);
+        // Don't fail the update if notifications fail
+      }
+    }
 
     return NextResponse.json(task);
   } catch (error) {

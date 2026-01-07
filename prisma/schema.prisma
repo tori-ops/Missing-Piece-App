@@ -700,6 +700,7 @@ enum TaskStatus {
   IN_PROGRESS
   CHANGED_MIND
   COMPLETED
+  DELETED
 }
 
 enum TaskPriority {

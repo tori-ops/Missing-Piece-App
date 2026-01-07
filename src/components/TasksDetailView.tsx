@@ -8,7 +8,7 @@ interface Task {
   id: string;
   title: string;
   description?: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED';
+  status: 'TODO' | 'IN_PROGRESS' | 'COMPLETED' | 'CHANGED_MIND' | 'DELETED';
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   dueDate?: string;
   createdAt: string;
@@ -63,8 +63,11 @@ export default function TasksDetailView({
   const [assignedToClient, setAssignedToClient] = useState(false);
   const [assignedToTenant, setAssignedToTenant] = useState(false);
 
+  // Delete confirmation modal
+  const [deleteConfirmTaskId, setDeleteConfirmTaskId] = useState<string | null>(null);
+
   // Filters
-  const [filterStatus, setFilterStatus] = useState<'ALL' | 'TODO' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED'>('ALL');
+  const [filterStatus, setFilterStatus] = useState<'ALL' | 'TODO' | 'IN_PROGRESS' | 'COMPLETED' | 'CHANGED_MIND' | 'DELETED'>('ALL');
   const [filterPriority, setFilterPriority] = useState<'ALL' | 'LOW' | 'MEDIUM' | 'HIGH'>('ALL');
   const [filterKeyword, setFilterKeyword] = useState('');
   const [filterDueDate, setFilterDueDate] = useState('');
@@ -147,10 +150,17 @@ export default function TasksDetailView({
 
   const handleDeleteTask = async (taskId: string) => {
     try {
-      const response = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'DELETED' }),
+      });
       if (response.ok) {
-        setSuccessMessage('Task deleted successfully!');
+        setSuccessMessage('Task moved to deleted!');
+        setDeleteConfirmTaskId(null);
         await fetchTasks();
+        // Refresh badge count
+        window.dispatchEvent(new CustomEvent('taskStatusChanged'));
         setTimeout(() => setSuccessMessage(''), 3000);
       }
     } catch (error) {
@@ -163,15 +173,36 @@ export default function TasksDetailView({
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'DONE' }),
+        body: JSON.stringify({ status: 'COMPLETED' }),
       });
       if (response.ok) {
         setSuccessMessage('Task completed!');
         await fetchTasks();
+        // Refresh badge count (notification cleared)
+        window.dispatchEvent(new CustomEvent('taskStatusChanged'));
         setTimeout(() => setSuccessMessage(''), 3000);
       }
     } catch (error) {
       console.error('Failed to update task:', error);
+    }
+  };
+
+  const handleStatusChange = async (taskId: string, newStatus: string) => {
+    try {
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (response.ok) {
+        setSuccessMessage('Task status updated!');
+        await fetchTasks();
+        // Refresh badge count
+        window.dispatchEvent(new CustomEvent('taskStatusChanged'));
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Failed to update task status:', error);
     }
   };
 
@@ -195,11 +226,23 @@ export default function TasksDetailView({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'DONE': return '#388e3c';
+      case 'COMPLETED': return '#388e3c';
       case 'IN_PROGRESS': return '#1976d2';
-      case 'BLOCKED': return '#d32f2f';
+      case 'CHANGED_MIND': return '#f57c00';
       case 'TODO': return '#757575';
+      case 'DELETED': return '#9e9e9e';
       default: return primaryColor;
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'TODO': return 'To Do';
+      case 'IN_PROGRESS': return 'In Progress';
+      case 'COMPLETED': return 'Completed';
+      case 'CHANGED_MIND': return 'Changed Mind';
+      case 'DELETED': return 'Deleted';
+      default: return status;
     }
   };
 
@@ -532,8 +575,9 @@ export default function TasksDetailView({
               <option value="ALL">All</option>
               <option value="TODO">To Do</option>
               <option value="IN_PROGRESS">In Progress</option>
-              <option value="DONE">Done</option>
-              <option value="BLOCKED">Blocked</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="CHANGED_MIND">Changed Mind</option>
+              <option value="DELETED">Deleted</option>
             </select>
           </div>
 
@@ -604,80 +648,55 @@ export default function TasksDetailView({
           <p style={{ color: fontColor, fontFamily: bodyFontFamily, opacity: 0.7 }}>No tasks found.</p>
         ) : (
           <div style={{ display: 'grid', gap: '1rem' }}>
-            {filteredTasks.map((task) => (
+            {filteredTasks.map((task) => {
+              const isDeleted = task.status === 'DELETED';
+              return (
               <div
                 key={task.id}
                 style={{
                   border: `2px solid ${getStatusColor(task.status)}`,
                   borderRadius: '8px',
                   padding: '1.5rem',
-                  background: '#f9f9f9',
+                  background: isDeleted ? '#e0e0e0' : '#f9f9f9',
                   fontFamily: bodyFontFamily,
+                  opacity: isDeleted ? 0.6 : 1,
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-                      <h4 style={{ margin: '0', color: fontColor }}>
-                        {task.title}
-                      </h4>
-                      {task.client && !clientId && (
-                        <span style={{
-                          display: 'inline-block',
-                          background: primaryColor,
-                          color: '#ffffff',
-                          padding: '0.25rem 0.75rem',
-                          borderRadius: '20px',
-                          fontSize: '0.75rem',
-                          fontWeight: '600',
-                          whiteSpace: 'nowrap',
-                        }}>
-                          {task.client.couple1FirstName} {task.client.couple1LastName}
-                        </span>
-                      )}
-                    </div>
-                    {task.description && (
-                      <p style={{ margin: '0 0 0.75rem 0', color: fontColor, opacity: 0.8, fontSize: '0.9rem' }}>
-                        {task.description}
-                      </p>
+                {/* Row 1: Title | Complete | Delete */}
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  gap: '1rem',
+                  marginBottom: '0.75rem',
+                  paddingBottom: '0.75rem',
+                  borderBottom: `1px solid ${secondaryColor}`,
+                }}>
+                  <h4 style={{ 
+                    margin: '0', 
+                    color: fontColor, 
+                    flex: 1,
+                    textDecoration: isDeleted ? 'line-through' : 'none',
+                  }}>
+                    {task.title}
+                    {task.client && !clientId && (
+                      <span style={{
+                        display: 'inline-block',
+                        background: primaryColor,
+                        color: '#ffffff',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '20px',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        marginLeft: '0.75rem',
+                        verticalAlign: 'middle',
+                      }}>
+                        {task.client.couple1FirstName} {task.client.couple1LastName}
+                      </span>
                     )}
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                      <span style={{
-                        background: getStatusColor(task.status),
-                        color: '#ffffff',
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '16px',
-                        fontSize: '0.85rem',
-                        fontWeight: '600',
-                      }}>
-                        {task.status.replace('_', ' ')}
-                      </span>
-                      <span style={{
-                        background: getPriorityColor(task.priority),
-                        color: '#ffffff',
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '16px',
-                        fontSize: '0.85rem',
-                        fontWeight: '600',
-                      }}>
-                        {task.priority}
-                      </span>
-                      {task.dueDate && (
-                        <span style={{
-                          background: '#e0e0e0',
-                          color: fontColor,
-                          padding: '0.25rem 0.75rem',
-                          borderRadius: '16px',
-                          fontSize: '0.85rem',
-                        }}>
-                          Due: {new Date(task.dueDate).toLocaleDateString()}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
+                  </h4>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    {task.status !== 'DONE' && (
+                    {task.status !== 'COMPLETED' && task.status !== 'DELETED' && (
                       <button
                         onClick={() => handleCompleteTask(task.id)}
                         style={{
@@ -685,40 +704,112 @@ export default function TasksDetailView({
                           color: '#ffffff',
                           border: 'none',
                           borderRadius: '4px',
-                          padding: '0.5rem',
+                          padding: '0.5rem 0.75rem',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           gap: '0.5rem',
                           fontFamily: bodyFontFamily,
+                          fontSize: '0.85rem',
+                          fontWeight: '600',
                         }}
                         title="Mark as complete"
                       >
-                        <Check size={18} />
+                        <Check size={16} /> Complete
                       </button>
                     )}
-                    <button
-                      onClick={() => handleDeleteTask(task.id)}
-                      style={{
-                        background: '#f44336',
-                        color: '#ffffff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        padding: '0.5rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        fontFamily: bodyFontFamily,
-                      }}
-                      title="Delete task"
-                    >
-                      <Trash2 size={18} />
-                    </button>
+                    {task.status !== 'DELETED' && (
+                      <button
+                        onClick={() => setDeleteConfirmTaskId(task.id)}
+                        style={{
+                          background: '#A0453A',
+                          color: '#ffffff',
+                          border: 'none',
+                          borderRadius: '4px',
+                          padding: '0.5rem 0.75rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          fontFamily: bodyFontFamily,
+                          fontSize: '0.85rem',
+                          fontWeight: '600',
+                        }}
+                        title="Delete task"
+                      >
+                        <Trash2 size={16} /> Delete
+                      </button>
+                    )}
                   </div>
                 </div>
+
+                {/* Row 2: Description */}
+                {task.description && (
+                  <p style={{ 
+                    margin: '0 0 0.75rem 0', 
+                    color: fontColor, 
+                    opacity: 0.8, 
+                    fontSize: '0.9rem',
+                    textDecoration: isDeleted ? 'line-through' : 'none',
+                  }}>
+                    {task.description}
+                  </p>
+                )}
+
+                {/* Row 3: Status (interactive) | Priority | Due Date */}
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <select
+                    value={task.status}
+                    onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                    disabled={isDeleted}
+                    style={{
+                      background: getStatusColor(task.status),
+                      color: '#ffffff',
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: '16px',
+                      fontSize: '0.85rem',
+                      fontWeight: '600',
+                      border: 'none',
+                      cursor: isDeleted ? 'not-allowed' : 'pointer',
+                      fontFamily: bodyFontFamily,
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      paddingRight: '1.5rem',
+                      backgroundImage: isDeleted ? 'none' : `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e")`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 0.25rem center',
+                      backgroundSize: '1.25rem',
+                    }}
+                  >
+                    <option value="TODO">To Do</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="CHANGED_MIND">Changed Mind</option>
+                  </select>
+                  <span style={{
+                    background: getPriorityColor(task.priority),
+                    color: '#ffffff',
+                    padding: '0.25rem 0.75rem',
+                    borderRadius: '16px',
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                  }}>
+                    {task.priority}
+                  </span>
+                  {task.dueDate && (
+                    <span style={{
+                      background: '#e0e0e0',
+                      color: fontColor,
+                      padding: '0.25rem 0.75rem',
+                      borderRadius: '16px',
+                      fontSize: '0.85rem',
+                    }}>
+                      Due: {new Date(task.dueDate).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
               </div>
-            ))}
+            );})}
           </div>
         )}
 
@@ -783,6 +874,77 @@ export default function TasksDetailView({
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmTaskId && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+          onClick={() => setDeleteConfirmTaskId(null)}
+        >
+          <div
+            style={{
+              background: '#ffffff',
+              padding: '2rem',
+              borderRadius: '8px',
+              maxWidth: '400px',
+              width: '90%',
+              fontFamily: bodyFontFamily,
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ margin: '0 0 1rem 0', color: fontColor, fontFamily: headerFontFamily }}>
+              Delete Task?
+            </h3>
+            <p style={{ margin: '0 0 1.5rem 0', color: fontColor, opacity: 0.8 }}>
+              Are you sure you want to delete this task? The task will be marked as deleted but kept for accountability.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setDeleteConfirmTaskId(null)}
+                style={{
+                  background: '#e0e0e0',
+                  color: fontColor,
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '0.75rem 1.5rem',
+                  cursor: 'pointer',
+                  fontFamily: bodyFontFamily,
+                  fontWeight: '600',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeleteTask(deleteConfirmTaskId)}
+                style={{
+                  background: '#A0453A',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '0.75rem 1.5rem',
+                  cursor: 'pointer',
+                  fontFamily: bodyFontFamily,
+                  fontWeight: '600',
+                }}
+              >
+                Delete Task
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
