@@ -740,10 +740,10 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'design' && (
         <div>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem' }}>Design Preferences</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '1rem' }}>Design Preferences</h2>
           
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
               Header Font (Script/Fancy)
             </label>
             <select
@@ -768,7 +768,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
               Body Font (Serif/Sans Serif)
             </label>
             <select
@@ -793,7 +793,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
               Font Color (used throughout website)
             </label>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -829,7 +829,7 @@ export default function WebsiteBuilderForm({
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
             {(['colorPrimary', 'colorSecondary', 'colorAccent'] as const).map(color => (
               <div key={color}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem', color: fontColor, fontFamily: headerFontFamily }}>
                   {color === 'colorPrimary' ? 'Primary' : color === 'colorSecondary' ? 'Secondary' : 'Accent'}
                 </label>
                 <input
@@ -867,13 +867,13 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'hero' && (
         <div>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem' }}>Hero Images</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '1rem' }}>Hero Images</h2>
           <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
             Select or upload header and background images for your website, or let your planner choose for you.
           </p>
 
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: primaryColor, fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>Header Image</h3>
+            <h3 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>Header Image</h3>
             <div style={{
               padding: '2rem',
               border: `2px dashed ${primaryColor}40`,
@@ -894,7 +894,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: primaryColor, fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>Background Image</h3>
+            <h3 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>Background Image</h3>
             <div style={{
               padding: '2rem',
               border: `2px dashed ${primaryColor}40`,
@@ -915,7 +915,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
               Describe Your Ideal Images (Optional)
             </label>
             <textarea
@@ -939,14 +939,14 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'url' && (
         <div>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem' }}>Website URL</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '1rem' }}>Website URL</h2>
           
           <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
             Your website will be: <strong>https://www.missingpieceplanning.com/events/______</strong>
           </p>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
               URL Ending Option 1
             </label>
             <input
@@ -972,7 +972,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
               URL Ending Option 2
             </label>
             <input
@@ -1001,17 +1001,17 @@ export default function WebsiteBuilderForm({
 
       {activeTab === 'registries' && (
         <div>
-          <h2 style={{ color: primaryColor, fontSize: '1.5rem', marginBottom: '1rem' }}>Registries</h2>
+          <h2 style={{ color: fontColor, fontFamily: headerFontFamily, fontSize: '1.5rem', marginBottom: '1rem' }}>Registries</h2>
           <p style={{ color: fontColor, opacity: 0.7, marginBottom: '1.5rem' }}>
             Add up to 5 registry links
           </p>
 
           {registriesWithDefaults.map((registry, index) => (
             <div key={index} style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: primaryColor + '05', borderRadius: '4px' }}>
-              <h4 style={{ margin: '0 0 1rem 0', color: primaryColor }}>Registry {index + 1}</h4>
+              <h4 style={{ margin: '0 0 1rem 0', color: fontColor, fontFamily: headerFontFamily }}>Registry {index + 1}</h4>
               
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem', color: fontColor, fontFamily: headerFontFamily }}>
                   Registry Name
                 </label>
                 <input
@@ -1032,7 +1032,7 @@ export default function WebsiteBuilderForm({
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem', color: fontColor, fontFamily: headerFontFamily }}>
                   Registry URL
                 </label>
                 <input
@@ -1052,7 +1052,7 @@ export default function WebsiteBuilderForm({
                 />
               </div>
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem', color: fontColor, fontFamily: headerFontFamily }}>
                 <input
                   type="checkbox"
                   checked={registry.isOptional}
