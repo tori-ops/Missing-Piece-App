@@ -42,7 +42,7 @@ export default function WeatherDetailView({
         borderBottom: `2px solid ${primaryColor}20`,
       }}>
         <h2 style={{ 
-          color: primaryColor,
+          color: fontColor,
           fontFamily: headerFontFamily,
           margin: 0,
           fontSize: '2.5rem',
@@ -90,9 +90,9 @@ export default function WeatherDetailView({
       <button
         onClick={onBack}
         style={{
-          background: `${primaryColor}20`,
-          color: primaryColor,
-          border: `1px solid ${primaryColor}`,
+          background: primaryColor,
+          color: fontColor,
+          border: `1px solid ${secondaryColor}`,
           padding: '0.75rem 1.5rem',
           borderRadius: '6px',
           fontSize: '0.95rem',
@@ -103,12 +103,10 @@ export default function WeatherDetailView({
           marginTop: '2rem',
         }}
         onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-          (e.currentTarget as HTMLButtonElement).style.color = 'white';
+          (e.currentTarget as HTMLButtonElement).style.background = `${secondaryColor}30`;
         }}
         onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-          (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+          (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
         }}
       >
         ← Back to Dashboard

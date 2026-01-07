@@ -354,9 +354,9 @@ export default function WeddingDayWidget({
           <button
             onClick={handleToggleAstrology}
             style={{
-              background: `${primaryColor}20`,
-              color: primaryColor,
-              border: `1px solid ${primaryColor}`,
+              background: primaryColor,
+              color: fontColor,
+              border: `1px solid ${secondaryColor || '#ccc'}`,
               padding: '0.5rem 1.25rem',
               borderRadius: '6px',
               fontSize: '0.9rem',
@@ -366,12 +366,10 @@ export default function WeddingDayWidget({
               transition: 'all 0.2s ease',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-              (e.currentTarget as HTMLButtonElement).style.color = 'white';
+              (e.currentTarget as HTMLButtonElement).style.background = `${secondaryColor || '#ccc'}30`;
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-              (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+              (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
             }}
           >
             {showAstrologyToggle ? '🌙 Hide Astrology' : '🌙 Show Astrology'}
@@ -385,9 +383,9 @@ export default function WeddingDayWidget({
           <button
             onClick={handleToggleAstrology}
             style={{
-              background: `${primaryColor}20`,
-              color: primaryColor,
-              border: `1px solid ${primaryColor}`,
+              background: primaryColor,
+              color: fontColor,
+              border: `1px solid ${secondaryColor || '#ccc'}`,
               padding: '0.5rem 1.25rem',
               borderRadius: '6px',
               fontSize: '0.9rem',
@@ -397,12 +395,10 @@ export default function WeddingDayWidget({
               transition: 'all 0.2s ease',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-              (e.currentTarget as HTMLButtonElement).style.color = 'white';
+              (e.currentTarget as HTMLButtonElement).style.background = `${secondaryColor || '#ccc'}30`;
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-              (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+              (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
             }}
           >
             {showAstrologyToggle ? '🌙 Hide Astrology' : '🌙 Show Astrology'}
