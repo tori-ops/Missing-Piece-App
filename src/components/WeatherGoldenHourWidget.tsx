@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import WeddingDayWidget from './WeddingDayWidget';
 
 interface WeatherGoldenHourWidgetProps {
   weddingDate: string;
@@ -335,20 +334,6 @@ export default function WeatherGoldenHourWidget({
           </div>
         </div>
       </div>
-
-      {/* Wedding Details Card */}
-      <WeddingDayWidget
-        weddingDate={weddingDate}
-        venueLat={venueLat}
-        venueLng={venueLng}
-        primaryColor={primaryColor}
-        secondaryColor={secondaryColor}
-        fontColor={fontColor}
-        bodyFontFamily={bodyFontFamily}
-        headerFontFamily={headerFontFamily}
-        showAstrology={false}
-        clientId={clientId}
-      />
     </div>
   );
 }
