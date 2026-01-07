@@ -320,128 +320,89 @@ export default function TaskForm({
           </select>
         </div>
 
-        {/* Assign To Client */}
-        {userRole === 'TENANT' && (
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label
-              htmlFor="assignedToClientId"
-              style={{
-                display: 'block',
-                fontWeight: '600',
-                color: primaryColor,
-                marginBottom: '0.5rem',
-                fontSize: '0.95rem',
-              }}
-            >
-              Assign to Client
-            </label>
-            <select
-              id="assignedToClientId"
-              name="assignedToClientId"
-              value={formData.assignedToClientId}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                borderRadius: '4px',
-                border: `1px solid ${primaryColor}40`,
-                fontSize: '0.95rem',
-                fontFamily: bodyFontFamily,
-                boxSizing: 'border-box',
-                cursor: 'pointer',
-              }}
-            >
-              <option value="">-- Select a client --</option>
-              {loadedClients.map((client) => (
-                <option key={client.id} value={client.id}>
-                  {client.couple1FirstName && client.couple1LastName
-                    ? `${client.couple1FirstName} ${client.couple1LastName}`
-                    : `Client ${client.id.substring(0, 8)}`}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {/* Assign To Tenant/Planner */}
+        {/* Assign Task To - Checkboxes for CLIENT */}
         {userRole === 'CLIENT' && (
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label
-              htmlFor="assignedToTenantId"
-              style={{
-                display: 'block',
-                fontWeight: '600',
-                color: primaryColor,
-                marginBottom: '0.5rem',
-                fontSize: '0.95rem',
-              }}
-            >
-              Assign to Planner
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: `${primaryColor}08`, borderRadius: '8px', border: `1px solid ${primaryColor}20` }}>
+            <label style={{ display: 'block', fontWeight: '600', color: primaryColor, marginBottom: '1rem', fontSize: '0.95rem' }}>
+              Assign Task To
             </label>
-            <select
-              id="assignedToTenantId"
-              name="assignedToTenantId"
-              value={formData.assignedToTenantId}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                borderRadius: '4px',
-                border: `1px solid ${primaryColor}40`,
-                fontSize: '0.95rem',
-                fontFamily: bodyFontFamily,
-                boxSizing: 'border-box',
-                cursor: 'pointer',
-              }}
-            >
-              <option value="">-- Select a planner --</option>
-              {loadedTenants.map((tenant) => (
-                <option key={tenant.id} value={tenant.id}>
-                  {tenant.businessName || `Planner ${tenant.id.substring(0, 8)}`}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {/* Self-Assignment Option */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <label
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              cursor: 'pointer',
-              fontWeight: '600',
-              color: fontColor,
-              fontSize: '0.95rem',
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={userRole === 'TENANT' ? !!formData.assignedToTenantId : !!formData.assignedToClientId}
-              onChange={(e) => {
-                if (userRole === 'TENANT') {
-                  setFormData((prev) => ({
-                    ...prev,
-                    assignedToTenantId: e.target.checked ? (tenantId || '') : '',
-                  }));
-                } else {
+            
+            {/* Checkbox 1: Assign to myself */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', marginBottom: '0.75rem', color: fontColor }}>
+              <input
+                type="checkbox"
+                checked={!!formData.assignedToClientId}
+                onChange={(e) => {
                   setFormData((prev) => ({
                     ...prev,
                     assignedToClientId: e.target.checked ? (clientId || '') : '',
                   }));
-                }
-              }}
-              style={{
-                cursor: 'pointer',
-              }}
-            />
-            {userRole === 'TENANT'
-              ? 'Assign to myself (Planner)'
-              : 'Assign to myself (Client)'}
-          </label>
-        </div>
+                }}
+                style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+              />
+              <span style={{ fontSize: '0.95rem' }}>Myself (Client)</span>
+            </label>
+
+            {/* Checkbox 2: Assign to planner */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', color: fontColor }}>
+              <input
+                type="checkbox"
+                checked={!!formData.assignedToTenantId}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    assignedToTenantId: e.target.checked ? (tenantId || '') : '',
+                  }));
+                }}
+                style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+              />
+              <span style={{ fontSize: '0.95rem' }}>
+                My Planner {tenantId && loadedTenants.length > 0 ? `(${loadedTenants[0]?.businessName || 'Coordinator'})` : ''}
+              </span>
+            </label>
+          </div>
+        )}
+
+        {/* Assign Task To - Checkboxes for TENANT */}
+        {userRole === 'TENANT' && (
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: `${primaryColor}08`, borderRadius: '8px', border: `1px solid ${primaryColor}20` }}>
+            <label style={{ display: 'block', fontWeight: '600', color: primaryColor, marginBottom: '1rem', fontSize: '0.95rem' }}>
+              Assign Task To
+            </label>
+            
+            {/* Checkbox 1: Assign to myself */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', marginBottom: '0.75rem', color: fontColor }}>
+              <input
+                type="checkbox"
+                checked={!!formData.assignedToTenantId}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    assignedToTenantId: e.target.checked ? (tenantId || '') : '',
+                  }));
+                }}
+                style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+              />
+              <span style={{ fontSize: '0.95rem' }}>Myself (Planner)</span>
+            </label>
+
+            {/* Checkbox 2: Assign to client */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', marginBottom: '0.75rem', color: fontColor }}>
+              <input
+                type="checkbox"
+                checked={!!formData.assignedToClientId}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    assignedToClientId: e.target.checked ? (clientId || '') : '',
+                  }));
+                }}
+                style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+              />
+              <span style={{ fontSize: '0.95rem' }}>Client</span>
+            </label>
+          </div>
+        )}
 
         {/* Submit & Cancel */}
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
