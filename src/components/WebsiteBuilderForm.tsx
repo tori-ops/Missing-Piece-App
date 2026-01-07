@@ -1012,7 +1012,7 @@ export default function WebsiteBuilderForm({
               <h4 style={{ margin: '0 0 1rem 0', color: fontColor, fontFamily: headerFontFamily }}>Registry {index + 1}</h4>
               
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem', color: fontColor, fontFamily: headerFontFamily }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.95rem', color: fontColor, fontFamily: bodyFontFamily, fontStyle: 'italic', opacity: 0.7 }}>
                   Registry Name
                 </label>
                 <input
@@ -1033,7 +1033,7 @@ export default function WebsiteBuilderForm({
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.9rem', color: fontColor, fontFamily: headerFontFamily }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', fontSize: '0.95rem', color: fontColor, fontFamily: bodyFontFamily, fontStyle: 'italic', opacity: 0.7 }}>
                   Registry URL
                 </label>
                 <input
@@ -1053,7 +1053,7 @@ export default function WebsiteBuilderForm({
                 />
               </div>
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem', color: fontColor, fontFamily: headerFontFamily }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.95rem', color: fontColor, fontFamily: bodyFontFamily, fontStyle: 'italic', opacity: 0.7 }}>
                 <input
                   type="checkbox"
                   checked={registry.isOptional}
