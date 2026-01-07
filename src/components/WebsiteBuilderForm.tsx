@@ -654,9 +654,10 @@ export default function WebsiteBuilderForm({
               {IMAGE_CATEGORIES.map(category => (
                 <div key={category.id} style={{
                   padding: '0.75rem',
-                  backgroundColor: primaryColor + '10',
-                  borderRadius: '4px',
-                  border: `1px solid ${primaryColor}30`
+                  backgroundColor: secondaryColor + '66',
+                  borderRadius: '8px',
+                  border: `1px solid ${secondaryColor}`,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                 }}>
                   <h4 style={{ margin: '0 0 0.25rem 0', color: fontColor, fontSize: '0.95rem' }}>{category.label}</h4>
                   <p style={{ margin: 0, fontSize: '0.8rem', color: fontColor, opacity: 0.7 }}>{category.description}</p>

@@ -89,8 +89,27 @@ export default function ClientDashboardContent({
         fontFamily, 
         color: fontColor,
         width: '100%',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        position: 'relative'
       }}>
+        {overlayUrl && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `url('${overlayUrl}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed',
+            opacity: overlayOpacity / 100,
+            zIndex: 0,
+            pointerEvents: 'none'
+          }} />
+        )}
+        <div style={{ position: 'relative', zIndex: 1 }}>
         <WeatherDetailView
           weddingDate={clientProfile.weddingDate!.toISOString().split('T')[0]}
           venueLat={clientProfile.venueLat || undefined}
@@ -106,6 +125,7 @@ export default function ClientDashboardContent({
           companyName={companyName}
           onBack={() => setActiveView('dashboard')}
         />
+        </div>
       </div>
     );
   }
@@ -119,8 +139,27 @@ export default function ClientDashboardContent({
         fontFamily, 
         color: fontColor,
         width: '100%',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        position: 'relative'
       }}>
+        {overlayUrl && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `url('${overlayUrl}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed',
+            opacity: overlayOpacity / 100,
+            zIndex: 0,
+            pointerEvents: 'none'
+          }} />
+        )}
+        <div style={{ position: 'relative', zIndex: 1 }}>
         <AstrologyDetailView
           weddingDate={clientProfile.weddingDate!.toISOString().split('T')[0]}
           ceremonyTime={clientProfile.ceremonyTime || undefined}
@@ -138,6 +177,7 @@ export default function ClientDashboardContent({
           companyName={companyName}
           onBack={() => setActiveView('dashboard')}
         />
+        </div>
       </div>
     );
   }
@@ -151,8 +191,27 @@ export default function ClientDashboardContent({
         fontFamily, 
         color: fontColor,
         width: '100%',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        position: 'relative'
       }}>
+        {overlayUrl && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `url('${overlayUrl}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed',
+            opacity: overlayOpacity / 100,
+            zIndex: 0,
+            pointerEvents: 'none'
+          }} />
+        )}
+        <div style={{ position: 'relative', zIndex: 1 }}>
         <TasksDetailView
           clientId={clientProfile.id}
           tenantId={clientProfile.tenantId}
@@ -164,8 +223,7 @@ export default function ClientDashboardContent({
           logoUrl={logoUrl}
           companyName={companyName}
           onBack={() => setActiveView('dashboard')}
-        />
-      </div>
+        />        </div>      </div>
     );
   }
 
@@ -178,8 +236,27 @@ export default function ClientDashboardContent({
         fontFamily, 
         color: fontColor,
         width: '100%',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        position: 'relative'
       }}>
+        {overlayUrl && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `url('${overlayUrl}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed',
+            opacity: overlayOpacity / 100,
+            zIndex: 0,
+            pointerEvents: 'none'
+          }} />
+        )}
+        <div style={{ position: 'relative', zIndex: 1 }}>
         <MeetingNotesDetailView
           clientId={clientProfile.id}
           tenantId={clientProfile.tenantId}
@@ -192,6 +269,7 @@ export default function ClientDashboardContent({
           companyName={companyName}
           onBack={() => setActiveView('dashboard')}
         />
+        </div>
       </div>
     );
   }
@@ -205,8 +283,27 @@ export default function ClientDashboardContent({
         fontFamily, 
         color: fontColor,
         width: '100%',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        position: 'relative'
       }}>
+        {overlayUrl && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `url('${overlayUrl}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed',
+            opacity: overlayOpacity / 100,
+            zIndex: 0,
+            pointerEvents: 'none'
+          }} />
+        )}
+        <div style={{ position: 'relative', zIndex: 1 }}>
         <WebsiteBuilderForm
           clientId={clientProfile.id}
           tenantId={clientProfile.tenantId}
@@ -219,6 +316,7 @@ export default function ClientDashboardContent({
           companyName={companyName}
           onBack={() => setActiveView('dashboard')}
         />
+        </div>
       </div>
     );
   }
