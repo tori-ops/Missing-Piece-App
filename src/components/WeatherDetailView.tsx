@@ -1,6 +1,8 @@
 'use client';
 
 import WeatherGoldenHourWidget from './WeatherGoldenHourWidget';
+import SunriseSunsetCard from './SunriseSunsetCard';
+import WeddingDayWidget from './WeddingDayWidget';
 
 interface WeatherDetailViewProps {
   weddingDate: string;
@@ -52,29 +54,32 @@ export default function WeatherDetailView({
         </h2>
       </div>
 
-      {/* Venue Info */}
-      {venueName && (
-        <div style={{ marginBottom: '1.5rem' }}>
-          <p style={{ color: fontColor, fontSize: '0.9rem', margin: '0 0 0.25rem 0', opacity: 0.7 }}>
-            Venue:
-          </p>
-          <p style={{ color: fontColor, fontSize: '1rem', fontWeight: '600', margin: '0 0 0.25rem 0' }}>
-            {venueName}
-          </p>
-          {venueAddress && (
-            <p style={{ color: fontColor, fontSize: '0.9rem', margin: 0, opacity: 0.7 }}>
-              {venueAddress}
-            </p>
-          )}
-        </div>
-      )}
+      {/* Wedding Details Card */}
+      <WeddingDayWidget
+        weddingDate={weddingDate}
+        venueLat={venueLat}
+        venueLng={venueLng}
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        fontColor={fontColor}
+        bodyFontFamily={bodyFontFamily}
+        headerFontFamily={headerFontFamily}
+        showAstrology={false}
+      />
 
-      {/* Wedding Date */}
-      <p style={{ color: fontColor, marginBottom: '1.5rem', fontSize: '1rem', opacity: 0.8 }}>
-        Wedding Date: <strong>{new Date(weddingDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong>
-      </p>
+      {/* Sunrise/Sunset Comparison Card */}
+      <SunriseSunsetCard
+        weddingDate={weddingDate}
+        venueLat={venueLat}
+        venueLng={venueLng}
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        fontColor={fontColor}
+        bodyFontFamily={bodyFontFamily}
+        headerFontFamily={headerFontFamily}
+      />
 
-      {/* Widget */}
+      {/* Historical Weather Widget */}
       <WeatherGoldenHourWidget
         weddingDate={weddingDate}
         venueLat={venueLat}

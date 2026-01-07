@@ -349,64 +349,6 @@ export default function WeddingDayWidget({
           </div>
         </div>
       )}
-
-      {/* Astrology Toggle Button */}
-      {astrology && showAstrology !== undefined && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-          <button
-            onClick={handleToggleAstrology}
-            style={{
-              background: primaryColor,
-              color: fontColor,
-              border: `1px solid ${secondaryColor || '#ccc'}`,
-              padding: '0.5rem 1.25rem',
-              borderRadius: '6px',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              fontFamily: bodyFontFamily,
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = `${secondaryColor || '#ccc'}30`;
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-            }}
-          >
-            {showAstrologyToggle ? '🌙 Hide Astrology' : '🌙 Show Astrology'}
-          </button>
-        </div>
-      )}
-
-      {/* Astrology Toggle Button */}
-      {astrology && showAstrology !== undefined && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-          <button
-            onClick={handleToggleAstrology}
-            style={{
-              background: primaryColor,
-              color: fontColor,
-              border: `1px solid ${secondaryColor || '#ccc'}`,
-              padding: '0.5rem 1.25rem',
-              borderRadius: '6px',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              fontFamily: bodyFontFamily,
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = `${secondaryColor || '#ccc'}30`;
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-            }}
-          >
-            {showAstrologyToggle ? '🌙 Hide Astrology' : '🌙 Show Astrology'}
-          </button>
-        </div>
-      )}
     </div>
   );
 }

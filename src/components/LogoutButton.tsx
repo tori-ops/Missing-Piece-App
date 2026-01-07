@@ -4,9 +4,15 @@ import { signOut } from 'next-auth/react';
 
 interface LogoutButtonProps {
   primaryColor?: string;
+  secondaryColor?: string;
+  fontColor?: string;
 }
 
-export default function LogoutButton({ primaryColor = '#274E13' }: LogoutButtonProps) {
+export default function LogoutButton({
+  primaryColor = '#274E13',
+  secondaryColor = '#D0CEB5',
+  fontColor = '#000000',
+}: LogoutButtonProps) {
   const handleLogout = async () => {
     await signOut({ redirect: true, callbackUrl: '/' });
   };
@@ -15,9 +21,9 @@ export default function LogoutButton({ primaryColor = '#274E13' }: LogoutButtonP
     <button
       onClick={handleLogout}
       style={{
-        background: `${primaryColor}20`,
-        color: primaryColor,
-        border: `1px solid ${primaryColor}`,
+        background: primaryColor,
+        color: fontColor,
+        border: `1px solid ${secondaryColor}`,
         padding: '0.75rem 1.5rem',
         borderRadius: '6px',
         fontSize: '0.95rem',
@@ -26,12 +32,10 @@ export default function LogoutButton({ primaryColor = '#274E13' }: LogoutButtonP
         transition: 'all 0.2s ease',
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
-        (e.currentTarget as HTMLButtonElement).style.color = 'white';
+        (e.currentTarget as HTMLButtonElement).style.background = `${secondaryColor}30`;
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.background = `${primaryColor}20`;
-        (e.currentTarget as HTMLButtonElement).style.color = primaryColor;
+        (e.currentTarget as HTMLButtonElement).style.background = primaryColor;
       }}
     >
       Logout
