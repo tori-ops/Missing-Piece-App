@@ -20,25 +20,42 @@ interface Task {
   creatorName?: string;
   canEdit?: boolean;
   canDelete?: boolean;
+  assignedToClientId?: string;
+  assignedToTenantId?: string;
+  lastReassignedAt?: string;
 }
 
 interface TaskCardProps {
   task: Task;
   primaryColor: string;
   bodyFontFamily: string;
+  fontColor?: string;
   onStatusChange: (newStatus: Task['status']) => void;
   onDelete: () => void;
+  onReassign?: () => void;
+  clients?: any[];
+  tenants?: any[];
+  userRole?: 'TENANT' | 'CLIENT';
 }
 
 export default function TaskCard({
   task,
   primaryColor,
   bodyFontFamily,
+  fontColor = '#333333',
   onStatusChange,
   onDelete,
+  onReassign,
+  clients = [],
+  tenants = [],
+  userRole,
 }: TaskCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showReassign, setShowReassign] = useState(false);
+  const [reassignLoading, setReassignLoading] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState(task.assignedToClientId || '');
+  const [selectedTenantId, setSelectedTenantId] = useState(task.assignedToTenantId || '');
 
   const handleStatusChange = async (newStatus: Task['status']) => {
     setIsUpdating(true);
@@ -57,6 +74,36 @@ export default function TaskCard({
       alert('Failed to update task status');
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const handleReassign = async () => {
+    if (!selectedClientId && !selectedTenantId) {
+      alert('Please select a client or tenant to reassign to');
+      return;
+    }
+
+    setReassignLoading(true);
+    try {
+      const response = await fetch(`/api/tasks/${task.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          assignedToClientId: selectedClientId || null,
+          assignedToTenantId: selectedTenantId || null,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to reassign task');
+      const updated = await response.json();
+      setShowReassign(false);
+      if (onReassign) onReassign();
+      alert('Task reassigned successfully');
+    } catch (error) {
+      console.error('Error reassigning task:', error);
+      alert('Failed to reassign task');
+    } finally {
+      setReassignLoading(false);
     }
   };
 
@@ -234,6 +281,120 @@ export default function TaskCard({
               </p>
             </div>
           )}
+
+          {/* Reassign Section */}
+          <div style={{ marginBottom: '1rem', paddingBottom: '1rem', borderBottom: `1px solid ${primaryColor}15` }}>
+            <button
+              onClick={() => setShowReassign(!showReassign)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: primaryColor,
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                fontWeight: '600',
+                padding: 0,
+                textDecoration: 'underline',
+              }}
+            >
+              {showReassign ? 'Hide reassign' : 'Reassign task'}
+            </button>
+
+            {showReassign && (
+              <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: `${primaryColor}08`, borderRadius: '4px' }}>
+                {userRole === 'TENANT' && (
+                  <div style={{ marginBottom: '0.75rem' }}>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.4rem', color: primaryColor }}>
+                      Assign to Client
+                    </label>
+                    <select
+                      value={selectedClientId}
+                      onChange={(e) => setSelectedClientId(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '0.4rem',
+                        borderRadius: '4px',
+                        border: `1px solid ${primaryColor}40`,
+                        fontSize: '0.8rem',
+                        fontFamily: bodyFontFamily,
+                      }}
+                    >
+                      <option value="">-- Select a client --</option>
+                      {clients.map((client) => (
+                        <option key={client.id} value={client.id}>
+                          {client.couple1FirstName && client.couple1LastName
+                            ? `${client.couple1FirstName} ${client.couple1LastName}`
+                            : `Client ${client.id.substring(0, 8)}`}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {userRole === 'CLIENT' && (
+                  <div style={{ marginBottom: '0.75rem' }}>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.4rem', color: primaryColor }}>
+                      Assign to Planner
+                    </label>
+                    <select
+                      value={selectedTenantId}
+                      onChange={(e) => setSelectedTenantId(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '0.4rem',
+                        borderRadius: '4px',
+                        border: `1px solid ${primaryColor}40`,
+                        fontSize: '0.8rem',
+                        fontFamily: bodyFontFamily,
+                      }}
+                    >
+                      <option value="">-- Select a planner --</option>
+                      {tenants.map((tenant) => (
+                        <option key={tenant.id} value={tenant.id}>
+                          {tenant.businessName || `Planner ${tenant.id.substring(0, 8)}`}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                  <button
+                    onClick={() => setShowReassign(false)}
+                    style={{
+                      padding: '0.4rem 0.8rem',
+                      borderRadius: '4px',
+                      border: `1px solid ${primaryColor}40`,
+                      background: 'transparent',
+                      color: primaryColor,
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleReassign}
+                    disabled={reassignLoading}
+                    style={{
+                      padding: '0.4rem 0.8rem',
+                      borderRadius: '4px',
+                      border: 'none',
+                      background: primaryColor,
+                      color: fontColor,
+                      cursor: reassignLoading ? 'not-allowed' : 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                      opacity: reassignLoading ? 0.6 : 1,
+                    }}
+                  >
+                    {reassignLoading ? 'Reassigning...' : 'Reassign'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Actions */}
           <div

@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getTaskById, updateTask, deleteTask } from '@/lib/services/taskService';
+import { createNotificationLog } from '@/lib/services/notificationService';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -79,8 +80,43 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const { status, description, dueDate, priority } = body;
+    const { status, description, dueDate, priority, assignedToClientId, assignedToTenantId } = body;
 
+    // Check if this is a reassignment request
+    const isReassignment = assignedToClientId !== undefined || assignedToTenantId !== undefined;
+
+    if (isReassignment) {
+      // Handle reassignment - update the task with new assignment fields
+      const updatedTask = await prisma.task.update({
+        where: { id: taskId },
+        data: {
+          assignedToClientId: assignedToClientId || null,
+          assignedToTenantId: assignedToTenantId || null,
+          lastReassignedAt: new Date(),
+        },
+      });
+
+      // Create notifications for the newly assigned users
+      if (assignedToClientId) {
+        try {
+          await createNotificationLog(taskId, assignedToClientId, 'task_reassigned');
+        } catch (err) {
+          console.error('Error creating client notification:', err);
+        }
+      }
+
+      if (assignedToTenantId) {
+        try {
+          await createNotificationLog(taskId, assignedToTenantId, 'task_reassigned');
+        } catch (err) {
+          console.error('Error creating tenant notification:', err);
+        }
+      }
+
+      return NextResponse.json(updatedTask);
+    }
+
+    // Handle regular task updates (status, description, etc)
     const task = await updateTask(
       taskId,
       {
