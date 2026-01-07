@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FileText, Calendar, Plus } from 'lucide-react';
 import CreateTaskFromNoteModal from './CreateTaskFromNoteModal';
+import BrandedDatePicker from './BrandedDatePicker';
 
 interface MeetingNote {
   id: string;
@@ -338,17 +339,14 @@ export default function MeetingNotesDetailView({
 
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Meeting Date</label>
-            <input
-              type="date"
-              value={newNoteMeetingDate}
-              onChange={(e) => setNewNoteMeetingDate(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: `1px solid ${secondaryColor}`,
-                borderRadius: '4px',
-                fontFamily: bodyFontFamily,
-              }}
+            <BrandedDatePicker
+              selected={newNoteMeetingDate ? new Date(newNoteMeetingDate) : null}
+              onChange={(date) => setNewNoteMeetingDate(date ? date.toISOString().split('T')[0] : '')}
+              placeholderText="Select meeting date"
+              primaryColor={primaryColor}
+              secondaryColor={secondaryColor}
+              fontColor={fontColor}
+              bodyFontFamily={bodyFontFamily}
             />
           </div>
 
@@ -522,33 +520,27 @@ export default function MeetingNotesDetailView({
 
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Date From</label>
-            <input
-              type="date"
-              value={filterDateFrom}
-              onChange={(e) => setFilterDateFrom(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: `1px solid ${secondaryColor}`,
-                borderRadius: '4px',
-                fontFamily: bodyFontFamily,
-              }}
+            <BrandedDatePicker
+              selected={filterDateFrom ? new Date(filterDateFrom) : null}
+              onChange={(date) => setFilterDateFrom(date ? date.toISOString().split('T')[0] : '')}
+              placeholderText="Select start date"
+              primaryColor={primaryColor}
+              secondaryColor={secondaryColor}
+              fontColor={fontColor}
+              bodyFontFamily={bodyFontFamily}
             />
           </div>
 
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor }}>Date To</label>
-            <input
-              type="date"
-              value={filterDateTo}
-              onChange={(e) => setFilterDateTo(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: `1px solid ${secondaryColor}`,
-                borderRadius: '4px',
-                fontFamily: bodyFontFamily,
-              }}
+            <BrandedDatePicker
+              selected={filterDateTo ? new Date(filterDateTo) : null}
+              onChange={(date) => setFilterDateTo(date ? date.toISOString().split('T')[0] : '')}
+              placeholderText="Select end date"
+              primaryColor={primaryColor}
+              secondaryColor={secondaryColor}
+              fontColor={fontColor}
+              bodyFontFamily={bodyFontFamily}
             />
           </div>
 
