@@ -947,7 +947,7 @@ export default function WebsiteBuilderForm({
           </p>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: bodyFontFamily, fontSize: '0.95rem', fontStyle: 'italic', opacity: 0.7 }}>
               URL Ending Option 1
             </label>
             <input
@@ -973,7 +973,7 @@ export default function WebsiteBuilderForm({
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: headerFontFamily }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: fontColor, fontFamily: bodyFontFamily, fontSize: '0.95rem', fontStyle: 'italic', opacity: 0.7 }}>
               URL Ending Option 2
             </label>
             <input
